@@ -1,3 +1,4 @@
+import java.util.ArrayList;
 public class Hypothesis {
 	
 	/*
@@ -15,7 +16,24 @@ public class Hypothesis {
 	 * constructor
 	 * */
 	public Hypothesis(String[] f) {
-		this.features = f;
+		this.features = new String[f.length];
+		for(int i=0; i<f.length;i++) {
+			this.features[i]=f[i];
+		}
+	}
+	
+	/*
+	 * constructor for easier initialization of the most specific and most general
+	 * hypotheses.
+	 * accepts the number of features (int l) and the value "S" (for most specific)
+	 * or "G" (for most general).*/
+	public Hypothesis(int l, String type) {
+		String def = Hypothesis.ANY;
+        if(type.equals("S")) def = Hypothesis.NONE;
+        this.features = new String[l];
+        for (int i = 0 ; i < l ; i++){
+            this.features[i] = def;
+        }
 	}
 	
 	public String[] getFeatures() {
@@ -35,33 +53,51 @@ public class Hypothesis {
 	}
 	
 	
-	/*  int equals(Hypothesis h), returns:
+	/* overriden 
+	 * boolean equals(Hypothesis h), returns:
 	 * 		true if the two hypotheses have the same values for each feature
 	 * 		false if they differ on at least one feature
 	 * */
-	boolean equals(Hypothesis h) {
+	public boolean equals(Object o) {
 		for(int i=0;i<this.features.length; i++) {
-			if(!this.features[i].equals(h.features[i])) {
+			if(!this.features[i].equals(((Hypothesis)o).features[i])) {
 				return false;
 			}
 		}
 		return true;
 	}
 	
-	/*  int[] compareTo(Hypothesis h) returns an array of integers, where each integer represents the result of the equality
-	 *  check of a specific feature, the values of the integers can be:
-	 * 		true if the features of the two hypotheses differ at that index
-	 * 		false if the features of the two hypotheses are the same at that index
+	/*
+	 * overriden
+	 * needed for comparison in sets
+	 * calculates the hash of a hypothesis, it does so by adding the decimal representation
+	 * of each character of each feature value for all the features
 	 * */
-	
-	boolean[] compareTo(Hypothesis h) {
-		boolean[] result = new boolean[this.features.length];
-		for(int i=0;i<this.features.length; i++) {
-			if(!this.features[i].equals(h.features[i])) {
-				result[i]=true;
+	public int hashCode() {
+		int result=0;
+		for(int i=0;i<features.length;i++) {
+			for(int j=0;j<features[i].length();j++) {
+				int k = (int)(features[i].charAt(j));
+				result+=k;
 			}
 		}
 		return result;
+	}
+	
+	/*  ArrayList<Integer> compareTo(Hypothesis h) returns an array of integers, where each integer represents the index at which
+	 *  the two compared hypotheses differ
+	 *  if the value of a feature of either this or the h hypothesis is the ANY value, then the other feature being compared can
+	 *  be thought of as more specialized than the ANY value and thus not considered inequal
+	 * */
+	
+	ArrayList<Integer> compareTo(Hypothesis h) {
+		ArrayList<Integer> res = new ArrayList<Integer>();
+		for(int i=0;i<this.features.length; i++) {
+			if(!this.features[i].equals(h.features[i]) && !this.features[i].equals(ANY) && !h.features[i].equals(ANY)) {
+				res.add(i);
+			}
+		}
+		return res;
 	}
 	
 	/*
@@ -75,18 +111,19 @@ public class Hypothesis {
 	 *  	false otherwise
 	 * */
 	
-	//the negation of isMoreGeneralThan can also be used to check for specificity
-	boolean isMoreSpecifcThan(Hypothesis h) {
+	//the negation of isMoreGeneralThan NEEDS to be used to check for specificity
+	//as inconsistencies were found in the current definition of this method
+	boolean isMoreSpecificThan(Hypothesis h) {
 		int s1=0, s2=0;
 		for(int i=0;i<this.features.length;i++) {
+			if(this.features[i].equals(NONE) || h.features[i].equals(NONE)) {
+				return false;
+			}
 			if(this.features[i].equals(ANY)) {
 				s1++;
 			}
 			if(h.features[i].equals(ANY)) {
 				s2++;
-			}
-			if(!this.features[i].equals(h.features[i])) {
-				return false;
 			}
 			if(this.features[i].equals(ANY) && !h.features[i].equals(ANY)) {
 				return false;
@@ -108,6 +145,9 @@ public class Hypothesis {
 	boolean isMoreGeneralThan(Hypothesis h) {
 		int s1=0, s2=0;
 		for(int i=0;i<this.features.length;i++) {
+			if(this.features[i].equals(NONE) || h.features[i].equals(NONE)) {
+				return false;
+			}
 			if(this.features[i].equals(ANY)) {
 				s1++;
 			}
