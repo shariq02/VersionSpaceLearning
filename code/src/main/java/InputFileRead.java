@@ -1,24 +1,25 @@
-import java.io.FileReader;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.util.List;
-import java.util.Arrays;
+//import java.io.FileReader;
+//import java.io.BufferedReader;
+//import java.io.File;
+//import java.io.FileNotFoundException;
+//import java.io.IOException;
+//import java.nio.file.Files;
+//import java.util.List;
+//import java.util.Scanner;
+//import java.util.Arrays;
+//import static java.lang.System.*;
 
-import org.json.simple.JSONArray;
-import org.json.simple.JSONObject;
-import org.json.simple.parser.JSONParser;
-import org.json.simple.parser.ParseException;
+//import org.json.simple.JSONArray;
+//import org.json.simple.JSONObject;
+//import org.json.simple.parser.JSONParser;
+//import org.json.simple.parser.ParseException;
 
-import au.com.bytecode.opencsv.CSVReader;
+//import au.com.bytecode.opencsv.CSVReader;
 
 
 
 public class InputFileRead {
 	
-	//private static CSVReader reader;
-
-
-
 	/**
 	 * Identify file type of file with provided path and name
 	 * using JDK 7's Files.probeContentType(Path).
@@ -47,13 +48,15 @@ public class InputFileRead {
 	
 	
 
+	
+
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
 		//Build reader instance
 	      //Read all rows at once
-		List<String[]> allRows = null;
+		/*List<String[]> allRows = null;
 		try {
-			CSVReader reader = new CSVReader(new FileReader("data.csv"), ',', '"', 1); //"data.csv" is at present hard-coded, needs to be change for dynamic file processing
+			CSVReader reader = new CSVReader(new FileReader("C:\\Users\\Sharique\\Desktop\\Zoo_database.csv")); //, ',', '"', 1); //"data.csv" is at present hard-coded, needs to be change for dynamic file processing
 			   
 			  allRows = reader.readAll();
 		} catch (FileNotFoundException e) {
@@ -67,6 +70,8 @@ public class InputFileRead {
 	      //Read CSV line by line and use the string array as you want
 	     for(String[] row : allRows){
 	        System.out.println(Arrays.toString(row));
-	}
+	}*/
+		
+		ReadFromFile.setArray();
 	}
 }
