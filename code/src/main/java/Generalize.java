@@ -68,10 +68,12 @@ public class Generalize {
 					//another step where access to the most general set of hypotheses was required has been skipped
 					moreGeneralHypotheses.addAll(generalizations);
 					for(Hypothesis j: moreGeneralHypotheses) {
-						if(!s.equals(j) && s.isMoreGeneralThan(j)) {
-							System.out.println(s+" "+j);
-							moreGeneralHypotheses.remove(s);
+						for(Hypothesis k: moreGeneralHypotheses) {
+							if(!j.equals(k) && j.isMoreGeneralThan(k)) {
+								moreGeneralHypotheses.remove(j);
+							}
 						}
+						
 					}
 				}
 			}

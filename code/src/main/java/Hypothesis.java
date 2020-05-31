@@ -110,26 +110,8 @@ public class Hypothesis {
 	 *  	true if this hypothesis is more specific than the one given as a parameter
 	 *  	false otherwise
 	 * */
-	
-	//the negation of isMoreGeneralThan NEEDS to be used to check for specificity
-	//as inconsistencies were found in the current definition of this method
 	boolean isMoreSpecificThan(Hypothesis h) {
-		int s1=0, s2=0;
-		for(int i=0;i<this.features.length;i++) {
-			if(this.features[i].equals(NONE) || h.features[i].equals(NONE)) {
-				return false;
-			}
-			if(this.features[i].equals(ANY)) {
-				s1++;
-			}
-			if(h.features[i].equals(ANY)) {
-				s2++;
-			}
-			if(this.features[i].equals(ANY) && !h.features[i].equals(ANY)) {
-				return false;
-			}
-		}
-		return s1<s2? true: false;
+		return h.isMoreGeneralThan(this);
 	}
 	
 	/*
@@ -144,24 +126,30 @@ public class Hypothesis {
 	 * */
 	boolean isMoreGeneralThan(Hypothesis h) {
 		int s1=0, s2=0;
+		boolean noneFlag = false;
 		for(int i=0;i<this.features.length;i++) {
-			if(this.features[i].equals(NONE) || h.features[i].equals(NONE)) {
-				return false;
-			}
 			if(this.features[i].equals(ANY)) {
 				s1++;
 			}
+			else if(this.features[i].equals(NONE)){
+				s1--;
+				noneFlag=true;
+			}
+			
 			if(h.features[i].equals(ANY)) {
 				s2++;
 			}
-			if(!this.features[i].equals(ANY) && !this.features[i].equals(h.features[i])) {
+			else if(h.features[i].equals(NONE)){
+				s2--;
+			}
+			if(!this.features[i].equals(ANY) && !this.features[i].equals(h.features[i]) && !h.features[i].equals(NONE)) {
 				return false;
 			}
 			if(!this.features[i].equals(ANY) && h.features[i].equals(ANY)) {
 				return false;
 			}
 		}
-		return s1>s2? true: false;
+		return (s1>s2 && !noneFlag)? true: false;
 	}
 	
 	/*
