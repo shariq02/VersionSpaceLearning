@@ -1,6 +1,7 @@
 import org.junit.Test;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 
 import static org.junit.Assert.assertEquals;
 
@@ -8,351 +9,398 @@ public class SpecializeGBoundaryTest {
 
     @Test
     public void specialize() {
-        ArrayList<String> f1 = new ArrayList<>();
-        ArrayList<String> f2 = new ArrayList<>();
-        ArrayList<String> f3 = new ArrayList<>();
-        ArrayList<Hypothesis> gList;
-        SpecializeGBoundary sg = new SpecializeGBoundary();
+        /* Declaring the Feature sets to put all possible feature values for each features*/
+        ArrayList<String> featureSet1 = new ArrayList<>();
+        ArrayList<String> featureSet2 = new ArrayList<>();
+        ArrayList<String> featureSet3 = new ArrayList<>();
 
-        f1.add("Mango");f1.add("Orange");
-        f2.add("Yes");f2.add("No");f2.add("Maybe");
-        f3.add("OK");f3.add("Good");f3.add("Bad");
+        HashSet<Hypothesis> outputList;
+        SpecializeGBoundary specializeObject = new SpecializeGBoundary();
+
+        /* Assigning all possible feature values in their respective feature sets */
+        featureSet1.add("Mango");featureSet1.add("Orange");
+        featureSet2.add("Yes");featureSet2.add("No");featureSet2.add("Maybe");
+        featureSet3.add("OK");featureSet3.add("Good");featureSet3.add("Bad");
+
+        /* Now Creating an array list named featureList
+         * which will contain all the previously defined array lists
+         * containing all possible feature values */
+
+        ArrayList featureList = new ArrayList();
+        featureList.add(featureSet1);featureList.add(featureSet2);featureList.add(featureSet3);
+
+        /* Declaring a negative data which is to be compared with the generalized hypothesis */
+        String[] negativeData = {"Orange","Maybe","OK"};
+
+        Hypothesis testHypothesisG = new Hypothesis(3,"G");       //Constructor calling to create the most Generalized Hypothesis
+        Hypothesis testHypothesisS = new Hypothesis(3,"S");      //Constructor calling to create the most Specialized Hypothesis
+        HashSet<Hypothesis> specializedHypothesisSet = new HashSet<Hypothesis>();
+        specializedHypothesisSet.add(testHypothesisS);
+        outputList = specializeObject.specialize(negativeData, specializedHypothesisSet, featureList, testHypothesisG);
+
+        /* Creating String type arrays which contains the expected output Hypotheses and
+         *  putting all these hypotheses into a HashSet called expectedOutput
+         *  We want to match this expectedOutput with the output we are getting from the Specialized boundary class*/
+        String[] expectedFeatureSet1 =  {"Mango","?","?"};
+        String[] expectedFeatureSet2 =  {"?","Yes","?"};
+        String[] expectedFeatureSet3 =  {"?","No","?"};
+        String[] expectedFeatureSet4 =  {"?","?","Good"};
+        String[] expectedFeatureSet5 =  {"?","?","Bad"};
 
 
-        String[] nData = {"Orange","Maybe","OK"};
+        HashSet<Hypothesis> expectedOutput = new HashSet<Hypothesis>();
 
-        ArrayList fList = new ArrayList();
-        fList.add(f1);fList.add(f2);fList.add(f3);
-        Hypothesis testHyp = new Hypothesis(3,"G");
-        Hypothesis testHypS = new Hypothesis(3,"S");
-        Hypothesis[] s = new Hypothesis[1];
-        s[0] = testHypS;
-        gList= sg.specialize(nData, s, fList, testHyp);
+        expectedOutput.add(new Hypothesis(expectedFeatureSet1));expectedOutput.add(new Hypothesis(expectedFeatureSet2));expectedOutput.add(new Hypothesis(expectedFeatureSet3));expectedOutput.add(new Hypothesis(expectedFeatureSet4));expectedOutput.add(new Hypothesis(expectedFeatureSet5));
 
-
-        String[] f11 =  {"Mango","?","?"};
-        String[] f21 =  {"?","Yes","?"};
-        String[] f31 =  {"?","No","?"};
-        String[] f41 =  {"?","?","Good"};
-        String[] f51 =  {"?","?","Bad"};
-
-
-        ArrayList expOut = new ArrayList();
-
-        expOut.add(new Hypothesis(f11));expOut.add(new Hypothesis(f21));expOut.add(new Hypothesis(f31));expOut.add(new Hypothesis(f41));expOut.add(new Hypothesis(f51));
-
-        assertEquals(expOut +" " , gList +" ");
+        assertEquals(expectedOutput +" " , outputList +" ");
     }
 
 
 
     @Test
     public void specialize1() {
-        ArrayList<String> f1 = new ArrayList<>();
-        ArrayList<String> f2 = new ArrayList<>();
-        ArrayList<String> f3 = new ArrayList<>();
-        ArrayList<Hypothesis> gList;
-        SpecializeGBoundary sg = new SpecializeGBoundary();
+        /* Declaring the Feature sets to put all possible feature values for each features*/
+        ArrayList<String> featureSet1 = new ArrayList<>();
+        ArrayList<String> featureSet2 = new ArrayList<>();
+        ArrayList<String> featureSet3 = new ArrayList<>();
 
-        f1.add("Mango");f1.add("Orange");
-        f2.add("Yes");f2.add("No");f2.add("Maybe");
-        f3.add("OK");f3.add("Good");f3.add("Bad");
+        HashSet<Hypothesis> outputList;
+        SpecializeGBoundary specializeObject = new SpecializeGBoundary();
+
+        /* Assigning all possible feature values in their respective feature sets */
+        featureSet1.add("Mango");featureSet1.add("Orange");
+        featureSet2.add("Yes");featureSet2.add("No");featureSet2.add("Maybe");
+        featureSet3.add("OK");featureSet3.add("Good");featureSet3.add("Bad");
+
+        /* Now Creating an array list named featureList
+         which will contain all the previously defined array lists
+         containing all possible feature values */
+
+        ArrayList featureList = new ArrayList();
+        featureList.add(featureSet1);featureList.add(featureSet2);featureList.add(featureSet3);
+
+        /* Declaring a negative data which is to be compared with the generalized hypothesis */
+        String[] negativeData = {"Orange","Maybe","OK"};
+
+        String[] genaralisedHypothesis = {"?", "Maybe","?"};
+        Hypothesis testHypothesisG = new Hypothesis(genaralisedHypothesis);
+        Hypothesis testHypothesisS = new Hypothesis(3,"S");
+        HashSet<Hypothesis> specializedHypothesisSet = new HashSet<Hypothesis>();
+        specializedHypothesisSet.add(testHypothesisS);
+        outputList= specializeObject.specialize(negativeData, specializedHypothesisSet, featureList, testHypothesisG);
+
+        /* Creating String type arrays which contains the expected output Hypotheses and
+         *  putting all these hypotheses into a HashSet called expectedOutput
+         *  We want to match this expectedOutput with the output we are getting from the Specialized boundary class*/
+        String[] expectedFeatureSet1 =  {"Mango","Maybe","?"};
+        String[] expectedFeatureSet2 =  {"?","Yes","?"};
+        String[] expectedFeatureSet3 =  {"?","No","?"};
+        String[] expectedFeatureSet4 =  {"?","Maybe","Good"};
+        String[] expectedFeatureSet5 =  {"?","Maybe","Bad"};
 
 
-        String[] nData = {"Orange","Maybe","OK"};
+        HashSet<Hypothesis> expectedOutput = new HashSet<Hypothesis>();
 
-        ArrayList fList = new ArrayList();
-        fList.add(f1);fList.add(f2);fList.add(f3);
-        String[] f = {"?", "Maybe","?"};
-        Hypothesis testHyp = new Hypothesis(f);
+        expectedOutput.add(new Hypothesis(expectedFeatureSet1));expectedOutput.add(new Hypothesis(expectedFeatureSet2));expectedOutput.add(new Hypothesis(expectedFeatureSet3));expectedOutput.add(new Hypothesis(expectedFeatureSet4));expectedOutput.add(new Hypothesis(expectedFeatureSet5));
 
-        Hypothesis testHypS = new Hypothesis(3,"S");
-        Hypothesis[] s = new Hypothesis[1];
-        s[0] = testHypS;
-        gList= sg.specialize(nData, s, fList, testHyp);
-
-        String[] f11 =  {"Mango","Maybe","?"};
-        String[] f21 =  {"?","Yes","?"};
-        String[] f31 =  {"?","No","?"};
-        String[] f41 =  {"?","Maybe","Good"};
-        String[] f51 =  {"?","Maybe","Bad"};
-
-
-        ArrayList expOut = new ArrayList();
-
-        expOut.add(new Hypothesis(f11));expOut.add(new Hypothesis(f21));expOut.add(new Hypothesis(f31));expOut.add(new Hypothesis(f41));expOut.add(new Hypothesis(f51));
-
-        assertEquals(expOut +" " , gList +" ");
+        assertEquals(expectedOutput +" " , outputList +" ");
     }
 
 
     @Test
     public void specialize2() {
-        ArrayList<String> f1 = new ArrayList<>();
-        ArrayList<String> f2 = new ArrayList<>();
-        ArrayList<String> f3 = new ArrayList<>();
-        ArrayList<Hypothesis> gList;
-        SpecializeGBoundary sg = new SpecializeGBoundary();
+        /* Declaring the Feature sets to put all possible feature values for each features*/
+        ArrayList<String> featureSet1 = new ArrayList<>();
+        ArrayList<String> featureSet2 = new ArrayList<>();
+        ArrayList<String> featureSet3 = new ArrayList<>();
 
-        f1.add("Mango");f1.add("Orange");
-        f2.add("Yes");f2.add("No");f2.add("Maybe");
-        f3.add("OK");f3.add("Good");f3.add("Bad");
+        HashSet<Hypothesis> outputList;
+        SpecializeGBoundary specializeObject = new SpecializeGBoundary();
+
+        /* Assigning all possible feature values in their respective feature sets */
+        featureSet1.add("Mango");featureSet1.add("Orange");
+        featureSet2.add("Yes");featureSet2.add("No");featureSet2.add("Maybe");
+        featureSet3.add("OK");featureSet3.add("Good");featureSet3.add("Bad");
+
+        /* Now Creating an array list named featureList
+         which will contain all the previously defined array lists
+         containing all possible feature values */
+
+        ArrayList featureList = new ArrayList();
+        featureList.add(featureSet1);featureList.add(featureSet2);featureList.add(featureSet3);
+
+        /* Declaring a negative data which is to be compared with the generalized hypothesis */
+        String[] negativeData = {"Orange","Maybe","OK"};
+        String[] genaralisedHypothesis = {"?", "?","OK"};
+        Hypothesis testHypothesisG = new Hypothesis(genaralisedHypothesis);
+
+        Hypothesis testHypothesisS = new Hypothesis(3,"S");
+        HashSet<Hypothesis> specializedHypothesisSet = new HashSet<Hypothesis>();
+        specializedHypothesisSet.add(testHypothesisS);
+        outputList= specializeObject.specialize(negativeData, specializedHypothesisSet, featureList, testHypothesisG);
 
 
-        String[] nData = {"Orange","Maybe","OK"};
-
-        ArrayList fList = new ArrayList();
-        fList.add(f1);fList.add(f2);fList.add(f3);
-        String[] f = {"?", "?","OK"};
-        Hypothesis testHyp = new Hypothesis(f);
-
-        Hypothesis testHypS = new Hypothesis(3,"S");
-        Hypothesis[] s = new Hypothesis[1];
-        s[0] = testHypS;
-        gList= sg.specialize(nData, s, fList, testHyp);
-
-        String[] f11 =  {"Mango","?","OK"};
-        String[] f21 =  {"?","Yes","OK"};
-        String[] f31 =  {"?","No","OK"};
-        String[] f41 =  {"?","?","Good"};
-        String[] f51 =  {"?","?","Bad"};
+        /* Creating String type arrays which contains the expected output Hypotheses and
+         *  putting all these hypotheses into a HashSet called expectedOutput
+         *  We want to match this expectedOutput with the output we are getting from the Specialized boundary class*/
+        String[] expectedFeatureSet1 =  {"Mango","?","OK"};
+        String[] expectedFeatureSet2 =  {"?","Yes","OK"};
+        String[] expectedFeatureSet3 =  {"?","No","OK"};
+        String[] expectedFeatureSet4 =  {"?","?","Good"};
+        String[] expectedFeatureSet5 =  {"?","?","Bad"};
 
 
-        ArrayList expOut = new ArrayList();
+        HashSet<Hypothesis> expectedOutput = new HashSet<Hypothesis>();
 
-        expOut.add(new Hypothesis(f11));expOut.add(new Hypothesis(f21));expOut.add(new Hypothesis(f31));expOut.add(new Hypothesis(f41));expOut.add(new Hypothesis(f51));
+        expectedOutput.add(new Hypothesis(expectedFeatureSet1));expectedOutput.add(new Hypothesis(expectedFeatureSet2));expectedOutput.add(new Hypothesis(expectedFeatureSet3));expectedOutput.add(new Hypothesis(expectedFeatureSet4));expectedOutput.add(new Hypothesis(expectedFeatureSet5));
 
-        assertEquals(expOut +" " , gList +" ");
+        assertEquals(expectedOutput +" " , outputList +" ");
     }
     @Test
     public void specialize3() {
-        ArrayList<String> f1 = new ArrayList<>();
-        ArrayList<String> f2 = new ArrayList<>();
-        ArrayList<String> f3 = new ArrayList<>();
-        ArrayList<Hypothesis> gList;
-        SpecializeGBoundary sg = new SpecializeGBoundary();
+        /* Declaring the Feature sets to put all possible feature values for each features*/
+        ArrayList<String> featureSet1 = new ArrayList<>();
+        ArrayList<String> featureSet2 = new ArrayList<>();
+        ArrayList<String> featureSet3 = new ArrayList<>();
 
-        f1.add("Mango");f1.add("Orange");
-        f2.add("Yes");f2.add("No");f2.add("Maybe");
-        f3.add("OK");f3.add("Good");f3.add("Bad");
+        HashSet<Hypothesis> outputList;
+        SpecializeGBoundary specializeObject = new SpecializeGBoundary();
+
+        /* Assigning all possible feature values in their respective feature sets */
+        featureSet1.add("Mango");featureSet1.add("Orange");
+        featureSet2.add("Yes");featureSet2.add("No");featureSet2.add("Maybe");
+        featureSet3.add("OK");featureSet3.add("Good");featureSet3.add("Bad");
+
+        /* Now Creating an array list named featureList
+         which will contain all the previously defined array lists
+         containing all possible feature values */
+
+        ArrayList featureList = new ArrayList();
+        featureList.add(featureSet1);featureList.add(featureSet2);featureList.add(featureSet3);
+
+        /* Declaring a negative data which is to be compared with the generalized hypothesis */
+        String[] negativeData = {"Orange","Maybe","OK"};
+        String[] genaralisedHypothesis = {"Orange", "?","?"};
+        Hypothesis testHypothesisG = new Hypothesis(genaralisedHypothesis);
+
+        Hypothesis testHypothesisS = new Hypothesis(3,"S");
+        HashSet<Hypothesis> specializedHypothesisSet = new HashSet<Hypothesis>();
+        specializedHypothesisSet.add(testHypothesisS);
+        outputList= specializeObject.specialize(negativeData, specializedHypothesisSet, featureList, testHypothesisG);
+
+        /* Creating String type arrays which contains the expected output Hypotheses and
+         *  putting all these hypotheses into a HashSet called expectedOutput
+         *  We want to match this expectedOutput with the output we are getting from the Specialized boundary class*/
+        String[] expectedFeatureSet1 =  {"Mango","?","?"};
+        String[] expectedFeatureSet2 =  {"Orange","Yes","?"};
+        String[] expectedFeatureSet3 =  {"Orange","No","?"};
+        String[] expectedFeatureSet4 =  {"Orange","?","Good"};
+        String[] expectedFeatureSet5 =  {"Orange","?","Bad"};
 
 
-        String[] nData = {"Orange","Maybe","OK"};
+        HashSet<Hypothesis> expectedOutput = new HashSet<Hypothesis>();
 
-        ArrayList fList = new ArrayList();
-        fList.add(f1);fList.add(f2);fList.add(f3);
-        String[] f = {"Orange", "?","?"};
-        Hypothesis testHyp = new Hypothesis(f);
+        expectedOutput.add(new Hypothesis(expectedFeatureSet1));expectedOutput.add(new Hypothesis(expectedFeatureSet2));expectedOutput.add(new Hypothesis(expectedFeatureSet3));expectedOutput.add(new Hypothesis(expectedFeatureSet4));expectedOutput.add(new Hypothesis(expectedFeatureSet5));
 
-        Hypothesis testHypS = new Hypothesis(3,"S");
-        Hypothesis[] s = new Hypothesis[1];
-        s[0] = testHypS;
-        gList= sg.specialize(nData, s, fList, testHyp);
-
-        String[] f11 =  {"Mango","?","?"};
-        String[] f21 =  {"Orange","Yes","?"};
-        String[] f31 =  {"Orange","No","?"};
-        String[] f41 =  {"Orange","?","Good"};
-        String[] f51 =  {"Orange","?","Bad"};
-
-
-        ArrayList expOut = new ArrayList();
-
-        expOut.add(new Hypothesis(f11));expOut.add(new Hypothesis(f21));expOut.add(new Hypothesis(f31));expOut.add(new Hypothesis(f41));expOut.add(new Hypothesis(f51));
-
-        assertEquals(expOut +" " , gList +" ");
+        assertEquals(expectedOutput +" " , outputList +" ");
     }
     @Test
     public void specialize4() {
-        ArrayList<String> f1 = new ArrayList<>();
-        ArrayList<String> f2 = new ArrayList<>();
-        ArrayList<String> f3 = new ArrayList<>();
-        ArrayList<Hypothesis> gList;
-        SpecializeGBoundary sg = new SpecializeGBoundary();
+        /* Declaring the Feature sets to put all possible feature values for each features*/
+        ArrayList<String> featureSet1 = new ArrayList<>();
+        ArrayList<String> featureSet2 = new ArrayList<>();
+        ArrayList<String> featureSet3 = new ArrayList<>();
 
-        f1.add("Mango");f1.add("Orange");
-        f2.add("Yes");f2.add("No");f2.add("Maybe");
-        f3.add("OK");f3.add("Good");f3.add("Bad");
+        HashSet<Hypothesis> outputList;
+        SpecializeGBoundary specializeObject = new SpecializeGBoundary();
+
+        /* Assigning all possible feature values in their respective feature sets */
+        featureSet1.add("Mango");featureSet1.add("Orange");
+        featureSet2.add("Yes");featureSet2.add("No");featureSet2.add("Maybe");
+        featureSet3.add("OK");featureSet3.add("Good");featureSet3.add("Bad");
+
+        /* Now Creating an array list named featureList
+         which will contain all the previously defined array lists
+         containing all possible feature values */
+
+        ArrayList featureList = new ArrayList();
+        featureList.add(featureSet1);featureList.add(featureSet2);featureList.add(featureSet3);
+
+        /* Declaring a negative data which is to be compared with the generalized hypothesis */
+        String[] negativeData = {"Orange","Maybe","OK"};
+        String[] genaralisedHypothesis = {"Orange", "?","OK"};
+        Hypothesis testHypothesisG = new Hypothesis(genaralisedHypothesis);
+
+        Hypothesis testHypothesisS = new Hypothesis(3,"S");
+        HashSet<Hypothesis> specializedHypothesisSet = new HashSet<Hypothesis>();
+        specializedHypothesisSet.add(testHypothesisS);
+        outputList= specializeObject.specialize(negativeData, specializedHypothesisSet, featureList, testHypothesisG);
+
+        /* Creating String type arrays which contains the expected output Hypotheses and
+         *  putting all these hypotheses into a HashSet called expectedOutput
+         *  We want to match this expectedOutput with the output we are getting from the Specialized boundary class*/
+        String[] expectedFeatureSet1 =  {"Mango","?","OK"};
+        String[] expectedFeatureSet2 =  {"Orange","Yes","OK"};
+        String[] expectedFeatureSet3 =  {"Orange","No","OK"};
+        String[] expectedFeatureSet4 =  {"Orange","?","Good"};
+        String[] expectedFeatureSet5 =  {"Orange","?","Bad"};
 
 
-        String[] nData = {"Orange","Maybe","OK"};
+        HashSet<Hypothesis> expectedOutput = new HashSet<Hypothesis>();
 
-        ArrayList fList = new ArrayList();
-        fList.add(f1);fList.add(f2);fList.add(f3);
-        String[] f = {"Orange", "?","OK"};
-        Hypothesis testHyp = new Hypothesis(f);
+        expectedOutput.add(new Hypothesis(expectedFeatureSet1));expectedOutput.add(new Hypothesis(expectedFeatureSet2));expectedOutput.add(new Hypothesis(expectedFeatureSet3));expectedOutput.add(new Hypothesis(expectedFeatureSet4));expectedOutput.add(new Hypothesis(expectedFeatureSet5));
 
-        Hypothesis testHypS = new Hypothesis(3,"S");
-        Hypothesis[] s = new Hypothesis[1];
-        s[0] = testHypS;
-        gList= sg.specialize(nData, s, fList, testHyp);
-
-        String[] f11 =  {"Mango","?","OK"};
-        String[] f21 =  {"Orange","Yes","OK"};
-        String[] f31 =  {"Orange","No","OK"};
-        String[] f41 =  {"Orange","?","Good"};
-        String[] f51 =  {"Orange","?","Bad"};
-
-
-        ArrayList expOut = new ArrayList();
-
-        expOut.add(new Hypothesis(f11));expOut.add(new Hypothesis(f21));expOut.add(new Hypothesis(f31));expOut.add(new Hypothesis(f41));expOut.add(new Hypothesis(f51));
-
-        assertEquals(expOut +" " , gList +" ");
+        assertEquals(expectedOutput +" " , outputList +" ");
     }
     @Test
     public void specialize5() {
-        ArrayList<String> f1 = new ArrayList<>();
-        ArrayList<String> f2 = new ArrayList<>();
-        ArrayList<String> f3 = new ArrayList<>();
-        ArrayList<Hypothesis> gList;
-        SpecializeGBoundary sg = new SpecializeGBoundary();
+        /* Declaring the Feature sets to put all possible feature values for each features*/
+        ArrayList<String> featureSet1 = new ArrayList<>();
+        ArrayList<String> featureSet2 = new ArrayList<>();
+        ArrayList<String> featureSet3 = new ArrayList<>();
 
-        f1.add("Mango");f1.add("Orange");
-        f2.add("Yes");f2.add("No");f2.add("Maybe");
-        f3.add("OK");f3.add("Good");f3.add("Bad");
+        HashSet<Hypothesis> outputList;
+        SpecializeGBoundary specializeObject = new SpecializeGBoundary();
+
+        /* Assigning all possible feature values in their respective feature sets */
+        featureSet1.add("Mango");featureSet1.add("Orange");
+        featureSet2.add("Yes");featureSet2.add("No");featureSet2.add("Maybe");
+        featureSet3.add("OK");featureSet3.add("Good");featureSet3.add("Bad");
+
+        /* Now Creating an array list named featureList
+         which will contain all the previously defined array lists
+         containing all possible feature values */
+
+        ArrayList featureList = new ArrayList();
+        featureList.add(featureSet1);featureList.add(featureSet2);featureList.add(featureSet3);
+
+        /* Declaring a negative data which is to be compared with the generalized hypothesis */
+        String[] negativeData = {"Orange","Maybe","OK"};
+        String[] genaralisedHypothesis = {"Orange", "?","?"};
+        Hypothesis testHypothesisG = new Hypothesis(genaralisedHypothesis);
+
+        Hypothesis testHypothesisS = new Hypothesis(3,"S");
+        HashSet<Hypothesis> specializedHypothesisSet = new HashSet<Hypothesis>();
+        specializedHypothesisSet.add(testHypothesisS);
+        outputList= specializeObject.specialize(negativeData, specializedHypothesisSet, featureList, testHypothesisG);
+
+        /* Creating String type arrays which contains the expected output Hypotheses and
+         *  putting all these hypotheses into a HashSet called expectedOutput
+         *  We want to match this expectedOutput with the output we are getting from the Specialized boundary class*/
+        String[] expectedFeatureSet1 =  {"Mango","?","?"};
+        String[] expectedFeatureSet2 =  {"Orange","Yes","?"};
+        String[] expectedFeatureSet3 =  {"Orange","No","?"};
+        String[] expectedFeatureSet4 =  {"Orange","?","Good"};
+        String[] expectedFeatureSet5 =  {"Orange","?","Bad"};
 
 
-        String[] nData = {"Orange","Maybe","OK"};
+        HashSet<Hypothesis> expectedOutput = new HashSet<Hypothesis>();
 
-        ArrayList fList = new ArrayList();
-        fList.add(f1);fList.add(f2);fList.add(f3);
-        String[] f = {"Orange", "?","?"};
-        Hypothesis testHyp = new Hypothesis(f);
+        expectedOutput.add(new Hypothesis(expectedFeatureSet1));expectedOutput.add(new Hypothesis(expectedFeatureSet2));expectedOutput.add(new Hypothesis(expectedFeatureSet3));expectedOutput.add(new Hypothesis(expectedFeatureSet4));expectedOutput.add(new Hypothesis(expectedFeatureSet5));
 
-        Hypothesis testHypS = new Hypothesis(3,"S");
-        Hypothesis[] s = new Hypothesis[1];
-        s[0] = testHypS;
-        gList= sg.specialize(nData, s, fList, testHyp);
-
-        String[] f11 =  {"Mango","?","?"};
-        String[] f21 =  {"Orange","Yes","?"};
-        String[] f31 =  {"Orange","No","?"};
-        String[] f41 =  {"Orange","?","Good"};
-        String[] f51 =  {"Orange","?","Bad"};
-
-
-        ArrayList expOut = new ArrayList();
-
-        expOut.add(new Hypothesis(f11));expOut.add(new Hypothesis(f21));expOut.add(new Hypothesis(f31));expOut.add(new Hypothesis(f41));expOut.add(new Hypothesis(f51));
-
-        assertEquals(expOut +" " , gList +" ");
+        assertEquals(expectedOutput +" " , outputList +" ");
     }
 
     @Test
     public void specialize6() {
-        ArrayList<String> f1 = new ArrayList<>();
-        ArrayList<String> f2 = new ArrayList<>();
-        ArrayList<String> f3 = new ArrayList<>();
-        ArrayList<Hypothesis> gList;
-        SpecializeGBoundary sg = new SpecializeGBoundary();
+        /* Declaring the Feature sets to put all possible feature values for each features*/
+        ArrayList<String> featureSet1 = new ArrayList<>();
+        ArrayList<String> featureSet2 = new ArrayList<>();
+        ArrayList<String> featureSet3 = new ArrayList<>();
 
-        f1.add("Mango");f1.add("Orange");
-        f2.add("Yes");f2.add("No");f2.add("Maybe");
-        f3.add("OK");f3.add("Good");f3.add("Bad");
+        HashSet<Hypothesis> outputList;
+        SpecializeGBoundary specializeObject = new SpecializeGBoundary();
+
+        /* Assigning all possible feature values in their respective feature sets */
+        featureSet1.add("Mango");featureSet1.add("Orange");
+        featureSet2.add("Yes");featureSet2.add("No");featureSet2.add("Maybe");
+        featureSet3.add("OK");featureSet3.add("Good");featureSet3.add("Bad");
+
+        /* Now Creating an array list named featureList
+         which will contain all the previously defined array lists
+         containing all possible feature values */
+
+        ArrayList featureList = new ArrayList();
+        featureList.add(featureSet1);featureList.add(featureSet2);featureList.add(featureSet3);
+
+        /* Declaring a negative data which is to be compared with the generalized hypothesis */
+        String[] negativeData = {"Orange","Maybe","OK"};
+        String[] genaralisedHypothesis = {"?", "?","OK"};
+        Hypothesis testHypothesisG = new Hypothesis(genaralisedHypothesis);
+
+        Hypothesis testHypothesisS = new Hypothesis(3,"S");
+        HashSet<Hypothesis> specializedHypothesisSet = new HashSet<Hypothesis>();
+        specializedHypothesisSet.add(testHypothesisS);
+        outputList= specializeObject.specialize(negativeData, specializedHypothesisSet, featureList, testHypothesisG);
 
 
-        String[] nData = {"Orange","Maybe","OK"};
-
-        ArrayList fList = new ArrayList();
-        fList.add(f1);fList.add(f2);fList.add(f3);
-        String[] f = {"?", "?","OK"};
-        Hypothesis testHyp = new Hypothesis(f);
-
-        Hypothesis testHypS = new Hypothesis(3,"S");
-        Hypothesis[] s = new Hypothesis[1];
-        s[0] = testHypS;
-        gList= sg.specialize(nData, s, fList, testHyp);
+        /* Creating String type arrays which contains the expected output Hypotheses and
+         *  putting all these hypotheses into a HashSet called expectedOutput
+         *  We want to match this expectedOutput with the output we are getting from the Specialized boundary class*/
+        String[] expectedFeatureSet1 =  {"Mango","?","OK"};
+        String[] expectedFeatureSet2 =  {"?","Yes","OK"};
+        String[] expectedFeatureSet3 =  {"?","No","OK"};
+        String[] expectedFeatureSet4 =  {"?","?","Good"};
+        String[] expectedFeatureSet5 =  {"?","?","Bad"};
 
 
-        String[] f11 =  {"Mango","?","OK"};
-        String[] f21 =  {"?","Yes","OK"};
-        String[] f31 =  {"?","No","OK"};
-        String[] f41 =  {"?","?","Good"};
-        String[] f51 =  {"?","?","Bad"};
+        HashSet<Hypothesis> expectedOutput = new HashSet<Hypothesis>();
 
+        expectedOutput.add(new Hypothesis(expectedFeatureSet1));expectedOutput.add(new Hypothesis(expectedFeatureSet2));expectedOutput.add(new Hypothesis(expectedFeatureSet3));expectedOutput.add(new Hypothesis(expectedFeatureSet4));expectedOutput.add(new Hypothesis(expectedFeatureSet5));
 
-        ArrayList expOut = new ArrayList();
-
-        expOut.add(new Hypothesis(f11));expOut.add(new Hypothesis(f21));expOut.add(new Hypothesis(f31));expOut.add(new Hypothesis(f41));expOut.add(new Hypothesis(f51));
-
-        assertEquals(expOut +" " , gList +" ");
+        assertEquals(expectedOutput +" " , outputList +" ");
     }
+
 
 
     @Test
     public void specialize7() {
-        ArrayList<String> f1 = new ArrayList<>();
-        ArrayList<String> f2 = new ArrayList<>();
-        ArrayList<String> f3 = new ArrayList<>();
-        ArrayList<Hypothesis> gList;
-        SpecializeGBoundary sg = new SpecializeGBoundary();
 
-        f1.add("Mango");f1.add("Orange");
-        f2.add("Yes");f2.add("No");f2.add("Maybe");
-        f3.add("OK");f3.add("Good");f3.add("Bad");
+        /* Declaring the Feature sets to put all possible feature values for each features*/
+        ArrayList<String> featureSet1 = new ArrayList<>();
+        ArrayList<String> featureSet2 = new ArrayList<>();
+        ArrayList<String> featureSet3 = new ArrayList<>();
 
+        HashSet<Hypothesis> outputList;
+        SpecializeGBoundary specializeObject = new SpecializeGBoundary();
 
-        String[] nData = {"Orange","Maybe","OK"};
+        /* Assigning all possible feature values in their respective feature sets */
+        featureSet1.add("Mango");featureSet1.add("Orange");
+        featureSet2.add("Yes");featureSet2.add("No");featureSet2.add("Maybe");
+        featureSet3.add("OK");featureSet3.add("Good");featureSet3.add("Bad");
 
-        ArrayList fList = new ArrayList();
-        fList.add(f1);fList.add(f2);fList.add(f3);
-        String[] f = {"?","?","OK"};
-        Hypothesis testHyp = new Hypothesis(f);
-        String[] ths = {"Mango","Yes","OK"};
-        Hypothesis testHypS = new Hypothesis(ths);
-        Hypothesis[] s = new Hypothesis[1];
-        s[0] = testHypS;
-        gList= sg.specialize(nData, s, fList, testHyp);
+        /* Now Creating an array list named featureList
+         which will contain all the previously defined array lists
+         containing all possible feature values */
 
-        String[] f11 =  {"Mango","?","OK"};
-        String[] f21 =  {"?","Yes","OK"};
+        ArrayList featureList = new ArrayList();
+        featureList.add(featureSet1);featureList.add(featureSet2);featureList.add(featureSet3);
 
+        /* Declaring a negative data which is to be compared with the generalized hypothesis */
+        String[] negativeData = {"Orange","Maybe","OK"};
 
+        String[] genaralisedHypothesis = {"?","?","?"};
+        Hypothesis testHypothesisG = new Hypothesis(genaralisedHypothesis);
+        String[] specializedHypothesis = {"Mango","Yes","-"};
+        Hypothesis testHypothesisS = new Hypothesis(specializedHypothesis);
+        HashSet<Hypothesis> specializedHypothesisSet = new HashSet<Hypothesis>();
+        specializedHypothesisSet.add(testHypothesisS);
+        outputList= specializeObject.specialize(negativeData, specializedHypothesisSet, featureList, testHypothesisG);
 
-        ArrayList expOut = new ArrayList();
+        /* Creating String type arrays which contains the expected output Hypotheses and
+        *  putting all these hypotheses into a HashSet called expectedOutput
+        *  We want to match this expectedOutput with the output we are getting from the Specialized boundary class*/
 
-        expOut.add(new Hypothesis(f11));expOut.add(new Hypothesis(f21));
+        String[] expectedFeatureSet1 =  {"Mango","?","?"};
+        String[] expectedFeatureSet2 =  {"?","Yes","?"};
+        String[] expectedFeatureSet3 =  {"?","?","Good"};
+        String[] expectedFeatureSet4 =  {"?","?","Bad"};
 
-        assertEquals(expOut +" " , gList +" ");
-    }
-    @Test
-    public void specialize8() {
-        ArrayList<String> f1 = new ArrayList<>();
-        ArrayList<String> f2 = new ArrayList<>();
-        ArrayList<String> f3 = new ArrayList<>();
-        ArrayList<Hypothesis> gList;
-        SpecializeGBoundary sg = new SpecializeGBoundary();
+        HashSet<Hypothesis> expectedOutput = new HashSet<Hypothesis>();
 
-        f1.add("Mango");f1.add("Orange");
-        f2.add("Yes");f2.add("No");f2.add("Maybe");
-        f3.add("OK");f3.add("Good");f3.add("Bad");
+        expectedOutput.add(new Hypothesis(expectedFeatureSet1));expectedOutput.add(new Hypothesis(expectedFeatureSet2));expectedOutput.add(new Hypothesis(expectedFeatureSet3));expectedOutput.add(new Hypothesis(expectedFeatureSet4));
 
-
-        String[] nData = {"Orange","Maybe","OK"};
-
-        ArrayList fList = new ArrayList();
-        fList.add(f1);fList.add(f2);fList.add(f3);
-        String[] f = {"?","?","?"};
-        Hypothesis testHyp = new Hypothesis(f);
-        String[] ths = {"Mango","Yes","-"};
-        Hypothesis testHypS = new Hypothesis(ths);
-        Hypothesis[] s = new Hypothesis[1];
-        s[0] = testHypS;
-        gList= sg.specialize(nData, s, fList, testHyp);
-
-        String[] f11 =  {"Mango","?","?"};
-        String[] f21 =  {"?","Yes","?"};
-        String[] f31 =  {"?","?","Good"};
-        String[] f41 =  {"?","?","Bad"};
-
-
-
-        ArrayList expOut = new ArrayList();
-
-        expOut.add(new Hypothesis(f11));expOut.add(new Hypothesis(f21));expOut.add(new Hypothesis(f31));expOut.add(new Hypothesis(f41));
-
-        assertEquals(expOut +" " , gList +" ");
+        assertEquals(expectedOutput +" " , outputList +" ");
     }
 
 }
