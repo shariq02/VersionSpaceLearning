@@ -1,4 +1,7 @@
+package projectwork;
+
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.Iterator;
 
 public class SpecializeGBoundary {
@@ -6,17 +9,14 @@ public class SpecializeGBoundary {
     public static final String ANY= "?";
     public static final String NONE = "-";
 
-    public ArrayList<Hypothesis> specialize(String[] ne, Hypothesis[] s, ArrayList<ArrayList<String>> f_pssibleValues, Hypothesis k)
+    public HashSet<Hypothesis> specialize(String[] ne, HashSet<Hypothesis> s, ArrayList<ArrayList<String>> f_pssibleValues, Hypothesis k)
     {
-        ArrayList<Hypothesis> spGList = new ArrayList<>();
+        HashSet<Hypothesis> spGList = new HashSet<Hypothesis>();
         String[] base = new String[k.features.length];
         Iterator iter;
         String value;
         // IF our general hypothesis is already consistent with -ve example , no need to specialize it
-        if (k.isConsistentWithDataPoint(ne, false)) {
-            spGList.add(k);
-            return spGList;
-        }
+        if (k.isConsistentWithDataPoint(ne, false)) return spGList;
 
         /* If not then we ned to create multiple more specific hypothesis
          *  1) For each possible value of each feature the function will create a specialize hypothesis
@@ -28,7 +28,7 @@ public class SpecializeGBoundary {
          *  4) Finally if this function is able to generate any specialize hypothesis if will return with a arralist of hypotheses */
         for(int i= 0; i< ne.length ; i++)
         {
-            if (k.features[i].equals(ANY)||k.features[i].equals(ne[i]))
+            if (k.features[i].equals(ANY))
             {
                 iter = f_pssibleValues.get(i).iterator();
                 while(iter.hasNext())
@@ -42,9 +42,7 @@ public class SpecializeGBoundary {
                     base[i] = value;
                     spGList.add(new Hypothesis(base));
                 }
-
             }
-
         }
         iter = spGList.iterator();
         while(iter.hasNext())
