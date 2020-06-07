@@ -1,3 +1,4 @@
+package VersionSpaceLearning.src;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -82,7 +83,7 @@ public class SpecializeGBoundary {
                     break;
                 }
             }
-            if (counter != 0) spGList.add(h);
+            if (counter != 0) spGList.add(generalizedHyp);
         }
         return spGList;
     }
