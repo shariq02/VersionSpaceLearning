@@ -32,9 +32,12 @@ public class ReadFromCSVFile
 			fileName = Itr.next();
 			if (fileName.endsWith(".csv"))
 			{
+				System.out.println("filename" +fileName);
 				xfileLocation = fileName; //storing the file path of ".csv" file
+				System.out.println(xfileLocation);
 			}
 		}
+		System.out.println("outside while"+xfileLocation);
 		List<List<String>> records = new ArrayList<List<String>>();
 		Reader reader = Files.newBufferedReader(Paths.get(xfileLocation));
 		@SuppressWarnings("resource")
