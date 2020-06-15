@@ -10,8 +10,8 @@ public class SortingDataTest {
 
 	@Test
 	public void test() throws IOException {
-		List<List<String>> result = SortingData.sortedData();		
-		Assert.assertEquals(102, result.size());
+		List<Instance> result = SortingData.sortedData();		
+		Assert.assertEquals(10, result.size());
 	}
 
 }

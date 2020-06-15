@@ -9,8 +9,8 @@ import java.nio.file.Paths;
 * @author  Md Sharique 
 * 
 * 
-* It is not completely implemented, still need to figure out how to use is with rest of the code
-* Below method is not called in MainMethodToCallAllMethod (which is the main method for this project).
+* Below method will call the latest file in the directory,
+* At present, this code has a bug, 
 */
 
 public class FileUtilsLatestFile {
@@ -26,23 +26,25 @@ public class FileUtilsLatestFile {
 	        }
 
 	        File lastModifiedFile = files[0];
-	        for (int i = 1; i < files.length; i++) {
+	        for (int i = 1; i < files.length; i++) 
+	        {
+	        	String extns = "";
+	        	int len = files[i].getName().lastIndexOf('.');
+				if (len >= 0) { 
+					extns = files[i].getName().substring(i);
+					System.out.println("extns: "+extns);
+					}
+				if(extns.equals("csv"))
+					System.out.println("File with csv="+files[i]);
+				else
+					System.out.println("File with other ext="+files[i]);
+	        	
 	            if (lastModifiedFile.lastModified() < files[i].lastModified()) {
 	                lastModifiedFile = files[i];
 	            }
 	        }
-	        String k = lastModifiedFile.toString();
-
-	        System.out.println(lastModifiedFile);
-	        Path p = Paths.get(k);
-	        String file = p.getFileName().toString();
-	        return file;
+	        String latestFile = lastModifiedFile.toString();
+	        return latestFile;
 
 	    }
-	 
-	 public static void main(String[] args) {
-//		String result = FileUtilsLatestFile.pickLatestFileFromDownloads();
-//		System.out.println(result);
-		pickLatestFile(".\\src\\main\\resources\\datafile");
-	 }
 }

@@ -10,8 +10,8 @@ public class ReadFromCSVFileTest {
 
 	@Test
 	public void test() throws IOException {
-		List<List<String>> result = ReadFromCSVFile.csvReader();
-		Assert.assertEquals(102, result.size());
+		List<Instance> result = ReadFromCSVFile.csvReader();
+		Assert.assertEquals(10, result.size());
 	}
 
 }

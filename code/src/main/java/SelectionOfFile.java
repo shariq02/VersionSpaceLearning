@@ -1,7 +1,6 @@
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
+import java.util.Scanner;
 
 /**
 * Here, selectionOfFile() method will processed the file according to its extension
@@ -13,32 +12,39 @@ import java.util.List;
 
 public class SelectionOfFile 
 {
+	@SuppressWarnings("resource")
 	public static void selectionOfFile() throws IOException 
 	{
 		
 		ArrayList<String> extensionResults = InputFileExtension.extensionOfFile();
-		@SuppressWarnings("rawtypes")
-		Iterator i = extensionResults.iterator();
-	    while (i.hasNext()) 
+		Scanner input = new Scanner(System.in);
+		if (extensionResults.contains("csv") && extensionResults.contains("json"))
 	    {
-	         String extres = i.next().toString().trim();
-	         switch(extres) 
-	         {
-	      		case "json":
-	      		//Just to check the functionality, will be removed in next version of code
-	      			System.out.println("i m fired, json"); 
-	      			break;
-	      		case "csv":
-	      			List<List<String>> recordsList = new ArrayList<List<String>>();
-	      			recordsList = ReadFromCSVFile.csvReader();
-	      		//Just to check the functionality, will be removed in next version of code
-	      			System.out.println("recordsList............"+recordsList);
-	      			break;
-	      		default:
-	      		//Just to check the functionality, will be removed in next version of code
-	      			System.out.println("File Extension ." +extres +" is not supported as of now. " );
-	      			break;
-	         }
+	    	 System.out.println("Choose the data file (csv or json): ");
+	    	 String fileExtension = input.next();
+	    	 if (fileExtension.equals("csv"))
+	    	 {
+	    		 //To read data from CSV file
+	    		 ReadFromCSVFile.csvReader();
+	    	 }
+	    	 else if (fileExtension.equals("json"))
+	    	 {
+	    		 System.out.println("json is fired"); //Json file reader method to be added here
+	    	 }
+	    }	
+	    else if (!extensionResults.contains("csv") && extensionResults.contains("json"))
+	    {
+	    	System.out.println("only json is fired"); //Json file reader method to be added here
+
+	    }
+	    else if (extensionResults.contains("csv") && !extensionResults.contains("json"))
+	    {
+	    	ReadFromCSVFile.csvReader();
+
+	    }
+	    else 
+	    {
+	    	System.out.println("Other File formats are not supported yet.");
 	    }
 	}
 }

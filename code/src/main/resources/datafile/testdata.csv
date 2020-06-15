@@ -1,0 +1,6 @@
+﻿Number,Resturant,Meal,Day,Cost,Allegric Reaction
+Visit 1,Sam's,Breakfast,Friday,Cheap,Yes
+Visit 2,Kim's,Lunch,Friday,Expensive,No
+Visit 3,Sam's,Lunch,Saturday,Cheap,Yes
+Visit 4,Bob's,Breakfast,Sunday,Cheap,No
+Visit 5,Sam's,Breakfast,Sunday,Expensive,No

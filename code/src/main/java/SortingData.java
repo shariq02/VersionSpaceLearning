@@ -11,13 +11,15 @@ import java.util.List;
 * @author  Md Sharique 
 */
 
+//Having error, we will resolve it later, as this class is not needed as of now
+
 public class SortingData 
 {
 	
-	public static List<List<String>> sortedData() throws IOException
+	public static ArrayList<Instance> sortedData() throws IOException
 	{
-		List<List<String>> recordsList = new ArrayList<List<String>>();
-		List<List<String>> sortedRecordsList = new ArrayList<List<String>>();
+		ArrayList<Instance> recordsList = new ArrayList<>();
+		ArrayList<Instance> sortedRecordsList = new ArrayList<>();
 		recordsList = ReadFromCSVFile.csvReader();
 		for (int i = 0; i <= recordsList.size() - 1; i++)
 		{
