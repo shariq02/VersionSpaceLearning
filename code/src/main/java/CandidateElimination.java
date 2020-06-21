@@ -1,4 +1,3 @@
-package VersionSpaceLearning.VersionSpaceLearning.src;
 import java.io.*;
 import java.util.ArrayList;
 import java.util.HashSet;

@@ -1,4 +1,3 @@
-package VersionSpaceLearning.src;
 import java.util.ArrayList;
 public class Hypothesis {
 	
@@ -114,23 +113,14 @@ public class Hypothesis {
 	
 	//the negation of isMoreGeneralThan NEEDS to be used to check for specificity
 	//as inconsistencies were found in the current definition of this method
-	boolean isMoreSpecificThan(Hypothesis h) {
-		int s1=0, s2=0;
-		for(int i=0;i<this.features.length;i++) {
-			if(this.features[i].equals(NONE) || h.features[i].equals(NONE)) {
-				return false;
-			}
-			if(this.features[i].equals(ANY)) {
-				s1++;
-			}
-			if(h.features[i].equals(ANY)) {
-				s2++;
-			}
-			if(this.features[i].equals(ANY) && !h.features[i].equals(ANY)) {
-				return false;
-			}
+	boolean isMoreSpecificThan(Hypothesis h, ArrayList<Ontology> fGraphList) {
+		for (int i = 0 ; i < this.features.length ; i++ )
+		{
+			Ontology fGraph  = fGraphList.get(i);
+			Vertices currNode = fGraph.search(fGraph.getRoot(), h.features[i]);
+			if (fGraph.search(currNode, this.features[i]) == null) return false;
 		}
-		return s1<s2? true: false;
+		return true;
 	}
 	
 	/*
@@ -143,32 +133,15 @@ public class Hypothesis {
 	 *  	true if this hypothesis is more general than the one given as a parameter
 	 *  	false otherwise
 	 * */
-	boolean isMoreGeneralThan(Hypothesis h) {
-		int s1=0, s2=0;
-		boolean noneFlag = false;
-		for(int i=0;i<this.features.length;i++) {
-			if(this.features[i].equals(ANY)) {
-				s1++;
-			}
-			else if(this.features[i].equals(NONE)){
-				s1--;
-				noneFlag=true;
-			}
-			
-			if(h.features[i].equals(ANY)) {
-				s2++;
-			}
-			else if(h.features[i].equals(NONE)){
-				s2--;
-			}
-			if(!this.features[i].equals(ANY) && !this.features[i].equals(h.features[i]) && !h.features[i].equals(NONE)) {
-				return false;
-			}
-			if(!this.features[i].equals(ANY) && h.features[i].equals(ANY)) {
-				return false;
-			}
+	boolean isMoreGeneralThan(Hypothesis h, ArrayList<Ontology> fGraphList) {
+		for (int i = 0 ; i < this.features.length ; i++ )
+		{
+			Ontology fGraph  = fGraphList.get(i);
+			Vertices currNode = fGraph.search(fGraph.getRoot(), this.features[i]);
+			if (fGraph.search(currNode, h.features[i]) == null) return false;
 		}
-		return (s1>s2 && !noneFlag)? true: false;
+
+		return true;
 	}
 	
 	/*
@@ -179,8 +152,8 @@ public class Hypothesis {
 	 * 		true if the classifications are consistent
 	 * 		false if the classifications are not consistent
 	 * */
-	boolean isConsistentWithDataPoint(String[] d, boolean classification) {
-		if(classifyPoint(d) != classification) {
+	boolean isConsistentWithDataPoint(String[] d, boolean classification, ArrayList<Ontology> fGraphList) {
+		if(classifyPoint(d, fGraphList) != classification) {
 			return false;
 		}
 		return true;
@@ -191,11 +164,11 @@ public class Hypothesis {
 	 * 		true if the point was classified as positive (true)
 	 * 		false if the point was classified as negative (false)
 	 * */
-	boolean classifyPoint(String[] d) {
+	boolean classifyPoint(String[] d, ArrayList<Ontology> fGraphList ) {
 		for(int i =0; i<this.features.length;i++) {
-			if(!this.features[i].equals(d[i]) && !this.features[i].equals(ANY)) {
-				return false;
-			}
+			Ontology fGraph = fGraphList.get(i);
+			Vertices currentNode = fGraph.search(fGraph.getRoot(), this.features[i]);
+			if (fGraph.search(currentNode, d[i]) == null) return  false;
 		}
 		return true;
 	}
