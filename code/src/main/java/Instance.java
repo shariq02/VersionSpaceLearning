@@ -1,4 +1,3 @@
-package VersionSpaceLearning.VersionSpaceLearning.src;
 import java.lang.reflect.Array;
 import java.util.Arrays;
 
@@ -19,5 +18,15 @@ public class Instance {
 
     public String[] getAttribs() {
         return attribs;
+    }
+
+    public String toString()
+    {
+        String result = "< ";
+        for(String s: this.attribs) {
+            result+=s+", ";
+        }
+        result += this.label + " >";
+        return result;
     }
 }
