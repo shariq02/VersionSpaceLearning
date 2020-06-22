@@ -28,7 +28,7 @@ public class InputFileExtension
 	//Below method is used to find all the files in a given directory.
 	public static List<String> pathFile() throws IOException
 	{
-		Stream<Path> paths = Files.walk(Paths.get(".\\src\\main\\resources\\datafile"));
+		Stream<Path> paths = Files.walk(Paths.get(".\\src\\test\\resources\\datafile"));
 		
 		List<String> pathList = paths.map(p -> {
             if (Files.isDirectory(p)) {

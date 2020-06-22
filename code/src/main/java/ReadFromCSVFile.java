@@ -43,10 +43,10 @@ public class ReadFromCSVFile
 			{
 				//At present this condition is having a bug, it will work only if csv file is latest, if any other files 
 				//is there latest, it will throw an error. Working on it.
-				if (fileName.equals(FileUtilsLatestFile.pickLatestFile(".\\src\\main\\resources\\datafile")))
+				if (fileName.equals(FileUtils.pickLatestFile(".\\src\\test\\resources\\datafile")))
 				{
 					xfileLocation = fileName; //storing the file path of ".csv" file
-					System.out.println("xfileLocation "+xfileLocation);
+					//System.out.println("xfileLocation "+xfileLocation);
 				}
 				index = xfileLocation.lastIndexOf("\\");
 			}
@@ -90,7 +90,7 @@ public class ReadFromCSVFile
         System.out.println(G);
 	
 	    fileName1 = xfileLocation.substring(index + 1);
-	    MovingFileFromOneDirToAnother.filemovetoanotherfolder(".\\src\\main\\resources\\datafile\\", ".\\src\\main\\resources\\archivefile\\", fileName1);
+	    FileUtils.filemovetoanotherfolder(".\\src\\test\\resources\\datafile\\", ".\\src\\test\\resources\\archivefile\\", fileName1);
 	    return instances;
 	}
 }

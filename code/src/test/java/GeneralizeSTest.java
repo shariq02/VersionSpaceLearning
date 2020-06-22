@@ -20,16 +20,51 @@ public class GeneralizeSTest {
         featureSet1.add("Mango");featureSet1.add("Orange");
         featureSet2.add("Yes");featureSet2.add("No");featureSet2.add("Maybe");
         featureSet3.add("OK");featureSet3.add("Good");featureSet3.add("Bad");
-        ArrayList featureList = new ArrayList();
+        ArrayList<ArrayList<String>> featureList = new ArrayList<ArrayList<String>>();
         featureList.add(featureSet1);featureList.add(featureSet2);featureList.add(featureSet3);
-        String[] negativeData = {"Orange","Maybe","OK"};
         
-        Hypothesis testHypothesisG = new Hypothesis(3,"G");       //Constructor calling to create the most Generalized Hypothesis
-        Hypothesis testHypothesisS = new Hypothesis(3,"S");      //Constructor calling to create the most Specialized Hypothesis
+        String[] dataPoint = {"Mango","?","Good"};
+        
+        Hypothesis testHypothesisH = new Hypothesis(3,"H");       //Constructor calling to create the most Generalized Hypothesis
+        Hypothesis testHypothesisG = new Hypothesis(3,"G");      //Constructor calling to create the most Specialized Hypothesis
         HashSet<Hypothesis> generalizeHypothesisSet = new HashSet<Hypothesis>();
-        generalizeHypothesisSet.add(testHypothesisS);
-        outputList = generalizeObject.min_generalizations(testHypothesisG, testHypothesisS);
+        generalizeHypothesisSet.add(testHypothesisH);
+        System.out.println("generalizeHypothesisSet"+generalizeHypothesisSet);
+        outputList = generalizeObject.min_generalizations(generalizeHypothesisSet, dataPoint);
+      // outputList = generalizeObject.min_generalizations(testHypothesisS, testHypothesisH);
         		//.specialize(negativeData, generalizeHypothesisSet, featureList, testHypothesisG);
+        System.out.println("output" +outputList);
+        
+        String[] expectedFeatureSet1 =  {"Mango","?","?"};
+        String[] expectedFeatureSet2 =  {"?","Yes","?"};
+        String[] expectedFeatureSet3 =  {"?","No","?"};
+        String[] expectedFeatureSet4 =  {"?","?","Good"};
+        String[] expectedFeatureSet5 =  {"?","?","Bad"};
+
+
+        HashSet<Hypothesis> expectedOutput = new HashSet<Hypothesis>();
+
+        expectedOutput.add(new Hypothesis(expectedFeatureSet1));
+        expectedOutput.add(new Hypothesis(expectedFeatureSet2));
+        expectedOutput.add(new Hypothesis(expectedFeatureSet3));
+        expectedOutput.add(new Hypothesis(expectedFeatureSet4));
+        expectedOutput.add(new Hypothesis(expectedFeatureSet5));
+        
+        System.out.println("Expected" +expectedOutput);
+
+        assertEquals(expectedOutput +" " , outputList +" ");
+	}
+	
+	@Test
+	public void GeneralizeS()
+	{
+		
+		HashSet<Hypothesis> min_generalizations = new HashSet<Hypothesis>();
+		HashSet<Hypothesis> s = new HashSet<Hypothesis>();
+		HashSet<Hypothesis> outputList;
+		GeneralizeS generalizeObject = new GeneralizeS();
+		String[] dataPoint = {""};
+		outputList = generalizeObject.min_generalizations(s, dataPoint);
 	}
 
 }
