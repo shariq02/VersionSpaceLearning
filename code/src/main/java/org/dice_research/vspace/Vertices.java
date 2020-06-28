@@ -2,38 +2,43 @@ package org.dice_research.vspace;
 
 import java.util.HashSet;
 
-public class Vertices
-{
-    private Vertices parent;
-    private HashSet<Vertices> child;
-    private String value;
+/*
+ * Ontology Class creates the vertices for the hierarchical structure 
+ * with the help of Vertices class
+ * 
+ * @author Abhratanu Surai
+ */
 
-    public Vertices(String value)
-    {
-        this.value = value;
-        this.parent = null;
-        this.child = new HashSet<>();
-    }
+public class Vertices {
+	private Vertices parent;
+	private HashSet<Vertices> child;
+	private String value;
 
-    public Vertices getParent() {
-        return parent;
-    }
+	public Vertices(String value) {
+		this.value = value;
+		this.parent = null;
+		this.child = new HashSet<>();
+	}
 
-    public String getValue() {
-        return value;
-    }
+	public Vertices getParent() {
+		return parent;
+	}
 
-    public void setParent(Vertices parent) {
-        this.parent = parent;
-    }
+	public String getValue() {
+		return value;
+	}
 
-    public void addChild(String value) {
-        Vertices succ = new Vertices(value);
-        succ.setParent(this);
-        this.child.add(succ);
-    }
+	public void setParent(Vertices parent) {
+		this.parent = parent;
+	}
 
-    public HashSet<Vertices> getChild() {
-        return child;
-    }
+	public void addChild(String value) {
+		Vertices succ = new Vertices(value);
+		succ.setParent(this);
+		this.child.add(succ);
+	}
+
+	public HashSet<Vertices> getChild() {
+		return child;
+	}
 }
