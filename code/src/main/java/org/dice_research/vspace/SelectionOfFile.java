@@ -1,3 +1,4 @@
+package org.dice_research.vspace;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Scanner;

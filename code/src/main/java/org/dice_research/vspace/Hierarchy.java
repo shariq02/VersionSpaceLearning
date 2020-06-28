@@ -1,3 +1,5 @@
+package org.dice_research.vspace;
+
 import java.io.File;
 import java.nio.charset.Charset;
 import java.nio.file.Files;

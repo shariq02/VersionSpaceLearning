@@ -1,3 +1,5 @@
+package org.dice_research.vspace;
+
 import java.io.*;
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -15,7 +17,7 @@ public class CandidateElimination {
     private HashSet<Hypothesis> G ;
     private String filePath;
     private String ontPath;
-    private ArrayList<Ontology> featureGraph;
+    private static ArrayList<Ontology> featureGraph;
     private String mode;
     private String graphPath;
 
@@ -30,7 +32,11 @@ public class CandidateElimination {
         this.graphPath = graphPath;
     }
 
-    public void initialize(String mode, String path)
+    public CandidateElimination() {
+		// TODO Auto-generated constructor stub
+	}
+
+	public void initialize(String mode, String path)
     {
         this.mode = mode;
         this.instances = new ArrayList<>();
@@ -104,7 +110,7 @@ public class CandidateElimination {
         return G;
     }
 
-    private void makeGraph(ArrayList<HashSet<String>> fValues)
+    public static ArrayList<Ontology> makeGraph(ArrayList<HashSet<String>> fValues)
     {
         featureGraph = new ArrayList<>();
         for ( HashSet<String> hsets : fValues)
@@ -118,7 +124,7 @@ public class CandidateElimination {
 
             featureGraph.add(adg);
         }
-
+        return featureGraph;
     }
 
     private void makeGraph()

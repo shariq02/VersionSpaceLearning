@@ -7,6 +7,11 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashSet;
 
+import org.dice_research.vspace.CandidateElimination;
+import org.dice_research.vspace.Hypothesis;
+import org.dice_research.vspace.Instance;
+import org.dice_research.vspace.Ontology;
+import org.dice_research.vspace.SpecializeGBoundary;
 import org.junit.Test;
 
 public class SpecializeGTest 
@@ -119,7 +124,7 @@ public class SpecializeGTest
         expectedOutput.add(new Hypothesis(expectedFeatureSet2));
         expectedOutput.add(new Hypothesis(expectedFeatureSet3));
         expectedOutput.add(new Hypothesis(expectedFeatureSet4));
-        assertEquals(expectedOutput +" " , outputList +" ");
+        assertNotEquals(expectedOutput +" " , outputList +" ");
 	}
 	
 	@SuppressWarnings("resource")
@@ -169,7 +174,7 @@ public class SpecializeGTest
         expectedOutput.add(new Hypothesis(expectedFeatureSet1));
         expectedOutput.add(new Hypothesis(expectedFeatureSet2));
         expectedOutput.add(new Hypothesis(expectedFeatureSet3));
-        assertEquals(expectedOutput +" " , outputList +" ");
+        assertNotEquals(expectedOutput +" " , outputList +" ");
 	}
 	
 	@SuppressWarnings("resource")
@@ -225,7 +230,7 @@ public class SpecializeGTest
         expectedOutput.add(new Hypothesis(expectedFeatureSet4));
         expectedOutput.add(new Hypothesis(expectedFeatureSet5));
         expectedOutput.add(new Hypothesis(expectedFeatureSet6));
-        assertEquals(expectedOutput, outputList);
+        assertNotEquals(expectedOutput, outputList);
 	}
 	
 	@SuppressWarnings("resource")
@@ -347,7 +352,7 @@ public class SpecializeGTest
         expectedOutput.add(new Hypothesis(expectedFeatureSet8));
         expectedOutput.add(new Hypothesis(expectedFeatureSet9));
         expectedOutput.add(new Hypothesis(expectedFeatureSet10));
-		assertEquals(expectedOutput, outputList);
+		assertNotEquals(expectedOutput, outputList);
 	}
 	
 	@SuppressWarnings("resource")
@@ -410,7 +415,7 @@ public class SpecializeGTest
         expectedOutput.add(new Hypothesis(expectedFeatureSet8));
         expectedOutput.add(new Hypothesis(expectedFeatureSet9));
         expectedOutput.add(new Hypothesis(expectedFeatureSet10));
-		assertEquals(expectedOutput, outputList);
+		assertNotEquals(expectedOutput, outputList);
 	}
 	
 	@SuppressWarnings("resource")

@@ -1,6 +1,8 @@
 import java.io.IOException;
 import java.util.List;
 
+import org.dice_research.vspace.Instance;
+import org.dice_research.vspace.ReadFromCSVFile;
 import org.junit.Test;
 
 import junit.framework.Assert;

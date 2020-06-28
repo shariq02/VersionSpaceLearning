@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.dice_research.vspace.InputFileExtension;
 import org.junit.Test;
 
 import junit.framework.Assert;

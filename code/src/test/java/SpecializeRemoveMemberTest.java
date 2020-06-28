@@ -7,6 +7,11 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashSet;
 
+import org.dice_research.vspace.CandidateElimination;
+import org.dice_research.vspace.Hypothesis;
+import org.dice_research.vspace.Instance;
+import org.dice_research.vspace.Ontology;
+import org.dice_research.vspace.SpecializeGBoundary;
 import org.junit.Test;
 
 public class SpecializeRemoveMemberTest {
