@@ -1,3 +1,7 @@
+package org.dice_research.vspace;
+
+import static org.junit.Assert.assertEquals;
+
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
@@ -5,10 +9,6 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashSet;
 
-import org.dice_research.vspace.CandidateElimination;
-import org.dice_research.vspace.Hypothesis;
-import org.dice_research.vspace.Instance;
-import org.dice_research.vspace.Ontology;
 import org.junit.Test;
 
 public class MakeGraphTest {
@@ -45,9 +45,10 @@ public class MakeGraphTest {
             }
 	    }	
 		ArrayList<Ontology> output;
+		ArrayList<Ontology> expected = new ArrayList<>();
 		CandidateElimination candidateObject = new CandidateElimination();
 		output = candidateObject.makeGraph(featureValues);
-		System.out.println(output);
+		assertEquals(expected, output);
 	}
 
 }
