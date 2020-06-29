@@ -7,42 +7,41 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashSet;
 
+import org.junit.Before;
 import org.junit.jupiter.api.Test;
 import java.io.*;
 class Test1 {
-//CandidateElimination ceh=new CandidateElimination("Hierarchical", "/Users/parthsharma/eclipse-workspace1/DSS/VSL new/src/hierarchicalInstance.csv","/Users/parthsharma/eclipse-workspace1/DSS/VSL new/src/dataOntology.csv");
-
+	
+	CandidateElimination ceh=new CandidateElimination("Hierarchical", "/Users/parthsharma/Desktop/DataTest2.csv",
+            "/Users/parthsharma/Desktop/OntologyTest2.csv");
+	int datalen = 0;
+	HashSet<Hypothesis> S = new HashSet<>();
+    HashSet<Hypothesis> G = new HashSet<>();
+    ArrayList<Instance> instances = new ArrayList<>();
+    ArrayList<HashSet<String>> featureValues = new ArrayList<>();
+    GeneralizeS gs=new GeneralizeS();
 	@SuppressWarnings("resource")
-	@Test
-	public void test() throws IOException{
-		CandidateElimination ceh=new CandidateElimination("Hierarchical", "/Users/parthsharma/eclipse-workspace1/DSS/VSL new/src/hierarchicalInstance1.csv","/Users/parthsharma/eclipse-workspace1/DSS/VSL new/src/dataOntology.csv");
-		GeneralizeS gs=new GeneralizeS();
+	@Before
+	public void init() throws IOException
+	{	
 		BufferedReader br;
 		
-		ArrayList<HashSet<String>> featureValues = new ArrayList<>();
-		br=new BufferedReader(new FileReader(new File("/Users/parthsharma/eclipse-workspace1/DSS/VSL new/src/hierarchicalInstance1.csv")));
+		
+		br=new BufferedReader(new FileReader(new File("/Users/parthsharma/Desktop/DataTest2.csv")));
 		
 		String line="";
-		ArrayList<Instance> instances = new ArrayList<>();
+		
 		String[] datas;
-		int datalen = 0;
-		HashSet<Hypothesis> S = new HashSet<>();
-        HashSet<Hypothesis> G = new HashSet<>();
-        HashSet<Hypothesis> expOut = new HashSet<>();
-
-        
+		               
 		while ((line = br.readLine()) != null) {
-            datas = line.split(",");
-           //for(String d: datas)
-            //System.out.println(d);
-            
+            datas = line.split(",");            
             instances.add(new Instance(datas));
             if (datalen == 0)
             {
                 datalen = datas.length -1;
-           //   System.out.println(datalen+"datalen");
                 S.add(new Hypothesis(datalen,"S"));
                 G.add(new Hypothesis(datalen,"G"));
+                
                 for (int i = 1; i <= datalen; i++)
                 {
                     featureValues.add(new HashSet<>());
@@ -59,6 +58,13 @@ class Test1 {
 		}
 		
 		ceh.datalen=datalen;
+	}
+	@SuppressWarnings("resource")
+	@Test
+	public void testGeneralizeS() throws IOException{
+		init();
+		HashSet<Hypothesis> expOut = new HashSet<>();
+        HashSet<Hypothesis> Output = new HashSet<>();  
             ceh.makeGraph();
             for(Instance inst: instances)
             {
@@ -66,20 +72,20 @@ class Test1 {
                 if(inst.getLabel().equals("Yes"))
                 {
                     S = gs.min_generalizations(S, inst.getAttribs(),ceh.featureGraph, G);
+                    for(Hypothesis hyp:S)
+                    	Output.add(hyp);
                 }
             }
             
 	    
-		String[] out1= {"Tomato","Circle"};
-		//String[] out2= {}
+		String[] out2= {"Shapes","Small","?"};
+		String[] out1= {"Rhombus","Small","Green"};
 		expOut.add(new Hypothesis(out1));
-		//expOut.add(new Hypothesis(out2));
+		expOut.add(new Hypothesis(out2));
 		
-		assertEquals(expOut,S);
-		fail("Not yet implemented");
-		
+		assertEquals(expOut,Output);		
 	}
-
+	
 }
 
 
