@@ -1,3 +1,9 @@
+/*The test case DataTest2.csv contains different instances for shapes and their features respectively.
+ * OntologyTest2.csv contains the Hierarchical Data for the instances in DataTest2.csv
+ * This is to test the output of the min_generalisations method and compare it with the expected output.
+ * Also, the removeMember method inside the GeneralizeS class is being tested here using the same test cases. 
+ * @author Parth Sharma
+ */
 import static org.junit.Assert.assertEquals;
 import static org.junit.jupiter.api.Assertions.*;
 import java.io.BufferedReader;
@@ -84,6 +90,26 @@ class Test1 {
 		expOut.add(new Hypothesis(out2));
 		
 		assertEquals(expOut,Output);		
+	}
+	
+	@Test
+	void testRemMem() throws IOException {
+		init();
+		HashSet<Hypothesis> expOut = new HashSet<>();
+		GeneralizeS genS = new GeneralizeS();
+		ceh.makeGraph();
+		for (Instance inst : instances) {
+			System.out.println(inst.toString());
+			if (inst.getLabel().equals("Yes")) {
+				S = gs.min_generalizations(S, inst.getAttribs(), ceh.featureGraph, G);
+			} else {
+				S = genS.removeMember(S, inst.getAttribs(), ceh.featureGraph);
+			}
+		}
+		String[] out2 = { "Shapes", "Small", "?" };
+
+		expOut.add(new Hypothesis(out2));
+		assertEquals(expOut, S);
 	}
 	
 }
