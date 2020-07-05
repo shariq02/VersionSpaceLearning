@@ -1,5 +1,5 @@
-Right-Triangle;Large ;Red;No;Negative
-Rhombus;Small;Green;Yes;Positive
-Isoceles-Triangle;Small;Blue;Yes;Positive
-Rectangle;Big;Red;No;Negative
-Square;Small;Magenta;Yes;Positive
+Right-Triangle,Large,Red,No
+Rhombus,Small,Green,Yes
+Isoceles-Triangle,Small,Blue,Yes
+Rectangle,Large,Red,No
+Square,Small,Magenta,Yes
