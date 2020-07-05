@@ -1,5 +1,5 @@
-E-class,Moderate,Normal,High,No
-S-class,Expensive,High,High,No
-Skoda,Moderate,Normal,Moderate,Yes
 Ford,Affordable,Low,Low,Yes
 BMW,Affordable,Normal,Low,Yes
+Eclass,Moderate,Normal,High,Yes
+Sclass,Expensive,High,High,No
+Skoda,Moderate,Normal,Moderate,No

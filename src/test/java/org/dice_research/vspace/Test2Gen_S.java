@@ -1,3 +1,5 @@
+package org.dice_research.vspace;
+
 /*The test case DataTest1.csv contains different instances for cars and their features respectively.
  * OntologyTest1.csv contains the Hierarchical Data for the instances in DataTest1.csv
  * This is to test the output of the min_generalisations method and compare it with the expected output.
