@@ -6,7 +6,7 @@ import org.junit.runners.Suite.SuiteClasses;
 
 @RunWith(Suite.class)
 @SuiteClasses({ HypothesisTest.class, InputFileExtensionTest.class, InputFilePathTest.class, 
-    MakeGraphTest.class, ReadFromCSVFileTest.class, SpecializeGTest.class, 
+    MakeGraphTest.class, ReadFromcsvFile.class, SpecializeGTest.class, 
     SpecializeRemoveMemberTest.class })
 public class AllTests {
 

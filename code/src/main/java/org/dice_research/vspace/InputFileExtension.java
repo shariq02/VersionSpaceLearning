@@ -46,9 +46,9 @@ public class InputFileExtension {
     List<String> pathOfFile = new ArrayList<String>();
     pathOfFile = pathFile();
     ListIterator<String> itr = pathOfFile.listIterator();
-	ArrayList<String> extensionResult = new ArrayList<String>();
-	String extension = "";
-    while(itr.hasNext()){
+    ArrayList<String> extensionResult = new ArrayList<String>();
+    String extension = "";
+    while (itr.hasNext()) {
       extension = FilenameUtils.getExtension(itr.next());
       extensionResult.add(extension);
     }
@@ -60,12 +60,12 @@ public class InputFileExtension {
   
   public static String csvFilePath() throws IOException {
     List<String> pathOfFile = new ArrayList<String>();
-	String xfileLocation = "";
-	String fileName = "";
-	pathOfFile = InputFileExtension.pathFile();
-	ListIterator<String> itr = pathOfFile.listIterator();	
-	while(itr.hasNext()){ 
-		fileName = itr.next();
+    String xfileLocation = "";
+    String fileName = "";
+    pathOfFile = InputFileExtension.pathFile();
+    ListIterator<String> itr = pathOfFile.listIterator();
+    while (itr.hasNext()) { 
+      fileName = itr.next();
       if (fileName.endsWith(".csv")) {
         xfileLocation = fileName;
       }

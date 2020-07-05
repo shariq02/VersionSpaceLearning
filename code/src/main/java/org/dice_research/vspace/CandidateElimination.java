@@ -95,10 +95,11 @@ public class CandidateElimination {
                 S = genS.removeMember(S, inst.getAttribs(), featureGraph);
                 G = spclG.specialize(inst.getAttribs(), S, featureGraph, G);
             }
-            System.out.println("S boundary :");
-            System.out.println(getS());
-            System.out.println("G boundary :");
-            System.out.println(getG());
+            System.out.println("S boundary is:");
+            System.out.println(this.S);
+            System.out.println("G boundary is:");
+            System.out.println(this.G);
+            System.out.println("#######################################################################");
         }
     }
 
