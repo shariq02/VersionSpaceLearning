@@ -29,11 +29,11 @@ public class Hypothesis {
 	 * hypotheses.
 	 * accepts the number of features (int l) and the value "S" (for most specific)
 	 * or "G" (for most general).*/
-	public Hypothesis(int l, String type) {
+	public Hypothesis(int length, String type) {
 		String def = Hypothesis.ANY;
         if(type.equals("S")) def = Hypothesis.NONE;
-        this.features = new String[l];
-        for (int i = 0 ; i < l ; i++){
+        this.features = new String[length];
+        for (int i = 0 ; i < length ; i++){
             this.features[i] = def;
         }
 	}
@@ -104,17 +104,11 @@ public class Hypothesis {
 	
 	/*
 	 * checks whether this hypothesis is more specific than another hypothesis given as a parameter
-	 * it scans the features for "ANY" values, and if the number of "ANY" values of this hypothesis
-	 * is less than the number of "ANY" values of the hypothesis given as a parameter then this
-	 * hypothesis is more specific
-	 * 
 	 *  returns:
 	 *  	true if this hypothesis is more specific than the one given as a parameter
 	 *  	false otherwise
 	 * */
 	
-	//the negation of isMoreGeneralThan NEEDS to be used to check for specificity
-	//as inconsistencies were found in the current definition of this method
 	boolean isMoreSpecificThan(Hypothesis h, ArrayList<Ontology> fGraphList) {
 		for (int i = 0 ; i < this.features.length ; i++ )
 		{
@@ -127,10 +121,6 @@ public class Hypothesis {
 	
 	/*
 	 * checks whether this hypothesis is more general than the one given as a parameter
-	 * it scans the features for "ANY" values, and if the number of "ANY" values of this hypothesis
-	 * is greater than the number of "ANY" values of the hypothesis given as a parameter then this
-	 * hypothesis is more general
-	 * 
 	 *  returns:
 	 *  	true if this hypothesis is more general than the one given as a parameter
 	 *  	false otherwise
