@@ -26,7 +26,7 @@ public class SelectionOfFile
 	    	 if (fileExtension.equals("csv"))
 	    	 {
 	    		 //To read data from CSV file
-	    		 ReadFromCSVFile.csvReader();
+	    		 ReadFromcsvFile.csvReader();
 	    	 }
 	    	 else if (fileExtension.equals("json"))
 	    	 {
@@ -40,7 +40,7 @@ public class SelectionOfFile
 	    }
 	    else if (extensionResults.contains("csv") && !extensionResults.contains("json"))
 	    {
-	    	ReadFromCSVFile.csvReader();
+	    	ReadFromcsvFile.csvReader();
 
 	    }
 	    else 
