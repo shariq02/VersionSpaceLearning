@@ -13,3 +13,4 @@ buildNumber.properties
 .code/.settings
 .code/.classpath
 .code/.settings/org.eclipse.jdt.core.prefs
+.project
