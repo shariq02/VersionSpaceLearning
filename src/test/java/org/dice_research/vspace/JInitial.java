@@ -1,3 +1,5 @@
+package org.dice_research.vspace;
+
 import static org.junit.Assert.*;
 
 import org.junit.Test;
