@@ -1,7 +1,6 @@
-package org.dice_research.vspace;
 import java.util.ArrayList;
 import java.util.HashSet;
-import java.util.Iterator;
+
 public class GeneralizeS {
 
 
@@ -26,8 +25,9 @@ public class GeneralizeS {
 	 *  to hypothesis feature values (might need to further change the hypothesis
 	 *class to omit this change)
 	 */
-	HashSet<Hypothesis> min_generalizations(HashSet<Hypothesis> s, String[] dataPoint, ArrayList<Ontology> fGraphList) {
+	HashSet<Hypothesis> min_generalizations(HashSet<Hypothesis> s, String[] dataPoint, ArrayList<Ontology> fGraphList, HashSet<Hypothesis> g ) {
 		HashSet<Hypothesis> res = new HashSet<Hypothesis>();
+		HashSet<Hypothesis> finalRes = new HashSet<Hypothesis>();
 		Hypothesis newH = null;
 		Vertices parent;
 		for (Hypothesis sp : s)
@@ -44,7 +44,18 @@ public class GeneralizeS {
 					if (newH != sp) res.add(newH);
 				}
 			}
-		return res;
+		for (Hypothesis hyp_s: res)
+		{
+			for ( Hypothesis hyp_g : g)
+			{
+				if (hyp_s.isMoreSpecificThan(hyp_g, fGraphList))
+				{
+					finalRes.add(hyp_s);
+					break;
+				}
+			}
+		}
+		return finalRes;
 	}
 
 
@@ -57,6 +68,44 @@ public class GeneralizeS {
 			if (s.isConsistentWithDataPoint(data, false, f_pssibleValues)) spGList.add(s);
 		}
 		return spGList;
+	}
+
+	public HashSet<Hypothesis> compareG_Remove(HashSet<Hypothesis> S, HashSet<Hypothesis> G, ArrayList<Ontology> featureGraph)
+	{
+		HashSet<Hypothesis> finalRes = new HashSet<Hypothesis>();
+		for (Hypothesis hyp_s: S)
+		{
+			for ( Hypothesis hyp_g : G)
+			{
+				if (hyp_s.isMoreSpecificThan(hyp_g, featureGraph))
+				{
+					finalRes.add(hyp_s);
+					break;
+				}
+			}
+		}
+		return finalRes;
+	}
+
+	public HashSet<Hypothesis> removeGeneric(HashSet<Hypothesis> S, ArrayList<Ontology> featureGraph )
+	{
+		HashSet<Hypothesis> spGListFinal= new HashSet<Hypothesis>();
+		for (Hypothesis hyps : S)
+		{
+			int counter = 0;
+			for (Hypothesis hypotheses : S)
+			{
+				if(hyps == hypotheses) continue;
+				else if (hyps.isMoreGeneralThan(hypotheses, featureGraph))
+				{
+					counter ++;
+					break;
+				}
+			}
+			if (counter==0) spGListFinal.add(hyps);
+		}
+
+		return spGListFinal;
 	}
 
 }
