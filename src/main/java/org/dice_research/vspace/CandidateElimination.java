@@ -20,7 +20,7 @@ public class CandidateElimination {
     private HashSet<Hypothesis> merged_S ;
     private HashSet<Hypothesis> merged_G ;
     private HashSet<Hypothesis> placeholder;
-    private HashSet<Hypothesis> placeholder_S;
+    private HashSet<Hypothesis> placeholder_S;                                                   //few variables added for merging
     private HashSet<Hypothesis> placeholder_G;
     private String filePath;
     private String ontPath;
