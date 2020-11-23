@@ -1,3 +1,4 @@
+package org.dice_research.vspace;
 import java.io.*;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -21,13 +22,19 @@ public class CandidateElimination {
     private HashSet<Hypothesis> merged_G ;
     private HashSet<Hypothesis> placeholder;
     private HashSet<Hypothesis> placeholder_S;                                                   //few variables added for merging
-    private HashSet<Hypothesis> placeholder_G;
+    private HashSet<Hypothesis> placeholder_G; 
     private String filePath;
     private String ontPath;
     private ArrayList<Ontology> featureGraph;
     private String mode;
     private String graphPath;
     private Boolean inconsistancy;
+    public ArrayList<HashSet<Hypothesis>> newVS_S;
+    public ArrayList<HashSet<Hypothesis>> newVS_G;
+    public HashSet<Hypothesis> tempS;
+    public HashSet<Hypothesis> tempG;
+    private int consistencyCounter;
+    public int counterVS;
 
     public CandidateElimination(String mode, String path)
     {
@@ -56,9 +63,15 @@ public class CandidateElimination {
         this.merged_G = new HashSet<>();
         this.placeholder = new HashSet<>();
         this.placeholder_S = new HashSet<>();
-        this.placeholder_G = new HashSet<>();       
+        this.placeholder_G = new HashSet<>();
         this.filePath = path;
         this.inconsistancy = false;
+        this.newVS_S=new ArrayList<HashSet<Hypothesis>>();
+        this.newVS_G=new ArrayList<HashSet<Hypothesis>>();
+        this.consistencyCounter=0;
+        this.counterVS=0;
+        this.tempS=new HashSet<Hypothesis>();
+        this.tempG=new HashSet<Hypothesis>();
     }
 
 
@@ -120,7 +133,7 @@ public class CandidateElimination {
                 inst_G = spclG.specialize(inst.getAttribs(), inst_S, featureGraph, inst_G, "ce");
             }
             mergeVersionSpace(inst);
-            System.out.println("S boundary is:");
+            System.out.println("S Boundary is:");
             System.out.println(this.S);
             System.out.println("G boundary is:");
             System.out.println(this.G);
@@ -128,6 +141,9 @@ public class CandidateElimination {
             inst_S.clear();
             inst_G.clear();
         }
+        newVS_S.add(this.S); //Adding the version Spaces to Array List
+    	newVS_G.add(this.G);
+        compareIrregInstances(this.S,this.G,featureGraph);
     }
 
     public HashSet<Hypothesis> getS() {
@@ -237,5 +253,66 @@ public class CandidateElimination {
         merged_S.clear();
         merged_G.clear();
     }
+    
+    public void compareIrregInstances(HashSet<Hypothesis> S, HashSet<Hypothesis> G,ArrayList<Ontology> featureGraph)
+    {	
+    	for(Instance inst: instances)
+    	{
+    		if(inst.getLabel().equals("Yes"))
+    		{
+    			
+    			Hypothesis hypInst=new Hypothesis(inst.getAttribs()); //Convert instance to Hypothesis
+    			for(HashSet<Hypothesis> vs: newVS_S)
+    			{	
+    				
+	    				if(vs.contains(hypInst))
+	    				consistencyCounter++;
+	    				for(Hypothesis specific: vs)
+	    				{
+	    					if(hypInst.isMoreSpecificThan(specific,featureGraph)||specific.classifyPoint(inst.getAttribs(), featureGraph))
+	    					{
+	    						consistencyCounter++;
+	    					}
+	    				}
+    			}	
+    			for(HashSet<Hypothesis> vs: newVS_G)
+    			{
+	   	    			if(vs.contains(hypInst))
+	    				consistencyCounter++;
+	   	    			for(Hypothesis general:vs)
+	   	    			{
+	   	    				if(hypInst.isMoreSpecificThan(general,featureGraph)||general.classifyPoint(inst.getAttribs(), featureGraph))
+	   	    				{
+	   	    					consistencyCounter++;
+	   	    				}
+	   	    			}
+	    		}
+    			
+    			
+    			if(consistencyCounter==0)
+	    		{
+	    			createNewVersionSpace(inst); //create new Version Space and add it to array list	
+	    		}
+    		}
+    	}
+    }
+    
+    public void createNewVersionSpace(Instance inst)
+    {
+    	Hypothesis hypS=new Hypothesis(inst.getAttribs());
+    	Hypothesis hypG=new Hypothesis(inst.getLength(),"G");
+    	tempS.add(hypS);
+    	tempG.add(hypG);
+    	newVS_S.add(tempS);
+    	newVS_G.add(tempG);
+    	System.out.println(newVS_S);
+    	tempS.remove(hypS);
+    	tempG.remove(hypG);
+    	
+    	
+    }
+    
+    
+    
 
 }
