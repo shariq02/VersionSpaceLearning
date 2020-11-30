@@ -1,0 +1,9 @@
+small,cube,Yes
+small,octahedron,Yes
+small,sphere,No
+large,octahedron,No
+small,pyramid,Yes
+large,cube,Yes
+large,sphere,No
+large,pyramid,No
+large,triangle,Yes
