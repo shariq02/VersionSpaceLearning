@@ -1,6 +1,4 @@
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.Iterator;
+import java.util.*;
 
 public class SpecializeGBoundary {
 
@@ -125,6 +123,8 @@ public class SpecializeGBoundary {
         HashSet<Hypothesis> spGListFinal= new HashSet<Hypothesis>();
         for (Hypothesis hyps : G)
         {
+            List<String> featureList = Arrays.asList(hyps.features);   //new addition to remove hypothesis which contains <-,?> 
+            if(featureList.contains("-")) continue;
             int counter = 0;
             for (Hypothesis hypotheses : G)
             {
