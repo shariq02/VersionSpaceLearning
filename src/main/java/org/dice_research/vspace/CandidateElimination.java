@@ -265,7 +265,8 @@ public class CandidateElimination {
         if (inconsistancy)
         {
             consistentG = spclG.removeSpecific(consistentG,featureGraph);
-            VS_hSet.add(new VersionSpace(genS.removeGeneric(inst_S,featureGraph), spclG.removeMember(genS.removeGeneric(inst_S,featureGraph),consistentG,featureGraph)));
+              //removeMember function used
+            VS_hSet.add(new VersionSpace(genS.removeGeneric(inst_S,featureGraph), spclG.removeMember(genS.removeGeneric(inst_S,featureGraph),consistentG,featureGraph))); 
         }
 
     }
