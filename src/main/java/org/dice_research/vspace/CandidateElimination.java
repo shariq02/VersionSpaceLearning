@@ -1,4 +1,3 @@
-package org.dice_research.vspace;
 import java.io.*;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -23,7 +22,7 @@ public class CandidateElimination {
     private HashSet<Hypothesis> placeholder;
     private HashSet<Hypothesis> placeholder_S;
     private HashSet<Hypothesis> placeholder_G;
-    private HashSet<Hypothesis> masterG ;
+    private HashSet<Hypothesis> consistentG ;
     private HashSet<Hypothesis> placeholder_incnstc;
     private String filePath;
     private String ontPath;
@@ -62,7 +61,7 @@ public class CandidateElimination {
         this.placeholder_S = new HashSet<>();
         this.placeholder_G = new HashSet<>();
         this.placeholder_incnstc = new HashSet<>();
-        this.masterG = new HashSet<>();
+        this.consistentG = new HashSet<>();
         this.VS_hSet = new ArrayList<>();
         this.filePath = path;
         this.inconsistancy = false;
@@ -81,7 +80,7 @@ public class CandidateElimination {
                 datalen = datas.length -1;
                 S.add(new Hypothesis(datalen,"S"));
                 G.add(new Hypothesis(datalen,"G"));
-                masterG.add(new Hypothesis(datalen,"G"));
+                consistentG.add(new Hypothesis(datalen,"G"));
                 VS_hSet.add(new VersionSpace(S,G));
                 for (int i = 1; i <= datalen; i++)
                 {
@@ -120,7 +119,7 @@ public class CandidateElimination {
             }
             else
             {
-                masterG = spclG.specialize(inst.getAttribs(), inst_S, featureGraph, masterG, "ce");
+                consistentG = spclG.specialize(inst.getAttribs(), inst_S, featureGraph, consistentG, "ce");
                 inst_S = genS.removeMember(inst_S, inst.getAttribs(), featureGraph);
                 inst_G = spclG.specialize(inst.getAttribs(), inst_S, featureGraph, inst_G, "ce");
 
@@ -136,6 +135,8 @@ public class CandidateElimination {
                 System.out.println("#######################################################################");
                 indx ++;
             }
+            //System.out.println("Master G is:");
+            //System.out.println(consistentG);
             inst_S.clear();
             inst_G.clear();
         }
@@ -202,6 +203,8 @@ public class CandidateElimination {
     }
 
     private void mergeVersionSpace(Instance inst) {
+        int versionSpaceLength = VS_hSet.size();
+        int counter = 1;
         for (VersionSpace vs : VS_hSet) {
             this.S = vs.getS();
             this.G = vs.getG();
@@ -249,16 +252,20 @@ public class CandidateElimination {
                 vs.setS(genS.removeGeneric(S, featureGraph));
                 vs.setG(spclG.removeSpecific(G,featureGraph));
                 inconsistancy = false;
-                break;
+                if (inst.getLabel().equals("Yes") || counter == versionSpaceLength)
+                {
+                    counter++;
+                    break;
+                }
             }
             inconsistancy = true;
-
+            counter++;
         }
 
         if (inconsistancy)
         {
-            masterG = spclG.removeSpecific(masterG,featureGraph);
-            VS_hSet.add(new VersionSpace(genS.removeGeneric(inst_S,featureGraph), masterG));
+            consistentG = spclG.removeSpecific(consistentG,featureGraph);
+            VS_hSet.add(new VersionSpace(genS.removeGeneric(inst_S,featureGraph), spclG.removeMember(genS.removeGeneric(inst_S,featureGraph),consistentG,featureGraph)));
         }
 
     }
