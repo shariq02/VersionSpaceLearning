@@ -2,41 +2,28 @@ package org.dice_research.SparqlUseCase;
 
 import java.util.Map;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
 import java.util.List;
 
 public class SPARQLQueryParser{
-	//original query
-	String query;
-	
-	
-	static Map<String, String> prefixes;
-	static List<Statement> statements;
-	static List<Triple> triples;
-	List<String> reservedWords = Arrays.asList(new String[] { "SELECT", "WHERE", "GROUP", "HAVING", "ORDER",
-			"LIMIT", "OFFSET", "VALUES", "OPTIONAL", "MINUS", "GRAPH", "SERVICE", "FILTER", "BIND" });
-	//j is used for renaming purposes
-	int j=0;
+	//list of queries that will be read
+	static List<Query> queries;
 	
 	public SPARQLQueryParser() {
-		prefixes  = new HashMap<String, String>();
-		statements = new ArrayList<Statement>();
-		triples = new ArrayList<Triple>();
+		queries = new ArrayList<Query>();
 	}
 	
-	public String removePrefixes(String query){
+	public String removePrefixes(Query query){
 		String toReturn = "";
 		//remove all newlines and unnecessary whitespace from the query
-		query = query.replaceAll("\\s{2,}", " ").trim();
-		String[] tmp = query.split(" ");
+		query.setQuery(query.getQuery().replaceAll("\\s{2,}", " ").trim());
+		String[] tmp = query.getQuery().split(" ");
 		int i=0;
 		while(i<tmp.length){
 			//if this holds we know that the next two words will be the prefix variable and uri
 			if(tmp[i].toLowerCase().equals("prefix")){
 				String v = tmp[i+1].substring(0,tmp[i+1].length()-1);
 				String u = tmp[i+2].substring(1,tmp[i+2].length()-1);
-				prefixes.put(v,u);
+				query.prefixes.put(v,u);
 				i+=3;
 			}
 			else{
@@ -47,14 +34,13 @@ public class SPARQLQueryParser{
 				break;
 			}
 		}
-		
 		return toReturn;
 	}
 	
 	//parses the given query
-	public void parse(String query){
-		this.query = removePrefixes(query);
-		String[] tmp = this.query.trim().split(" ");
+	public void parse(Query query){
+		query.setQuery(removePrefixes(query));
+		String[] tmp = query.getQuery().trim().split(" ");
 
 		boolean searchForTriples = false;
 		for(int i=0;i<tmp.length;i++) {
@@ -67,20 +53,20 @@ public class SPARQLQueryParser{
 						s.putVariable(tmp[i], "*");
 					}
 					else if(tmp[i].startsWith("?")){
-						s.putVariable(tmp[i], "?v"+j);
-						j++;
+						s.putVariable(tmp[i], "?v"+query.j);
+						query.j++;
 					}
 					i++;
 				}
-				statements.add(s);
+				query.statements.add(s);
 			}
 			
 			if(searchForTriples) {
 				if(tmp[i].equals("}")) {
 					//nothing, empty brackets
 				}
-				else if(tmp[i+3].equals(".") || tmp[i+3].equals("}") || tmp[i+3].equals("{") || reservedWords.contains(tmp[i+3])) {
-					triples.add(new Triple(tmp[i], tmp[i + 1], tmp[i + 2]));
+				else if(tmp[i+3].equals(".") || tmp[i+3].equals("}") || tmp[i+3].equals("{") || Query.reservedWords.contains(tmp[i+3])) {
+					query.triples.add(new Triple(tmp[i], tmp[i + 1], tmp[i + 2]));
 					i += 3;
 				}
 				else if(tmp[i].equals("{")) {
@@ -96,7 +82,7 @@ public class SPARQLQueryParser{
 				
 			}
 			else {
-				if(tmp[i].equals("{") && !reservedWords.contains(tmp[i+1])) {
+				if(tmp[i].equals("{") && !Query.reservedWords.contains(tmp[i+1])) {
 					searchForTriples = true;
 				}
 				
@@ -105,43 +91,6 @@ public class SPARQLQueryParser{
 				}
 			}
 		}
-	}
-	
-	
-	public boolean renameVariables(List<Statement> statements, List<Triple> triples) {
-		for(Statement s: statements) {
-			Map<String, String> vars;
-			if(s.getType().equals("SELECT")) {
-				vars = s.getVariables();
-				for(Triple t: triples) {
-					if(vars.containsKey(t.s)) {
-						t.s = vars.get(t.s);
-					} else if(t.s.startsWith("?")) {
-						s.putVariable(t.s, "?v"+j);
-						t.s = "?v"+j;
-						j++;
-					}
-					if(vars.containsKey(t.p)) {
-						t.p = vars.get(t.p);
-					} else if(t.p.startsWith("?")) {
-						s.putVariable(t.p, "?v"+j);
-						t.p = "?v"+j;
-						j++;
-					}
-					if(vars.containsKey(t.o)) {
-						t.o = vars.get(t.o);
-					} else if(t.o.startsWith("?")) {
-						s.putVariable(t.o, "?v"+j);
-						t.o = "?v"+j;
-						j++;
-					}
-				}
-			}
-			else {
-				return false;
-			}
-		}
-		return true;
 	}
 	
 	public static void main(String[] args) {
@@ -226,34 +175,47 @@ public class SPARQLQueryParser{
 				"      { ?resource foaf:depiction ?image }\r\n" + 
 				"  }";
 		
-		p.parse(query3);
-		System.out.println(p.query);
+		queries.add(new Query(query1));
+		queries.add(new Query(query2));
+		queries.add(new Query(query3));
+		int i = 1;
+		p.parse(queries.get(i));
+		System.out.println(queries.get(i).getQuery());
 		System.out.println();
 		System.out.println("--- prefixes ---");
-		for(Map.Entry<String, String> e: prefixes.entrySet()) {
+		for(Map.Entry<String, String> e: queries.get(i).prefixes.entrySet()) {
 			System.out.println(e.getKey() + " -> " + e.getValue());
 		}
 		System.out.println();
 		System.out.println("--- variables ---");
-		for(Statement s: statements) {
+		for(Statement s: queries.get(i).statements) {
 			System.out.println(s);
 		}
 		System.out.println();
 		System.out.println("--- triples before renaming ---");
-		for(Triple t: triples) {
+		for(Triple t: queries.get(i).triples) {
 			System.out.println(t);
 		}
 		System.out.println();
 		System.out.println("--- triples after renaming ---");
-		System.out.println("Renamed: " + p.renameVariables(statements, triples));
-		for(Triple t: triples) {
+		System.out.println("Renamed: " + queries.get(i).renameVariables(queries.get(i).statements, queries.get(i).triples));
+		for(Triple t: queries.get(i).triples) {
 			System.out.println(t);
 		}
 		
 		System.out.println();
 		System.out.println("--- variables after extra variables renamed ---");
-		for(Statement s: statements) {
+		for(Statement s: queries.get(i).statements) {
 			System.out.println(s);
+		}
+		
+		
+		queries.get(i).replacePrefixVariables();
+		System.out.println();
+		System.out.println();
+		System.out.println("--- triples after prefix replacement ---");
+		for(Triple t: queries.get(i).triples) {
+			System.out.println(t);
 		}
 	}
 }
