@@ -94,7 +94,6 @@ public class Query {
 	}
 	
 	public boolean isMoreGeneralThan(Query q) {
-		
 		System.out.println(triples.size()+" "+q.triples.size());
 		int nrOfTriples = q.triples.size();
 		int nrOfFoundTriples = 0;
@@ -188,7 +187,32 @@ public class Query {
 		else {
 			return false;
 		}
+	}
+	
+	public boolean isMoreGeneralThan2(Query q, int start, List<Integer> toAvoid) {
+		List<Integer> triplesToAvoid = new ArrayList<Integer>();
+		if(toAvoid != null) {
+			triplesToAvoid.addAll(toAvoid);
+			System.out.println("toAvoid: "+triplesToAvoid.size()+"  "+"q.triples.size: "+q.triples.size()+"  "+"start: "+start);
+			if(toAvoid.size() == q.triples.size() && start == q.triples.size()) {
+				return true;
+			}
+		}
+
+		Triple t = q.triples.get(start);
+		for(Triple k: triples) {
+			if(triplesToAvoid.contains(triples.indexOf(k))) {
+				continue;
+			}
+			
+			if(k.isMoreGeneralThan(t)) {
+				triplesToAvoid.add(triples.indexOf(k));
+				return isMoreGeneralThan2(q, start+1, triplesToAvoid);
+			}
+		}
 		
+		//no triple in triples is more general than triple t from query q
+		return false;
 	}
 
 }

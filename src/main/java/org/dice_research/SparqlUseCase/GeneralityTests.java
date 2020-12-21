@@ -50,6 +50,7 @@ public class GeneralityTests {
 		System.out.println();
 		
 		System.out.println(queries[1].isMoreGeneralThan(queries[0]));
+		System.out.println(queries[1].isMoreGeneralThan2(queries[0],0,null));
 	}
 
 }
