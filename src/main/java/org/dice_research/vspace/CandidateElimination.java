@@ -4,6 +4,14 @@ import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
 
+/**
+ * @author Susmita Goswami, Parth sharma
+ */
+
+/**
+ * variable declaration
+ */
+
 public class CandidateElimination {
     private ArrayList<Instance> instances;
     private ArrayList<HashSet<String>> featureValues;
@@ -31,6 +39,10 @@ public class CandidateElimination {
     private String graphPath;
     private Boolean inconsistancy;
     private ArrayList<VersionSpace> VS_hSet;
+    
+    /**
+     * Constructor initialization and it does the candidate elimination on basis of the mode selection.
+     */
 
     public CandidateElimination(String mode, String path)
     {
@@ -42,7 +54,9 @@ public class CandidateElimination {
         initialize(mode,path);
         this.graphPath = graphPath;
     }
-
+/**
+ *  Variable initialization
+ */
     public void initialize(String mode, String path)
     {
         this.mode = mode;
@@ -67,7 +81,13 @@ public class CandidateElimination {
         this.inconsistancy = false;
     }
 
-
+/**
+ * This piece of function performs candidate elimination. It reads and splits the data from file.
+ * Initially, after reading the first instance the S and G boundaries are initialized and datalength is fixed. 
+ * In addition to this, here we have maintained a variable consistent G to maintain all the hypotheses for G. 
+ * It will help us to compare G boundaries later. Initial S and G hypotheses gets added to Version Space set.
+ * From data a unique value set for all features are prepared.
+ */
     public void performElimication()
     {
         try {
@@ -100,11 +120,28 @@ public class CandidateElimination {
         IOException e) {
             e.printStackTrace();
         }
+        /**
+         * It checks the mode and makes the corresponding feature graph.
+         */
         if (this.mode.equals("Normal")) makeGraph(featureValues);
         else makeGraph();
+        
+        /**
+         * placeholder_S and placeholder_G used to store temporary hypothesis
+         */
 
         placeholder_S.add(new Hypothesis(datalen,"S"));
         placeholder_G.add(new Hypothesis(datalen,"G"));
+        
+        /**
+         * inst_S and inst_G is single instance specific S and G boundary
+         * If the label is positive, the algorithm does generalization else it does specialization.
+         * In addition to this, in consistent G it holds the G boundary that is consistent with all negative instances the algorithm has seen till now
+         * Then it calls the mergeVersionSpace function
+         * and after merging or failed merging 
+         * the algorithm prints the number of version space it has found and the corresponding S and G boundary.
+         * Lastly, inst_S and inst_G get cleared for reuse.
+         */
 
         for(Instance inst: instances)
         {
@@ -149,6 +186,10 @@ public class CandidateElimination {
     public HashSet<Hypothesis> getG() {
         return G;
     }
+    
+    /**
+     * Graph formation on depending upon the mode.
+     */
 
     private void makeGraph(ArrayList<HashSet<String>> fValues)
     {
@@ -201,6 +242,13 @@ public class CandidateElimination {
         for(Ontology graphs : featureGraph) graphs.addStopper(graphs.getRoot());
 
     }
+    /**
+     * After a single instance coming,the algorithm tries to merge instance specific s and g boundaries with one of the existing versionspaces.
+     * If merging is successful,the existing version space is modified and the algorithm continues with next instance. If the merge failed i.e.
+     * produces null s and g boundary then a new version space is created.
+     * s boundary for the new version space is the instances and the G boundary is the consistent G.
+     * 
+     */
 
     private void mergeVersionSpace(Instance inst) {
         int versionSpaceLength = VS_hSet.size();
@@ -235,7 +283,12 @@ public class CandidateElimination {
                     }
                 }
             }
-
+            
+/**
+ * merged_G and merged_S finally are formed by removing more specific and more general hypothesis.
+ * S and G boundaries are formed from the merged_S and merged_G by removing hypotheses which are more general or more specific than itself and it does it by using 
+ * the following functions.
+ */
             for (Hypothesis mergedH : merged_G) placeholder_incnstc.add(mergedH);
             merged_G = spclG.removeMember(S, merged_G, featureGraph);
             merged_G = spclG.removeMember(inst_S, merged_G, featureGraph);
@@ -248,11 +301,14 @@ public class CandidateElimination {
             placeholder_incnstc.clear();
             merged_S.clear();
             merged_G.clear();
+        /**
+         * S and G boundary of Version space can get empty if the algorithm fails to cover the instance hence the inconsistency flag is set.
+         */
             if (!(S.isEmpty() || G.isEmpty())) {
                 vs.setS(genS.removeGeneric(S, featureGraph));
                 vs.setG(spclG.removeSpecific(G,featureGraph));
                 inconsistancy = false;
-                if (inst.getLabel().equals("Yes") || counter == versionSpaceLength)
+                if (inst.getLabel().equals("Yes") || counter == versionSpaceLength) //loop continues only for negative label
                 {
                     counter++;
                     break;
@@ -261,14 +317,21 @@ public class CandidateElimination {
             inconsistancy = true;
             counter++;
         }
+        
+        /**
+         * If the inconsistency flag is set then the new version space has been created.
+         */
 
         if (inconsistancy)
         {
             consistentG = spclG.removeSpecific(consistentG,featureGraph);
-              //removeMember function used
+        /**
+         * Hypothesis are removed from g boundary which is not consistent with s boundary.
+         */
             VS_hSet.add(new VersionSpace(genS.removeGeneric(inst_S,featureGraph), spclG.removeMember(genS.removeGeneric(inst_S,featureGraph),consistentG,featureGraph))); 
         }
 
     }
 
 }
+
