@@ -44,6 +44,7 @@ public class GeneralizeS {
 					if (newH != sp) res.add(newH);
 				}
 			}
+		
 		for (Hypothesis hyp_s: res)
 		{
 			for ( Hypothesis hyp_g : g)
@@ -58,7 +59,9 @@ public class GeneralizeS {
 		return finalRes;
 	}
 
-
+	/**
+	 * This function removes the hypotheses from specialized set of hypothesis which is inconsistent with data.
+	 */
 	public HashSet<Hypothesis> removeMember(HashSet<Hypothesis> S, String[] data, ArrayList<Ontology> f_pssibleValues)
 	{
 		HashSet<Hypothesis> spGList = new HashSet<Hypothesis>();
@@ -69,6 +72,11 @@ public class GeneralizeS {
 		}
 		return spGList;
 	}
+	
+	/**
+	 * This function checks whether hypothesis in s boundary is more specific than at least one of the g boundary hypothesis or not. If not it
+	 * removes it from s boundary. 
+	 */
 
 	public HashSet<Hypothesis> compareG_Remove(HashSet<Hypothesis> S, HashSet<Hypothesis> G, ArrayList<Ontology> featureGraph)
 	{
@@ -87,6 +95,10 @@ public class GeneralizeS {
 		return finalRes;
 	}
 
+	/**
+	 * This function checks whether hypothesis in s boundary is more general than the other hypothesis in s boundary. If that is the case, this
+	 * block of function removes that general hypothesis from the s boundary.
+	 */
 	public HashSet<Hypothesis> removeGeneric(HashSet<Hypothesis> S, ArrayList<Ontology> featureGraph )
 	{
 		HashSet<Hypothesis> spGListFinal= new HashSet<Hypothesis>();
