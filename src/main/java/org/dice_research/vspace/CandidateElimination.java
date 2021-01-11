@@ -34,7 +34,7 @@ public class CandidateElimination {
     private HashSet<Hypothesis> placeholder_incnstc;
     private String filePath;
     private String ontPath;
-    private ArrayList<Ontology> featureGraph;
+    public ArrayList<Ontology> featureGraph;
     private String mode;
     private String graphPath;
     private Boolean inconsistancy;
@@ -188,10 +188,11 @@ public class CandidateElimination {
     }
     
     /**
-     * Graph formation on depending upon the mode.
+     * Graph formation on depending upon the mode. Recent changes make graph functions made public.
+     * featureGraph variable made public.
      */
 
-    private void makeGraph(ArrayList<HashSet<String>> fValues)
+    public void makeGraph(ArrayList<HashSet<String>> fValues)
     {
         featureGraph = new ArrayList<>();
         for ( HashSet<String> hsets : fValues)
@@ -208,7 +209,7 @@ public class CandidateElimination {
 
     }
 
-    private void makeGraph()
+    public void makeGraph()
     {
         featureGraph = new ArrayList<>();
         for (int i = 1; i <= this.datalen; i++)
