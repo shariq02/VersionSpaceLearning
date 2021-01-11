@@ -1,9 +1,11 @@
 package org.dice_research.SparqlUseCase;
 
+import java.util.HashMap;
+
 public class GeneralityTests {
 	
 	public static void main(String[] args) {
-		Query[] queries = new Query[2];
+		Query[] queries = new Query[3];
 		SPARQLQueryParser p = new SPARQLQueryParser();
 		
 		String q1 = "PREFIX foaf:  <http://xmlns.com/foaf/0.1/>\r\n" + 
@@ -17,25 +19,30 @@ public class GeneralityTests {
 				"WHERE {\r\n" + 
 				"    ?person foaf:name ?name .\r\n" + 
 				"}";
-		String q3 = "PREFIX foaf: <http://xmlns.com/foaf/0.1/>\r\n" + 
+		String q3 = "PREFIX foaf: <http://xmlns.com/foaf/0.1/> \r\n" + 
 				"SELECT ?craft ?homepage\r\n" + 
 				"{\r\n" + 
-				"  ?craft foaf:name ?craft .\r\n" + 
-				"  ?craft foaf:homepage ?homepage .\r\n" + 
-				"  ?person foaf:mbox ?email .\r\n" + 
+				"?craft foaf:homepage ?homepage .\r\n" + 
+				"?person foaf:mbox ?email .\r\n" + 
+				"?craft foaf:name ?craft .\r\n" + 
+				"}";
+		String q4 = "PREFIX foaf: <http://xmlns.com/foaf/0.1/> \r\n" + 
+				"SELECT ?craft ?homepage\r\n" + 
+				"{\r\n" + 
+				"?craft ANY_IRI ?craft .\r\n" + 
+				"?craft foaf:homepage ?homepage .\r\n" + 
 				"}";
 		
-		queries[0]= new Query(q1);
-		queries[1]= new Query(q3);
+		queries[0]= new Query(q3);
+		queries[1]= new Query(q4);
+		
+		
+		
 		
 		p.parse(queries[0]);
 		p.parse(queries[1]);
+		queries[1].triples.add(0, new Triple("ANY_VARIABLE", "ANY_IRI", "ANY_ANY"));
 		
-		queries[0].renameVariables(queries[0].statements, queries[0].triples);
-		queries[1].renameVariables(queries[1].statements, queries[1].triples);
-		
-		queries[0].replacePrefixVariables();
-		queries[1].replacePrefixVariables();
 		
 		System.out.println("--- 1st query triples ---");
 		for(Triple t: queries[0].triples) {
@@ -49,8 +56,7 @@ public class GeneralityTests {
 		}
 		System.out.println();
 		
-		System.out.println(queries[1].isMoreGeneralThan(queries[0]));
-		System.out.println(queries[1].isMoreGeneralThan2(queries[0],0,null));
+		System.out.println(queries[1].isMoreGeneralThan(queries[0],0, new HashMap<Integer, Integer>()));
 	}
 
 }
