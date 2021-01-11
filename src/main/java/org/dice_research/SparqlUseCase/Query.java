@@ -2,13 +2,14 @@ package org.dice_research.SparqlUseCase;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.BitSet;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 public class Query {
 	//original query
-	String query;
+	String query = null;
 	
 	Map<String, String> prefixes;
 	List<Statement> statements;
@@ -18,15 +19,66 @@ public class Query {
 	static List<String> reservedWords = Arrays.asList(new String[] { "SELECT", "WHERE", "GROUP", "HAVING", "ORDER",
 			"LIMIT", "OFFSET", "VALUES", "OPTIONAL", "MINUS", "GRAPH", "SERVICE", "FILTER", "BIND" });
 	
+	public Query() {
+		this.prefixes  = new HashMap<String, String>();
+		this.statements = new ArrayList<Statement>();
+		this.triples = new ArrayList<Triple>();
+	}
+	
 	public Query(String q) {
 		this.query = q;
-		prefixes  = new HashMap<String, String>();
-		statements = new ArrayList<Statement>();
-		triples = new ArrayList<Triple>();
+		this.prefixes  = new HashMap<String, String>();
+		this.statements = new ArrayList<Statement>();
+		this.triples = new ArrayList<Triple>();
+	}
+	
+	//copy constructor
+	public Query(Query q) {
+		this.query = q.getQuery();
+		this.prefixes  = new HashMap<String, String>();
+		this.statements = new ArrayList<Statement>();
+		this.triples = new ArrayList<Triple>();
+		
+		for(Map.Entry<String, String> entry: q.getPrefixes().entrySet()) {
+			this.prefixes.put(entry.getKey(), entry.getValue());
+		}
+		for(Statement s: q.getStatements()) {
+			Statement temp = null;
+			if(s.getType().equals("SELECT")) {
+				temp = new SelectStatement();
+				for(Map.Entry<String, String> var: s.getVariables().entrySet()) {
+					temp.getVariables().put(var.getKey(), var.getValue());
+				}
+				this.statements.add(temp);
+			}
+		}
+		for(Triple t: q.getTriples()) {
+			this.triples.add(new Triple(t.getSubject(), t.getPredicate(), t.getObject()));
+		}
 	}
 	
 	public String getQuery() {
 		return query;
+	}
+	
+	public List<Triple> getTriples(){
+		return this.triples;
+	}
+	
+	public List<Triple> getCopyOfTriples(){
+		List<Triple> temp = new ArrayList<Triple>();
+		for(Triple t: this.triples) {
+			temp.add(new Triple(t.getSubject(), t.getPredicate(), t.getObject()));
+		}
+		return temp;
+	}
+	
+	public List<Statement> getStatements(){
+		return this.statements;
+	}
+	
+	public Map<String, String> getPrefixes(){
+		return this.prefixes;
 	}
 	
 	public void setQuery(String s) {
@@ -93,125 +145,70 @@ public class Query {
 		}
 	}
 	
-	public boolean isMoreGeneralThan(Query q) {
-		System.out.println(triples.size()+" "+q.triples.size());
-		int nrOfTriples = q.triples.size();
-		int nrOfFoundTriples = 0;
-		
-		for(Triple x: q.triples) {
-			boolean check1 = false;
-			boolean check2 = false;
-			boolean check3 = false;
-			String xSType = x.s.getType();
-			String xPType = x.p.getType();
-			String xOType = x.o.getType();
-			
-			for(Triple y: triples) {
-				String ySType = y.s.getType();
-				String yPType = y.p.getType();
-				String yOType = y.o.getType();
-				
-				//sub
-				if(xSType.equals(TripleValue.VARIABLE) && !xSType.equals(ySType)) {
-					continue;
-				}
-				else if(xSType.equals(TripleValue.VARIABLE) && xSType.equals(ySType)) {
-					check1 = true;
-				}
-				
-				if(xSType.equals(TripleValue.IRI) && !xSType.equals(ySType)) {
-					continue;
-				}
-				else if(xSType.equals(TripleValue.IRI) && xSType.equals(ySType) && !x.s.toString().equals(y.s.toString())) {
-					continue;
-				}
-				else if(xSType.equals(TripleValue.IRI) && xSType.equals(ySType) && x.s.toString().equals(y.s.toString())) {
-					check1 = true;
-				}
-				
-				//pred
-				if(xPType.equals(TripleValue.VARIABLE) && !xPType.equals(yPType)) {
-					continue;
-				}
-				else if(xPType.equals(TripleValue.VARIABLE) && xPType.equals(yPType)) {
-					check2 = true;
-				}
-				
-				if(xPType.equals(TripleValue.IRI) && !xPType.equals(yPType)) {
-					continue;
-				}
-				else if(xPType.equals(TripleValue.IRI) && xPType.equals(yPType) && !x.p.toString().equals(y.p.toString())) {
-					continue;
-				}
-				else if(xPType.equals(TripleValue.IRI) && xPType.equals(yPType) && x.p.toString().equals(y.p.toString())) {
-					check2 = true;
-				}
-				
-				//obj
-				if(xOType.equals(TripleValue.VARIABLE) && !xOType.equals(yOType)) {
-					continue;
-				}
-				else if(xOType.equals(TripleValue.VARIABLE) && xOType.equals(yOType)) {
-					check3 = true;
-				}
-				
-				if(xOType.equals(TripleValue.IRI) && !xOType.equals(yOType)) {
-					continue;
-				}
-				else if(xOType.equals(TripleValue.IRI) && xOType.equals(yOType) && !x.o.toString().equals(y.o.toString())) {
-					continue;
-				}
-				else if(xOType.equals(TripleValue.IRI) && xOType.equals(yOType) && x.o.toString().equals(y.o.toString())) {
-					check3 = true;
-				}
-				
-				if(xOType.equals(TripleValue.LITERAL) && !xOType.equals(yOType)) {
-					continue;
-				}
-				else if(xOType.equals(TripleValue.LITERAL) && xOType.equals(yOType) && !x.o.toString().equals(y.o.toString())) {
-					continue;
-				}
-				else if(xOType.equals(TripleValue.LITERAL) && xOType.equals(yOType) && x.o.toString().equals(y.o.toString())) {
-					check3 = true;
-				}
-			}
-			System.out.println(check1+" "+check2+" "+check3);
-			if(check1 && check2 && check3) {
-				nrOfFoundTriples++;
-			}
-		}
-		
-		if(nrOfFoundTriples == nrOfTriples) {
-			return true;
-		}
-		else {
-			return false;
-		}
-	}
-	
-	public boolean isMoreGeneralThan2(Query q, int start, List<Integer> toAvoid) {
-		List<Integer> triplesToAvoid = new ArrayList<Integer>();
+	public boolean isMoreGeneralThan2(Query q, int start, BitSet toAvoid) {
+		//Map<Integer, Integer> assignedTriples = new HashMap<>();
+		BitSet triplesToAvoid = new BitSet(q.triples.size());
 		if(toAvoid != null) {
-			triplesToAvoid.addAll(toAvoid);
-			System.out.println("toAvoid: "+triplesToAvoid.size()+"  "+"q.triples.size: "+q.triples.size()+"  "+"start: "+start);
-			if(toAvoid.size() == q.triples.size() && start == q.triples.size()) {
+			triplesToAvoid = (BitSet)toAvoid.clone();
+			System.out.println("toAvoid: "+triplesToAvoid.cardinality()+"  "+"q.triples.size: "+q.triples.size()+"  "+"start: "+start);
+			if(triplesToAvoid.cardinality() == q.triples.size() && start == q.triples.size()) {
 				return true;
 			}
 		}
 
 		Triple t = q.triples.get(start);
-		for(Triple k: triples) {
-			if(triplesToAvoid.contains(triples.indexOf(k))) {
+		for(int k=0; k<this.triples.size();k++) {
+			if(triplesToAvoid.get(k)) {
 				continue;
 			}
 			
-			if(k.isMoreGeneralThan(t)) {
-				triplesToAvoid.add(triples.indexOf(k));
+			if(this.triples.get(k).isMoreGeneralThan(t)) {
+				triplesToAvoid.set(k);
 				return isMoreGeneralThan2(q, start+1, triplesToAvoid);
 			}
 		}
+		//no triple in this.triples is more general than triple t from query q
+		return false;
+	}
+	
+	public boolean isMoreGeneralThan(Query q, int start, Map<Integer, Integer> assignedTriples) {
+		if(assignedTriples != null) {
+			//System.out.println("assignedTriples size: "+assignedTriples.size()+"  "+"q.triples.size: "+q.triples.size()+"  "+"start: "+start);
+			if(assignedTriples.size() == q.triples.size()) {
+				System.out.println("---");
+				for(Map.Entry<Integer, Integer> entry: assignedTriples.entrySet()) {
+					System.out.println(this.triples.get(entry.getKey()) +"  >=  "+ q.triples.get(entry.getValue()));
+				}
+				return true;
+			}
+			if(assignedTriples.containsValue(start)) {
+				return isMoreGeneralThan(q, start+1, assignedTriples);
+			}
+		}
+
+		Triple t = q.triples.get(start);
+		for(int k=0; k<this.triples.size();k++) {
+			if(assignedTriples.containsKey(k)) {
+				continue;
+			}
+			if(this.triples.get(k).isMoreGeneralThan(t)) {
+				assignedTriples.put(k, start);
+				System.out.println("1: "+this.triples.get(k)+"  >=  "+t);
+				return isMoreGeneralThan(q, start+1, assignedTriples);
+			} 
+		}
 		
-		//no triple in triples is more general than triple t from query q
+		for(Map.Entry<Integer, Integer> entry: assignedTriples.entrySet()) {
+			if(this.triples.get(entry.getKey()).isMoreGeneralThan(t)) {
+				//holds the index of the triple in q whose match has been reassigned,
+				//thus we need to find another match for it
+				int temp = entry.getValue();
+				assignedTriples.put(entry.getKey(), start);
+				System.out.println("2: "+this.triples.get(entry.getKey())+"  >=  "+t+" temp:"+temp);
+				return isMoreGeneralThan(q, temp, assignedTriples);
+			}
+		}
+		//no triple in this.triples is more general than triple t from query q
 		return false;
 	}
 

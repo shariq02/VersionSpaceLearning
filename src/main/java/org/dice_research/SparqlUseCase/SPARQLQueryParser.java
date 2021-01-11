@@ -1,6 +1,5 @@
 package org.dice_research.SparqlUseCase;
 
-import java.util.Map;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -91,131 +90,134 @@ public class SPARQLQueryParser{
 				}
 			}
 		}
+		
+		query.renameVariables(query.statements, query.triples);
+		query.replacePrefixVariables();
 	}
 	
-	public static void main(String[] args) {
-		SPARQLQueryParser p = new SPARQLQueryParser();
-		String query1 = "PREFIX  db:   <http://dbpedia.org/ontology/>\r\n" + 
-				"PREFIX  foaf: <http://xmlns.com/foaf/0.1/>\r\n" + 
-				"PREFIX  property: <http://dbpedia.org/property/>\r\n" + 
-				"\r\n" + 
-				"SELECT  *\r\n" + 
-				"WHERE\r\n" + 
-				"  { ?musician <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> db:MusicalArtist .\r\n" + 
-				"    ?musician db:activeYearsStartYear ?activeyearsstartyear .\r\n" + 
-				"    ?musician db:associatedBand ?associatedband .\r\n" + 
-				"    ?musician db:birthPlace ?birthplace .\r\n" + 
-				"    ?musician db:genre ?genre .\r\n" + 
-				"    ?musician db:recordLabel ?recordlable .\r\n" + 
-				"    ?musician property:voiceType ?voicetype .\r\n" + 
-				"    ?artist property:artist ?musician .\r\n" + 
-				"    ?starring db:starring ?musician .\r\n" + 
-				"    ?voice db:voice ?musician .\r\n" + 
-				"    ?writer db:writer ?musician\r\n" + 
-				"  }";
-		String query2 = "PREFIX  :     <http://dbpedia.org/resource/>\r\n" + 
-				"PREFIX  dc:   <http://purl.org/dc/elements/1.1/>\r\n" + 
-				"PREFIX  dbpedia2: <http://dbpedia.org/property/>\r\n" + 
-				"PREFIX  dbpedia-owl: <http://dbpedia.org/ontology/>\r\n" + 
-				"PREFIX  foaf: <http://xmlns.com/foaf/0.1/>\r\n" + 
-				"PREFIX  yago: <http://dbpedia.org/class/yago/>\r\n" + 
-				"PREFIX  rdfs: <http://www.w3.org/2000/01/rdf-schema#>\r\n" + 
-				"PREFIX  dbo:  <http://dbpedia.org/property/>\r\n" + 
-				"PREFIX  dbpedia: <http://dbpedia.org/>\r\n" + 
-				"PREFIX  xsd:  <http://www.w3.org/2001/XMLSchema#>\r\n" + 
-				"PREFIX  owl:  <http://www.w3.org/2002/07/owl#>\r\n" + 
-				"PREFIX  rdf:  <http://www.w3.org/1999/02/22-rdf-syntax-ns#>\r\n" + 
-				"PREFIX  skos: <http://www.w3.org/2004/02/skos/core#>\r\n" + 
-				"\r\n" + 
-				"SELECT  ?x ?f\r\n" + 
-				"WHERE\r\n" + 
-				"  { ?x rdf:type dbpedia-owl:Mountain .\r\n" + 
-				"    ?x dbpedia2:firstAscent ?f .\r\n" + 
-				"    ?y rdf:type dbpedia-owl:Person .\r\n" + 
-				"    ?y dbpedia2:birthDate ?b\r\n" + 
-				"    FILTER ( ?y = :Tim_Berners-Lee )\r\n" + 
-				"    FILTER ( ?f <= xsd:dateTime(?b) )\r\n" + 
-				"  }";
-		String query3 = "PREFIX  rdfs: <http://www.w3.org/2000/01/rdf-schema#>\r\n" + 
-				"PREFIX  foaf: <http://xmlns.com/foaf/0.1/>\r\n" + 
-				"PREFIX  dbp:  <http://dbpedia.org/property/>\r\n" + 
-				"PREFIX  rdf:  <http://www.w3.org/1999/02/22-rdf-syntax-ns#>\r\n" + 
-				"\r\n" + 
-				"SELECT DISTINCT  ?resource ?uri ?wtitle ?comment ?image\r\n" + 
-				"WHERE\r\n" + 
-				"  { {   { ?resource foaf:page <http://en.wikipedia.org/wiki/Sellafield> }\r\n" + 
-				"      UNION\r\n" + 
-				"        { ?resource foaf:page <http://en.wikipedia.org/wiki/AMEC> }\r\n" + 
-				"      UNION\r\n" + 
-				"        { ?resource foaf:page <http://en.wikipedia.org/wiki/Construction> }\r\n" + 
-				"      UNION\r\n" + 
-				"        { ?resource foaf:page <http://en.wikipedia.org/wiki/Page> }\r\n" + 
-				"      UNION\r\n" + 
-				"        { ?resource foaf:page <http://en.wikipedia.org/wiki/Position_(team_sports)> }\r\n" + 
-				"      UNION\r\n" + 
-				"        { ?resource foaf:page <http://en.wikipedia.org/wiki/Engineering> }\r\n" + 
-				"      UNION\r\n" + 
-				"        { ?resource foaf:page <http://en.wikipedia.org/wiki/Liquid_(The_Rasmus_song)> }\r\n" + 
-				"      UNION\r\n" + 
-				"        { ?resource foaf:page <http://en.wikipedia.org/wiki/Scouting> }\r\n" + 
-				"      UNION\r\n" + 
-				"        { ?resource foaf:page <http://en.wikipedia.org/wiki/Hell_of_a_Tester> }\r\n" + 
-				"      UNION\r\n" + 
-				"        { ?resource foaf:page <http://en.wikipedia.org/wiki/Scout_Leader> }\r\n" + 
-				"    }\r\n" + 
-				"    ?resource foaf:page ?uri .\r\n" + 
-				"    ?resource rdfs:comment ?wtitle\r\n" + 
-				"    FILTER langMatches(lang(?wtitle), \"en\")\r\n" +
-				"    ?test rdfs:something ?test2" +
-				"    OPTIONAL\r\n" + 
-				"      { ?resource rdfs:comment ?comment\r\n" + 
-				"        FILTER langMatches(lang(?comment), \"en\")\r\n" + 
-				"      }\r\n" + 
-				"    OPTIONAL\r\n" + 
-				"      { ?resource foaf:depiction ?image }\r\n" + 
-				"  }";
-		
-		queries.add(new Query(query1));
-		queries.add(new Query(query2));
-		queries.add(new Query(query3));
-		int i = 1;
-		p.parse(queries.get(i));
-		System.out.println(queries.get(i).getQuery());
-		System.out.println();
-		System.out.println("--- prefixes ---");
-		for(Map.Entry<String, String> e: queries.get(i).prefixes.entrySet()) {
-			System.out.println(e.getKey() + " -> " + e.getValue());
-		}
-		System.out.println();
-		System.out.println("--- variables ---");
-		for(Statement s: queries.get(i).statements) {
-			System.out.println(s);
-		}
-		System.out.println();
-		System.out.println("--- triples before renaming ---");
-		for(Triple t: queries.get(i).triples) {
-			System.out.println(t);
-		}
-		System.out.println();
-		System.out.println("--- triples after renaming ---");
-		System.out.println("Renamed: " + queries.get(i).renameVariables(queries.get(i).statements, queries.get(i).triples));
-		for(Triple t: queries.get(i).triples) {
-			System.out.println(t);
-		}
-		
-		System.out.println();
-		System.out.println("--- variables after extra variables renamed ---");
-		for(Statement s: queries.get(i).statements) {
-			System.out.println(s);
-		}
-		
-		
-		queries.get(i).replacePrefixVariables();
-		System.out.println();
-		System.out.println();
-		System.out.println("--- triples after prefix replacement ---");
-		for(Triple t: queries.get(i).triples) {
-			System.out.println(t);
-		}
-	}
+//	public static void main(String[] args) {
+//		SPARQLQueryParser p = new SPARQLQueryParser();
+//		String query1 = "PREFIX  db:   <http://dbpedia.org/ontology/>\r\n" + 
+//				"PREFIX  foaf: <http://xmlns.com/foaf/0.1/>\r\n" + 
+//				"PREFIX  property: <http://dbpedia.org/property/>\r\n" + 
+//				"\r\n" + 
+//				"SELECT  *\r\n" + 
+//				"WHERE\r\n" + 
+//				"  { ?musician <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> db:MusicalArtist .\r\n" + 
+//				"    ?musician db:activeYearsStartYear ?activeyearsstartyear .\r\n" + 
+//				"    ?musician db:associatedBand ?associatedband .\r\n" + 
+//				"    ?musician db:birthPlace ?birthplace .\r\n" + 
+//				"    ?musician db:genre ?genre .\r\n" + 
+//				"    ?musician db:recordLabel ?recordlable .\r\n" + 
+//				"    ?musician property:voiceType ?voicetype .\r\n" + 
+//				"    ?artist property:artist ?musician .\r\n" + 
+//				"    ?starring db:starring ?musician .\r\n" + 
+//				"    ?voice db:voice ?musician .\r\n" + 
+//				"    ?writer db:writer ?musician\r\n" + 
+//				"  }";
+//		String query2 = "PREFIX  :     <http://dbpedia.org/resource/>\r\n" + 
+//				"PREFIX  dc:   <http://purl.org/dc/elements/1.1/>\r\n" + 
+//				"PREFIX  dbpedia2: <http://dbpedia.org/property/>\r\n" + 
+//				"PREFIX  dbpedia-owl: <http://dbpedia.org/ontology/>\r\n" + 
+//				"PREFIX  foaf: <http://xmlns.com/foaf/0.1/>\r\n" + 
+//				"PREFIX  yago: <http://dbpedia.org/class/yago/>\r\n" + 
+//				"PREFIX  rdfs: <http://www.w3.org/2000/01/rdf-schema#>\r\n" + 
+//				"PREFIX  dbo:  <http://dbpedia.org/property/>\r\n" + 
+//				"PREFIX  dbpedia: <http://dbpedia.org/>\r\n" + 
+//				"PREFIX  xsd:  <http://www.w3.org/2001/XMLSchema#>\r\n" + 
+//				"PREFIX  owl:  <http://www.w3.org/2002/07/owl#>\r\n" + 
+//				"PREFIX  rdf:  <http://www.w3.org/1999/02/22-rdf-syntax-ns#>\r\n" + 
+//				"PREFIX  skos: <http://www.w3.org/2004/02/skos/core#>\r\n" + 
+//				"\r\n" + 
+//				"SELECT  ?x ?f\r\n" + 
+//				"WHERE\r\n" + 
+//				"  { ?x rdf:type dbpedia-owl:Mountain .\r\n" + 
+//				"    ?x dbpedia2:firstAscent ?f .\r\n" + 
+//				"    ?y rdf:type dbpedia-owl:Person .\r\n" + 
+//				"    ?y dbpedia2:birthDate ?b\r\n" + 
+//				"    FILTER ( ?y = :Tim_Berners-Lee )\r\n" + 
+//				"    FILTER ( ?f <= xsd:dateTime(?b) )\r\n" + 
+//				"  }";
+//		String query3 = "PREFIX  rdfs: <http://www.w3.org/2000/01/rdf-schema#>\r\n" + 
+//				"PREFIX  foaf: <http://xmlns.com/foaf/0.1/>\r\n" + 
+//				"PREFIX  dbp:  <http://dbpedia.org/property/>\r\n" + 
+//				"PREFIX  rdf:  <http://www.w3.org/1999/02/22-rdf-syntax-ns#>\r\n" + 
+//				"\r\n" + 
+//				"SELECT DISTINCT  ?resource ?uri ?wtitle ?comment ?image\r\n" + 
+//				"WHERE\r\n" + 
+//				"  { {   { ?resource foaf:page <http://en.wikipedia.org/wiki/Sellafield> }\r\n" + 
+//				"      UNION\r\n" + 
+//				"        { ?resource foaf:page <http://en.wikipedia.org/wiki/AMEC> }\r\n" + 
+//				"      UNION\r\n" + 
+//				"        { ?resource foaf:page <http://en.wikipedia.org/wiki/Construction> }\r\n" + 
+//				"      UNION\r\n" + 
+//				"        { ?resource foaf:page <http://en.wikipedia.org/wiki/Page> }\r\n" + 
+//				"      UNION\r\n" + 
+//				"        { ?resource foaf:page <http://en.wikipedia.org/wiki/Position_(team_sports)> }\r\n" + 
+//				"      UNION\r\n" + 
+//				"        { ?resource foaf:page <http://en.wikipedia.org/wiki/Engineering> }\r\n" + 
+//				"      UNION\r\n" + 
+//				"        { ?resource foaf:page <http://en.wikipedia.org/wiki/Liquid_(The_Rasmus_song)> }\r\n" + 
+//				"      UNION\r\n" + 
+//				"        { ?resource foaf:page <http://en.wikipedia.org/wiki/Scouting> }\r\n" + 
+//				"      UNION\r\n" + 
+//				"        { ?resource foaf:page <http://en.wikipedia.org/wiki/Hell_of_a_Tester> }\r\n" + 
+//				"      UNION\r\n" + 
+//				"        { ?resource foaf:page <http://en.wikipedia.org/wiki/Scout_Leader> }\r\n" + 
+//				"    }\r\n" + 
+//				"    ?resource foaf:page ?uri .\r\n" + 
+//				"    ?resource rdfs:comment ?wtitle\r\n" + 
+//				"    FILTER langMatches(lang(?wtitle), \"en\")\r\n" +
+//				"    ?test rdfs:something ?test2" +
+//				"    OPTIONAL\r\n" + 
+//				"      { ?resource rdfs:comment ?comment\r\n" + 
+//				"        FILTER langMatches(lang(?comment), \"en\")\r\n" + 
+//				"      }\r\n" + 
+//				"    OPTIONAL\r\n" + 
+//				"      { ?resource foaf:depiction ?image }\r\n" + 
+//				"  }";
+//		
+//		queries.add(new Query(query1));
+//		queries.add(new Query(query2));
+//		queries.add(new Query(query3));
+//		int i = 1;
+//		p.parse(queries.get(i));
+//		System.out.println(queries.get(i).getQuery());
+//		System.out.println();
+//		System.out.println("--- prefixes ---");
+//		for(Map.Entry<String, String> e: queries.get(i).prefixes.entrySet()) {
+//			System.out.println(e.getKey() + " -> " + e.getValue());
+//		}
+//		System.out.println();
+//		System.out.println("--- variables ---");
+//		for(Statement s: queries.get(i).statements) {
+//			System.out.println(s);
+//		}
+//		System.out.println();
+//		System.out.println("--- triples before renaming ---");
+//		for(Triple t: queries.get(i).triples) {
+//			System.out.println(t);
+//		}
+//		System.out.println();
+//		System.out.println("--- triples after renaming ---");
+//		System.out.println("Renamed: " + queries.get(i).renameVariables(queries.get(i).statements, queries.get(i).triples));
+//		for(Triple t: queries.get(i).triples) {
+//			System.out.println(t);
+//		}
+//		
+//		System.out.println();
+//		System.out.println("--- variables after extra variables renamed ---");
+//		for(Statement s: queries.get(i).statements) {
+//			System.out.println(s);
+//		}
+//		
+//		
+//		queries.get(i).replacePrefixVariables();
+//		System.out.println();
+//		System.out.println();
+//		System.out.println("--- triples after prefix replacement ---");
+//		for(Triple t: queries.get(i).triples) {
+//			System.out.println(t);
+//		}
+//	}
 }

@@ -6,16 +6,20 @@ import java.util.List;
 public class TripleValue {
 	String value;
 	String type;
+	
+	//possible types
 	static String VARIABLE = "VARIABLE";
 	static String IRI = "IRI";
 	static String LITERAL = "LITERAL";
+	static String ANY = "ANY";
 	
-	static List<String> anyValues = Arrays.asList(new String[] {"ANY_VARIABLE", "ANY_IRI", "ANY_LITERAL"});
+	//possile values apart from specific values
+	static List<String> anyValues = Arrays.asList(new String[] {"ANY_VARIABLE", "ANY_IRI", "ANY_LITERAL", "ANY_ANY"});
 	
 	public TripleValue(String v) {
 		if(anyValues.contains(v)) {
 			this.value = v;
-			this.type = v.substring(v.indexOf("_"), v.length());
+			this.type = v.substring(v.indexOf("_")+1, v.length());
 		}
 		else {
 			this.value = v;
@@ -46,11 +50,19 @@ public class TripleValue {
 	
 	/** TripleValue version of isMoreGeneralThan */
 	public boolean isMoreGeneralThan(TripleValue v) {
-		if(this.type.equals(TripleValue.VARIABLE) || (anyValues.contains(this.value) && !anyValues.contains(v.toString()))) {
-			return true;
-		}
-		else if(this.value.equals(v.toString()) || (anyValues.contains(this.value) && !anyValues.contains(v.toString()))) {
-			return true;
+		if(this.type.equals(v.type) || this.type.equals(ANY)) {
+			if(this.type.equals(TripleValue.ANY)) {
+				return true;
+			}
+			else if(this.type.equals(TripleValue.VARIABLE) || (anyValues.contains(this.value) && !anyValues.contains(v.value))) {
+				return true;
+			}
+			else if(this.type.equals(TripleValue.IRI) && ((anyValues.contains(this.value) && !anyValues.contains(v.value)) || this.value.equals(v.value))) {
+				return true;
+			}
+			else if(this.type.equals(TripleValue.LITERAL) && ((anyValues.contains(this.value) && !anyValues.contains(v.value)) || this.value.equals(v.value))) {
+				return true;
+			}
 		}
 		return false;
 	}

@@ -1,6 +1,6 @@
 package org.dice_research.SparqlUseCase;
 
-import java.util.ArrayList;
+import java.util.BitSet;
 import java.util.List;
 
 public class Triple {
@@ -17,6 +17,18 @@ public class Triple {
 		return s+" "+p+" "+o;
 	}
 	
+	public String getSubject() {
+		return this.s.toString();
+	}
+	
+	public String getPredicate() {
+		return this.p.toString();
+	}
+	
+	public String getObject() {
+		return this.o.toString();
+	}
+	
 	/** Triple version of isMoreGeneralThan*/
 	public boolean isMoreGeneralThan(Triple t) {
 		if(s.isMoreGeneralThan(t.s) && p.isMoreGeneralThan(t.p) && o.isMoreGeneralThan(t.o)) {
@@ -25,21 +37,38 @@ public class Triple {
 		return false;
 	}
 	
-	/* Returns list of integers indicating the indices in which this triple's values disagree with the input
+	/* Returns BitSet of integers indicating the indices in which this triple's values disagree with the input
 	 * triple's values*/
-	public List<Integer> difference(Triple t) {
-		List<Integer> res = new ArrayList<Integer>();
+	public BitSet getDifference(Triple t) {
+		BitSet res = new BitSet(3);
 		
 		if(!s.isMoreGeneralThan(t.s)) {
-			res.add(0);
+			res.set(0);
 		}
 		if(!p.isMoreGeneralThan(t.p)) {
-			res.add(1);
+			res.set(1);
 		}
 		if(!o.isMoreGeneralThan(t.o)) {
-			res.add(2);
+			res.set(2);
 		}
-		
 		return res;
+	}
+	
+	/* Returns the index of a triple in y which is the most similar to triple t
+	 * */
+	public static int indexOfMostSimilar(Triple t, List<Triple> y) {
+		int similarity = Integer.MAX_VALUE;
+		int index = -1;
+		for(Triple i: y) {
+			int tmp = t.getDifference(i).size();
+			if(tmp == 1) {
+				return y.indexOf(i);
+			}
+			else if(tmp < similarity) {
+				similarity = tmp;
+				index = y.indexOf(i);
+			}
+		}
+		return index;
 	}
 }
