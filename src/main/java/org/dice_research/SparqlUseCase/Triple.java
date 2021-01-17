@@ -17,15 +17,27 @@ public class Triple {
 		return s+" "+p+" "+o;
 	}
 	
-	public String getSubject() {
+	public TripleValue getSubject() {
+		return this.s;
+	}
+	
+	public TripleValue getPredicate() {
+		return this.p;
+	}
+	
+	public TripleValue getObject() {
+		return this.o;
+	}
+	
+	public String getSubjectValue() {
 		return this.s.toString();
 	}
 	
-	public String getPredicate() {
+	public String getPredicateValue() {
 		return this.p.toString();
 	}
 	
-	public String getObject() {
+	public String getObjectValue() {
 		return this.o.toString();
 	}
 	
@@ -37,8 +49,9 @@ public class Triple {
 		return false;
 	}
 	
-	/* Returns BitSet of integers indicating the indices in which this triple's values disagree with the input
-	 * triple's values*/
+	/* Returns BitSet of booleans where the indices which are set to true indicate where the two triples being compared
+	 * dissagre
+	 * */
 	public BitSet getDifference(Triple t) {
 		BitSet res = new BitSet(3);
 		
@@ -54,18 +67,36 @@ public class Triple {
 		return res;
 	}
 	
-	/* Returns the index of a triple in y which is the most similar to triple t
+	/* Returns the index of a triple in y which is the most similar to triple t (similar in terms of the lowest dissagrement)
 	 * */
 	public static int indexOfMostSimilar(Triple t, List<Triple> y) {
-		int similarity = Integer.MAX_VALUE;
+		int score = 0;
 		int index = -1;
 		for(Triple i: y) {
-			int tmp = t.getDifference(i).size();
-			if(tmp == 1) {
-				return y.indexOf(i);
+			int currentScore = 0;
+			int difference = t.getDifference(i).cardinality();
+			if(t.getSubject().getType().equals(i.getSubject().getType())) {
+				currentScore+=3;
 			}
-			else if(tmp < similarity) {
-				similarity = tmp;
+			switch(difference) {
+				case 1:
+					currentScore+=3;
+					break;
+				case 2:
+					currentScore+=2;
+					break;
+				case 3:
+					currentScore+=1;
+					break;
+			}
+			//if the currently being checked triples are of the same type and differ only in one triplevalue
+			//return immediately
+			if(currentScore == 6) {
+				return y.indexOf(i);
+			} 
+			//keep searching until the best match is found
+			else if(currentScore > score) {
+				score = currentScore;
 				index = y.indexOf(i);
 			}
 		}
