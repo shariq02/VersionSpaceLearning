@@ -97,7 +97,9 @@ public class SpecializeGBoundary {
 
         return spGListFinal;
     }
-
+/**
+ * This function removes hypothesis from G boundary that are not more general than any hypothesis from S boundary.
+ */
     public HashSet<Hypothesis> removeMember(HashSet<Hypothesis> S, HashSet<Hypothesis> G, ArrayList<Ontology> f_pssibleValues)
     {
         HashSet<Hypothesis> spGList = new HashSet<Hypothesis>();
@@ -118,6 +120,9 @@ public class SpecializeGBoundary {
         return spGList;
     }
 
+    /**
+     * This function removes hypothesis from G boundary which is specific than any other hypothesis in the boundary.
+     */
     public HashSet<Hypothesis> removeSpecific(HashSet<Hypothesis> G, ArrayList<Ontology> f_pssibleValues)
     {
         HashSet<Hypothesis> spGListFinal= new HashSet<Hypothesis>();
