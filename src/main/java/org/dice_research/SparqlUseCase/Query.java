@@ -31,6 +31,16 @@ public class Query {
 		this.statements = new ArrayList<Statement>();
 		this.triples = new ArrayList<Triple>();
 	}
+	//constructor to construct a query with amount of (ANY_ANY ANY_ANY ANY_ANY) triples
+	public Query(int amount) {
+		this.prefixes  = new HashMap<String, String>();
+		this.statements = new ArrayList<Statement>();
+		this.triples = new ArrayList<Triple>();
+		
+		for(int i=0; i<amount; i++) {
+			this.triples.add(new Triple("ANY_ANY", "ANY_ANY", "ANY_ANY"));
+		}
+	}
 	
 	//copy constructor
 	public Query(Query q) {
@@ -46,19 +56,33 @@ public class Query {
 			Statement temp = null;
 			if(s.getType().equals("SELECT")) {
 				temp = new SelectStatement();
-				for(Map.Entry<String, String> var: s.getVariables().entrySet()) {
-					temp.getVariables().put(var.getKey(), var.getValue());
+				for(Map.Entry<String, String> var: ((SelectStatement)s).getVariables().entrySet()) {
+					((SelectStatement)temp).getVariables().put(var.getKey(), var.getValue());
 				}
-				this.statements.add(temp);
+			//any other query type
+			} else {
+				temp = new Statement() {
+					public String getType() {
+						return s.getType();
+					}
+				};
 			}
+			this.statements.add(temp);
 		}
+		
 		for(Triple t: q.getTriples()) {
-			this.triples.add(new Triple(t.getSubject(), t.getPredicate(), t.getObject()));
+			this.triples.add(new Triple(t.getSubjectValue(), t.getPredicateValue(), t.getObjectValue()));
 		}
 	}
 	
 	public String getQuery() {
 		return query;
+	}
+	
+	public void printTriples() {
+		for(Triple t: this.triples) {
+			System.out.println(t);
+		}
 	}
 	
 	public List<Triple> getTriples(){
@@ -68,7 +92,7 @@ public class Query {
 	public List<Triple> getCopyOfTriples(){
 		List<Triple> temp = new ArrayList<Triple>();
 		for(Triple t: this.triples) {
-			temp.add(new Triple(t.getSubject(), t.getPredicate(), t.getObject()));
+			temp.add(new Triple(t.getSubjectValue(), t.getPredicateValue(), t.getObjectValue()));
 		}
 		return temp;
 	}
@@ -85,30 +109,36 @@ public class Query {
 		query = s;
 	}
 	
+	public void addAllTriples(List<Triple> triples) {
+		for(Triple t: triples) {
+			this.triples.add(new Triple(t.getSubjectValue(), t.getPredicateValue(), t.getObjectValue()));
+		}
+	}
+	
 	public boolean renameVariables(List<Statement> statements, List<Triple> triples) {
 		for(Statement s: statements) {
 			Map<String, String> vars;
 			if(s.getType().equals("SELECT")) {
-				vars = s.getVariables();
+				vars = ((SelectStatement)s).getVariables();
 				for(Triple t: triples) {
 					if(vars.containsKey(t.s.toString())) {
 						t.s.setValue(vars.get(t.s.toString()));
 					} else if(t.s.toString().startsWith("?")) {
-						s.putVariable(t.s.toString(), "?v"+j);
+						((SelectStatement)s).putVariable(t.s.toString(), "?v"+j);
 						t.s.setValue("?v"+j);
 						j++;
 					}
 					if(vars.containsKey(t.p.toString())) {
 						t.p.setValue(vars.get(t.p.toString()));
 					} else if(t.p.toString().startsWith("?")) {
-						s.putVariable(t.p.toString(), "?v"+j);
+						((SelectStatement)s).putVariable(t.p.toString(), "?v"+j);
 						t.p.setValue("?v"+j);
 						j++;
 					}
 					if(vars.containsKey(t.o.toString())) {
 						t.o.setValue(vars.get(t.o.toString()));
 					} else if(t.o.toString().startsWith("?")) {
-						s.putVariable(t.o.toString(), "?v"+j);
+						((SelectStatement)s).putVariable(t.o.toString(), "?v"+j);
 						t.o.setValue("?v"+j);
 						j++;
 					}
@@ -144,33 +174,7 @@ public class Query {
 			}
 		}
 	}
-	
-	public boolean isMoreGeneralThan2(Query q, int start, BitSet toAvoid) {
-		//Map<Integer, Integer> assignedTriples = new HashMap<>();
-		BitSet triplesToAvoid = new BitSet(q.triples.size());
-		if(toAvoid != null) {
-			triplesToAvoid = (BitSet)toAvoid.clone();
-			System.out.println("toAvoid: "+triplesToAvoid.cardinality()+"  "+"q.triples.size: "+q.triples.size()+"  "+"start: "+start);
-			if(triplesToAvoid.cardinality() == q.triples.size() && start == q.triples.size()) {
-				return true;
-			}
-		}
 
-		Triple t = q.triples.get(start);
-		for(int k=0; k<this.triples.size();k++) {
-			if(triplesToAvoid.get(k)) {
-				continue;
-			}
-			
-			if(this.triples.get(k).isMoreGeneralThan(t)) {
-				triplesToAvoid.set(k);
-				return isMoreGeneralThan2(q, start+1, triplesToAvoid);
-			}
-		}
-		//no triple in this.triples is more general than triple t from query q
-		return false;
-	}
-	
 	public boolean isMoreGeneralThan(Query q, int start, Map<Integer, Integer> assignedTriples) {
 		if(assignedTriples != null) {
 			//System.out.println("assignedTriples size: "+assignedTriples.size()+"  "+"q.triples.size: "+q.triples.size()+"  "+"start: "+start);
@@ -204,7 +208,7 @@ public class Query {
 				//thus we need to find another match for it
 				int temp = entry.getValue();
 				assignedTriples.put(entry.getKey(), start);
-				System.out.println("2: "+this.triples.get(entry.getKey())+"  >=  "+t+" temp:"+temp);
+				System.out.println("2: "+this.triples.get(entry.getKey())+"  >=  "+t);
 				return isMoreGeneralThan(q, temp, assignedTriples);
 			}
 		}

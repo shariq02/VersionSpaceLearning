@@ -1,17 +1,12 @@
 package org.dice_research.SparqlUseCase;
 
-import java.util.ArrayList;
-import java.util.List;
-
 public class SPARQLQueryParser{
-	//list of queries that will be read
-	static List<Query> queries;
-	
-	public SPARQLQueryParser() {
-		queries = new ArrayList<Query>();
-	}
-	
-	public String removePrefixes(Query query){
+	/*
+	 * Removes all the white space and all the lines in the input query that start with "PREFIX".
+	 * All the mappings from the prefixes to their respective values are saved in the prefixes
+	 * arraylist in the query.
+	 * */
+	public static String removePrefixes(Query query){
 		String toReturn = "";
 		//remove all newlines and unnecessary whitespace from the query
 		query.setQuery(query.getQuery().replaceAll("\\s{2,}", " ").trim());
@@ -36,28 +31,58 @@ public class SPARQLQueryParser{
 		return toReturn;
 	}
 	
-	//parses the given query
-	public void parse(Query query){
+	/*
+	 * Parses the input query
+	 * */
+	public static void parse(Query query){
 		query.setQuery(removePrefixes(query));
 		String[] tmp = query.getQuery().trim().split(" ");
 
 		boolean searchForTriples = false;
 		for(int i=0;i<tmp.length;i++) {
+			Statement s;
 			//if next word is a SELECT statement add and rename all variables present in the statement to the vars map
-			if(tmp[i].toLowerCase().equals("select")) {
+			if(tmp[i].equals("SELECT")) {
 				i++;
-				Statement s = new SelectStatement();
+				s = new SelectStatement();
 				while(!tmp[i].equals("{")) {
 					if(tmp[i].equals("*")) {
-						s.putVariable(tmp[i], "*");
+						((SelectStatement)s).putVariable(tmp[i], "*");
 					}
 					else if(tmp[i].startsWith("?")){
-						s.putVariable(tmp[i], "?v"+query.j);
+						((SelectStatement)s).putVariable(tmp[i], "?v"+query.j);
 						query.j++;
 					}
 					i++;
 				}
 				query.statements.add(s);
+			} 
+			//parsing other types of queries apart form SELECT queries is not supported
+			else if(tmp[i].equals("ASK")) {
+				s = new Statement() {
+					public String getType() {
+						return "ASK";
+					}
+				};
+				query.statements.add(s);
+				break;
+			} else if(tmp[i].equals("DESCRIBE")) {
+				s = new Statement() {
+					public String getType() {
+						return "DESCRIBE";
+					}
+				};
+				query.statements.add(s);
+				break;
+				
+			} else if(tmp[i].equals("CONSTRUCT")) {
+				s = new Statement() {
+					public String getType() {
+						return "CONSTRUCT";
+					}
+				};
+				query.statements.add(s);
+				break;
 			}
 			
 			if(searchForTriples) {
@@ -72,7 +97,7 @@ public class SPARQLQueryParser{
 					//embedded brackets
 				}
 				else {
-					System.out.println("Some kind of error happened while parsing: " + tmp[i-1] + " " +tmp[i] + " " +tmp[i+1]);
+					System.out.println("Some kind of error happened while parsing: " + tmp[i-1] + " " +tmp[i] + " " +tmp[i+1]+ " " +tmp[i+2]);
 				}
 				
 				if(!tmp[i].equals(".")) {
