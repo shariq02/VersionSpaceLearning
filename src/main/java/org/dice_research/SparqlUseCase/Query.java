@@ -31,6 +31,16 @@ public class Query {
 		this.statements = new ArrayList<Statement>();
 		this.triples = new ArrayList<Triple>();
 	}
+	//constructor to construct a query with amount of (ANY_ANY ANY_ANY ANY_ANY) triples
+	public Query(int amount) {
+		this.prefixes  = new HashMap<String, String>();
+		this.statements = new ArrayList<Statement>();
+		this.triples = new ArrayList<Triple>();
+		
+		for(int i=0; i<amount; i++) {
+			this.triples.add(new Triple("ANY_ANY", "ANY_ANY", "ANY_ANY"));
+		}
+	}
 	
 	//copy constructor
 	public Query(Query q) {
@@ -67,6 +77,12 @@ public class Query {
 	
 	public String getQuery() {
 		return query;
+	}
+	
+	public void printTriples() {
+		for(Triple t: this.triples) {
+			System.out.println(t);
+		}
 	}
 	
 	public List<Triple> getTriples(){

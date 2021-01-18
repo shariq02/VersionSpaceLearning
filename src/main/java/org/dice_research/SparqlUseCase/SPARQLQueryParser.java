@@ -1,22 +1,12 @@
 package org.dice_research.SparqlUseCase;
 
-import java.util.ArrayList;
-import java.util.List;
-
 public class SPARQLQueryParser{
-	//list of queries that will be read
-	List<Query> queries;
-	
-	public SPARQLQueryParser() {
-		queries = new ArrayList<Query>();
-	}
-	
 	/*
 	 * Removes all the white space and all the lines in the input query that start with "PREFIX".
 	 * All the mappings from the prefixes to their respective values are saved in the prefixes
 	 * arraylist in the query.
 	 * */
-	public String removePrefixes(Query query){
+	public static String removePrefixes(Query query){
 		String toReturn = "";
 		//remove all newlines and unnecessary whitespace from the query
 		query.setQuery(query.getQuery().replaceAll("\\s{2,}", " ").trim());
@@ -44,7 +34,7 @@ public class SPARQLQueryParser{
 	/*
 	 * Parses the input query
 	 * */
-	public void parse(Query query){
+	public static void parse(Query query){
 		query.setQuery(removePrefixes(query));
 		String[] tmp = query.getQuery().trim().split(" ");
 
@@ -107,7 +97,7 @@ public class SPARQLQueryParser{
 					//embedded brackets
 				}
 				else {
-					System.out.println("Some kind of error happened while parsing: " + tmp[i-1] + " " +tmp[i] + " " +tmp[i+1]);
+					System.out.println("Some kind of error happened while parsing: " + tmp[i-1] + " " +tmp[i] + " " +tmp[i+1]+ " " +tmp[i+2]);
 				}
 				
 				if(!tmp[i].equals(".")) {

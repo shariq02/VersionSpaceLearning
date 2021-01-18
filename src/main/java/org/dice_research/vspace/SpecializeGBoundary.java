@@ -3,6 +3,11 @@ package org.dice_research.vspace;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.Set;
+
+import org.dice_research.SparqlUseCase.Query;
+import org.dice_research.SparqlUseCase.Triple;
+import org.dice_research.SparqlUseCase.TripleValue;
 
 /*
  * Here we are trying to specialize the generalized hypotheses
@@ -140,6 +145,58 @@ public class SpecializeGBoundary {
 				spGList.add(g);
 		}
 		return spGList;
+	}
+	/*
+	 * Minimally specializes the set of most general queries depending on the set of most special queries
+	 * */
+	public Set<Query> min_specializations(Query h, Set<Query> q){
+		Set<Query> res = new HashSet<Query>();
+		
+		for(Query e: q) {
+			int triples = e.getTriples().size();
+			if(triples == 0) {
+				break;
+			}
+			
+			Query tmp = null;
+			Triple tmpTriple = null;
+			Triple qTriple = null;
+			
+			for(int i=0; i<triples; i++) {
+				tmp = new Query(h);
+				//i-th triple of h
+				tmpTriple = tmp.getTriples().get(i);
+				//i-th triple of q
+				qTriple = e.getTriples().get(i);
+				
+				//specialize either h's subject, predicate or object to the respective q's value
+				if(qTriple.getSubject().getType().equals(TripleValue.IRI) || qTriple.getSubject().getType().equals(TripleValue.LITERAL)) {
+					if(!qTriple.getSubject().isMoreGeneralThan(tmpTriple.getSubject())) {
+						tmpTriple.getSubject().setValue(qTriple.getSubjectValue());
+						res.add(tmp);
+						continue;
+					}
+				}
+				
+				if(qTriple.getPredicate().getType().equals(TripleValue.IRI)) {
+					if(!qTriple.getPredicate().isMoreGeneralThan(tmpTriple.getPredicate())) {
+						tmpTriple.getPredicate().setValue(qTriple.getPredicateValue());
+						res.add(tmp);
+						continue;
+					}
+				}
+				
+				if(qTriple.getObject().getType().equals(TripleValue.IRI) || qTriple.getObject().getType().equals(TripleValue.LITERAL)) {
+					if(!qTriple.getObject().isMoreGeneralThan(tmpTriple.getObject())) {
+						tmpTriple.getObject().setValue(qTriple.getObjectValue());
+						res.add(tmp);
+						continue;
+					}
+				}
+			}
+		}
+		
+		return res;
 	}
 
 }

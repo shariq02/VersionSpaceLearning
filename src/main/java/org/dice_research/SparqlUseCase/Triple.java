@@ -74,28 +74,26 @@ public class Triple {
 		int index = -1;
 		for(Triple i: y) {
 			int currentScore = 0;
-			int difference = t.getDifference(i).cardinality();
-			if(t.getSubject().getType().equals(i.getSubject().getType())) {
+			BitSet difference = t.getDifference(i);
+			if(difference.get(0)) {
+				currentScore++;
+				if(t.getSubject().getType().equals(i.getSubject().getType())) {
 				currentScore+=3;
+				}
 			}
-			switch(difference) {
-				case 1:
+			if(difference.get(1)) {
+				currentScore++;
+				if(t.getPredicate().getType().equals(i.getPredicate().getType())) {
 					currentScore+=3;
-					break;
-				case 2:
-					currentScore+=2;
-					break;
-				case 3:
-					currentScore+=1;
-					break;
+				}
 			}
-			//if the currently being checked triples are of the same type and differ only in one triplevalue
-			//return immediately
-			if(currentScore == 6) {
-				return y.indexOf(i);
-			} 
-			//keep searching until the best match is found
-			else if(currentScore > score) {
+			if(difference.get(2)) {
+				currentScore++;
+				if(t.getObject().getType().equals(i.getObject().getType())) {
+					currentScore+=3;
+				}
+			}
+			if(currentScore > score) {
 				score = currentScore;
 				index = y.indexOf(i);
 			}

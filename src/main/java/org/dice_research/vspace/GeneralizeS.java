@@ -90,6 +90,10 @@ public class GeneralizeS {
 		//constructed to match the unmatched triple
 		//for(Triple cand: candidateTriples) {
 		for(ListIterator<Triple> iter = candidateTriples.listIterator(); iter.hasNext();) {
+			//no unmatched triples left
+			if(qTriples.size() == 0) {
+				break;
+			}
 			Triple cand = iter.next();
 			Triple mostSimilarTriple = qTriples.get(Triple.indexOfMostSimilar(cand, qTriples));
 			BitSet missmatches = cand.getDifference(mostSimilarTriple);
