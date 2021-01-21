@@ -132,34 +132,33 @@ public class CandidateElimination {
 		
 		//process the negative examples
 		if(this.mostSpecialBoundary.size() > 0) {
-			this.mostGeneralBoundary.clear();
-			this.mostGeneralBoundary.add(new Query(this.mostSpecialBoundary.iterator().next().getTriples().size()));
 			for(ListIterator<Query> negativePointsIter = negativeQueries.listIterator(); negativePointsIter.hasNext();) {
 				Query currentNegPoint = negativePointsIter.next();
 				Set<Query> newGMembers = new HashSet<Query>();
 				for(Iterator<Query> gBoundaryIter = this.mostGeneralBoundary.iterator(); gBoundaryIter.hasNext();) {
 					Query currentG = gBoundaryIter.next();
-					if(currentG.isMoreGeneralThan(currentNegPoint, 0, new HashMap<Integer, Integer>(), null)) {
+					if(currentG.isMoreGeneralThanWithoutOptionals(currentNegPoint, 0, new HashMap<Integer, Integer>(), null)) {
 						gBoundaryIter.remove();
 						
 						Set<Query> minSpecializations = spclG.min_specializations(currentG, currentNegPoint, this.mostSpecialBoundary);
 						
-						Query k = minSpecializations.iterator().next();
-						System.out.println(currentNegPoint.getParsedQuery());
-						System.out.println(k.getParsedQuery());
-						System.out.println("HOW?: "+k.isMoreGeneralThan(currentNegPoint, 0, new HashMap<Integer, Integer>(), null));
+//						Query k = minSpecializations.iterator().next();
+//						System.out.println(currentNegPoint.getParsedQuery());
+//						System.out.println(k.getParsedQuery());
+//						System.out.println(k.isMoreGeneralThanWithoutOptionals(currentNegPoint, 0, new HashMap<Integer, Integer>(), null));
 //						for(Triple u: k.getTriples()) {
 //							System.out.println(u.getSubject().getType()+", "+u.getPredicate().getType()+", "+u.getObject().getType());
 //						}
-						
-//						for(Query q: minSpecializations) {
-//							System.out.println(q.getParsedQuery());
-//						}
+						System.out.println("Specialization: "+currentG.getParsedQuery()+"-->");
 						for(Query q: minSpecializations) {
-							if(!q.isMoreGeneralThan(currentNegPoint, 0, new HashMap<Integer, Integer>(), null)){
+							System.out.println(q.getParsedQuery());
+						}
+						System.out.println("+++");
+						for(Query q: minSpecializations) {
+							//System.out.println(q.getParsedQuery()+" >=?"+ currentNegPoint.getParsedQuery());
+							if(!q.isMoreGeneralThanWithoutOptionals(currentNegPoint, 0, new HashMap<Integer, Integer>(), null)){
 								for(Query w: this.mostSpecialBoundary) {
-									System.out.println(q.getParsedQuery());
-									if(!w.isMoreGeneralThan(q, 0, new HashMap<Integer, Integer>(), null)) {
+									if(!w.isMoreGeneralThanWithoutOptionals(q, 0, new HashMap<Integer, Integer>(), null)) {
 										newGMembers.add(q);
 										break;
 									}
@@ -172,18 +171,31 @@ public class CandidateElimination {
 			}
 		}
 		System.out.println("S:[");
+		System.out.println("");
 		if(this.mostSpecialBoundary.size() > 0) {
 			System.out.println(this.mostSpecialBoundary.iterator().next().getParsedQuery());
 		}
 		System.out.println("]");
+		System.out.println("");
 		System.out.println("G: [");
+		System.out.println("");
 		if(this.mostGeneralBoundary.size() > 0) {
 			for(Query q: this.mostGeneralBoundary) {
 				System.out.println(q.getParsedQuery());
-				System.out.println(q.hashCode());
 			}
 		}
 		System.out.println("]");
+		System.out.println(this.positiveQueries.size());
+		if(this.mostGeneralBoundary.size() > 0) {
+			for(Query q: this.mostGeneralBoundary) {
+				System.out.println(q.getParsedQuery());
+				for(Query w: this.negativeQueries) {
+					//System.out.println(q.isMoreGeneralThan(w, 0, new HashMap<Integer, Integer>(), null));
+					
+					System.out.println(q.isMoreGeneralThanWithoutOptionals(w, 0, new HashMap<Integer, Integer>(), null));
+				}
+			}
+		}
 		
 		
 //		for(Query q: this.positiveQueries) {

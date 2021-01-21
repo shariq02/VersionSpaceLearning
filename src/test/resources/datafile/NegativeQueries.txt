@@ -64,3 +64,49 @@ PREFIX  opencyc: <http://sw.opencyc.org/2008/06/10/concept/>
  
 SELECT  ?s  WHERE
     { <http://dbpedia.org/resource/Uglegorsk%2C_Sakhalin_Oblast> rdf:type ?s }
+---
+SELECT  *  WHERE
+    { ?airport <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://dbpedia.org/ontology/Airport> .
+      ?airport <http://dbpedia.org/ontology/iataLocationIdentifier> "IAD"@en
+    } 
+---
+PREFIX  dc:   <http://purl.org/dc/elements/1.1/>  
+PREFIX  dbpedia2: <http://dbpedia.org/property/>  
+PREFIX  dbpedia-owl: <http://dbpedia.org/ontology/>  
+PREFIX  geo:  <http://www.w3.org/2003/01/geo/wgs84_pos#>  
+PREFIX  foaf: <http://xmlns.com/foaf/0.1/>  
+PREFIX  yago: <http://mpii.de/yago/resource/>  
+PREFIX  georss: <http://www.georss.org/georss/>  
+PREFIX  umbel-ac: <http://umbel.org/umbel/ac/>  
+PREFIX  geonames: <http://www.geonames.org/ontology#>  
+PREFIX  units: <http://dbpedia.org/units/>  
+PREFIX  dcterms: <http://purl.org/dc/terms/>  
+PREFIX  gn:   <http://xldb.di.fc.ul.pt/xldb/publications/2009/10/geo-net#>  
+PREFIX  rdfs: <http://www.w3.org/2000/01/rdf-schema#>  
+PREFIX  gnpt: <http://xldb.di.fc.ul.pt/xldb/publications/2009/10/geo-net-pt#>  
+PREFIX  umbel-sc: <http://umbel.org/umbel/sc/>  
+PREFIX  xsd:  <http://www.w3.org/2001/XMLSchema#>  
+PREFIX  owl:  <http://www.w3.org/2002/07/owl#>  
+PREFIX  dbpedia: <http://dbpedia.org/>  
+PREFIX  gnpt02: <http://xldb.di.fc.ul.pt/xldb/publications/2009/10/geo-net-pt-02#>  
+PREFIX  rdf:  <http://www.w3.org/1999/02/22-rdf-syntax-ns#>  
+PREFIX  wikicompany: <http://dbpedia.openlinksw.com/wikicompany/>  
+PREFIX  skos: <http://www.w3.org/2004/02/skos/core#>  
+PREFIX  opencyc: <http://sw.opencyc.org/2008/06/10/concept/>  
+ 
+SELECT  ?s  WHERE
+    { <http://dbpedia.org/resource/Heston_Aerodrome> rdf:type ?s }   
+---
+PREFIX  dc:   <http://purl.org/dc/elements/1.1/>  
+PREFIX  :     <http://dbpedia.org/resource/>  
+PREFIX  rdfs: <http://www.w3.org/2000/01/rdf-schema#>  
+PREFIX  dbpedia2: <http://dbpedia.org/property/>  
+PREFIX  foaf: <http://xmlns.com/foaf/0.1/>  
+PREFIX  owl:  <http://www.w3.org/2002/07/owl#>  
+PREFIX  xsd:  <http://www.w3.org/2001/XMLSchema#>  
+PREFIX  dbpedia: <http://dbpedia.org/>  
+PREFIX  rdf:  <http://www.w3.org/1999/02/22-rdf-syntax-ns#>  
+PREFIX  skos: <http://www.w3.org/2004/02/skos/core#> 
+  
+SELECT  *  WHERE
+    { ?obj rdf:type ?qls }

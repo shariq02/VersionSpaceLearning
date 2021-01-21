@@ -7,6 +7,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.dice_research.vspace.Hypothesis;
+
 public class Query {
 	//original query
 	String query = null;
@@ -36,6 +38,7 @@ public class Query {
 		this.statements = new ArrayList<Statement>();
 		this.triples = new ArrayList<Triple>();
 	}
+	
 	//constructor to construct a query with amount of (ANY_ANY ANY_ANY ANY_ANY) triples
 	public Query(int amount) {
 		this.query = "";
@@ -79,6 +82,25 @@ public class Query {
 		for(Triple t: q.getTriples()) {
 			this.triples.add(new Triple(t.getSubjectValue(), t.getPredicateValue(), t.getObjectValue()));
 		}
+	}
+	
+	@Override
+	public boolean equals(Object o) {
+		if(this.hashCode() == ((Query)o).hashCode()) {
+			return true;
+		}
+		return false;
+	}
+	
+	@Override
+	public int hashCode() {
+		int result=0;
+		for(int i=0;i<this.triples.size();i++) {
+			Triple t = this.triples.get(i);
+			result+=t.getSubjectValue().hashCode()+t.getObjectValue().hashCode()+t.getPredicateValue().hashCode();
+			
+		}
+		return result;
 	}
 	
 	public boolean isMostGeneral() {
@@ -271,6 +293,62 @@ public class Query {
 				}
 				//System.out.println("2: hash: "+this.triples.get(entry.getKey()).hashCode()+" -"+this.triples.get(entry.getKey())+"  >=  "+t);
 				return isMoreGeneralThan(q, temp, assignedTriples, switched);
+			}
+		}
+		//no triple in this.triples is more general than triple t from query q
+		return false;
+	}
+	
+	public boolean isMoreGeneralThanWithoutOptionals(Query q, int start, Map<Integer, Integer> assignedTriples, List<Integer> switched) {
+		if(this.mostGeneral) {
+			return true;
+		}
+		if(assignedTriples != null) {
+			//System.out.println("assignedTriples size: "+assignedTriples.size()+"  "+"q.triples.size: "+q.triples.size()+"  "+"start: "+start);
+			if(assignedTriples.size() == q.triples.size()) {
+//				System.out.println("---");
+//				for(Map.Entry<Integer, Integer> entry: assignedTriples.entrySet()) {
+//					System.out.println(this.triples.get(entry.getKey()) +"  >=  "+ q.triples.get(entry.getValue()));
+//				}
+				return true;
+			}
+			if(assignedTriples.containsValue(start)) {
+				return isMoreGeneralThanWithoutOptionals(q, start+1, assignedTriples, null);
+			}
+		}
+
+		Triple t = q.triples.get(start);
+		for(int k=0; k<this.triples.size();k++) {
+			if(assignedTriples.containsKey(k) || this.triples.get(k).isOptional()) {
+				continue;
+			}
+			if(this.triples.get(k).isMoreGeneralThan(t)) {
+				assignedTriples.put(k, start);
+				//System.out.println("1: "+this.triples.get(k)+"  >=  "+t);
+				return isMoreGeneralThanWithoutOptionals(q, start+1, assignedTriples, null);
+			} 
+		}
+		
+		for(Map.Entry<Integer, Integer> entry: assignedTriples.entrySet()) {
+			if(!this.triples.get(entry.getKey()).isOptional() && this.triples.get(entry.getKey()).isMoreGeneralThan(t)) {
+				
+				if(switched != null) {
+					if(switched.contains(entry.getKey())) {
+						continue;
+					}
+				}
+				//holds the index of the triple in q whose match has been reassigned,
+				//thus we need to find another match for it
+				int temp = entry.getValue();
+				assignedTriples.put(entry.getKey(), start);
+				if(switched != null) {
+					switched.add(entry.getKey());
+				} else {
+					switched = new ArrayList<Integer>();
+					switched.add(entry.getKey());
+				}
+				//System.out.println("2: hash: "+this.triples.get(entry.getKey()).hashCode()+" -"+this.triples.get(entry.getKey())+"  >=  "+t);
+				return isMoreGeneralThanWithoutOptionals(q, temp, assignedTriples, switched);
 			}
 		}
 		//no triple in this.triples is more general than triple t from query q

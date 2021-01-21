@@ -78,6 +78,13 @@ public class Triple {
 		return res;
 	}
 	
+	public boolean hasSameValues(Triple t) {
+		if(this.s.toString().equals(t.s.toString()) && this.p.toString().equals(t.p.toString()) && this.o.toString().equals(t.o.toString())) {
+			return true;
+		}
+		return false;
+	}
+	
 	/* Returns the index of a triple in y which is the most similar to triple t (similar in terms of the lowest dissagrement)
 	 * */
 	public static int indexOfMostSimilar(Triple t, List<Triple> y) {

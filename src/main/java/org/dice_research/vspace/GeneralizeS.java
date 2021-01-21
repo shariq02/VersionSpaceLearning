@@ -135,8 +135,6 @@ public class GeneralizeS {
 		
 		//add all still remaining triples from q for which no generalization was found (no candidate was left)
 		if(qTriples.size()>0) {
-			System.out.println("Really dude!");
-			//tmpQuery.addAllTriples(qTriples);
 			for(Triple r: qTriples) {
 				tmpQuery.getTriples().add(new Triple(r.getSubjectValue(), r.getPredicateValue(), r.getObjectValue(), true));
 			}
