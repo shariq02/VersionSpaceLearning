@@ -9,7 +9,6 @@ import java.util.Set;
 
 import org.dice_research.SparqlUseCase.Query;
 import org.dice_research.SparqlUseCase.Triple;
-import org.dice_research.SparqlUseCase.TripleValue;
 public class GeneralizeS {
 	/*
 	 * Finds the minimal generalizations for the hypotheses in s such that they are more general the input data point
@@ -136,7 +135,11 @@ public class GeneralizeS {
 		
 		//add all still remaining triples from q for which no generalization was found (no candidate was left)
 		if(qTriples.size()>0) {
-			tmpQuery.addAllTriples(qTriples);
+			System.out.println("Really dude!");
+			//tmpQuery.addAllTriples(qTriples);
+			for(Triple r: qTriples) {
+				tmpQuery.getTriples().add(new Triple(r.getSubjectValue(), r.getPredicateValue(), r.getObjectValue(), true));
+			}
 		}
 		res.add(tmpQuery);
 		return res;

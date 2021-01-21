@@ -9,8 +9,8 @@ public class SPARQLQueryParser{
 	public static String removePrefixes(Query query){
 		String toReturn = "";
 		//remove all newlines and unnecessary whitespace from the query
-		query.setQuery(query.getQuery().replaceAll("\\s{2,}", " ").trim());
-		String[] tmp = query.getQuery().split(" ");
+		query.setQuery(query.getOriginalQuery().replaceAll("\\s{2,}", " ").trim());
+		String[] tmp = query.getOriginalQuery().split(" ");
 		int i=0;
 		while(i<tmp.length){
 			//if this holds we know that the next two words will be the prefix variable and uri
@@ -36,7 +36,7 @@ public class SPARQLQueryParser{
 	 * */
 	public static void parse(Query query){
 		query.setQuery(removePrefixes(query));
-		String[] tmp = query.getQuery().trim().split(" ");
+		String[] tmp = query.getOriginalQuery().trim().split(" ");
 
 		boolean searchForTriples = false;
 		for(int i=0;i<tmp.length;i++) {

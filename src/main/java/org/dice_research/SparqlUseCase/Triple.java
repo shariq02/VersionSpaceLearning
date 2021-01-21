@@ -5,11 +5,19 @@ import java.util.List;
 
 public class Triple {
 	TripleValue s, p, o;
+	boolean optional = false;
 	
 	public Triple(String s, String p, String o) {
 		this.s = new TripleValue(s);
 		this.p = new TripleValue(p);
 		this.o = new TripleValue(o);
+	}
+	
+	public Triple(String s, String p, String o, boolean op) {
+		this.s = new TripleValue(s);
+		this.p = new TripleValue(p);
+		this.o = new TripleValue(o);
+		this.optional = true;
 	}
 	
 	@Override
@@ -39,6 +47,9 @@ public class Triple {
 	
 	public String getObjectValue() {
 		return this.o.toString();
+	}
+	public boolean isOptional() {
+		return this.optional;
 	}
 	
 	/** Triple version of isMoreGeneralThan*/
