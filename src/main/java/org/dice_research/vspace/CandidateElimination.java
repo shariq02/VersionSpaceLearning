@@ -141,21 +141,7 @@ public class CandidateElimination {
 						gBoundaryIter.remove();
 						
 						Set<Query> minSpecializations = spclG.min_specializations(currentG, currentNegPoint, this.mostSpecialBoundary);
-						
-//						Query k = minSpecializations.iterator().next();
-//						System.out.println(currentNegPoint.getParsedQuery());
-//						System.out.println(k.getParsedQuery());
-//						System.out.println(k.isMoreGeneralThanWithoutOptionals(currentNegPoint, 0, new HashMap<Integer, Integer>(), null));
-//						for(Triple u: k.getTriples()) {
-//							System.out.println(u.getSubject().getType()+", "+u.getPredicate().getType()+", "+u.getObject().getType());
-//						}
-						System.out.println("Specialization: "+currentG.getParsedQuery()+"-->");
 						for(Query q: minSpecializations) {
-							System.out.println(q.getParsedQuery());
-						}
-						System.out.println("+++");
-						for(Query q: minSpecializations) {
-							//System.out.println(q.getParsedQuery()+" >=?"+ currentNegPoint.getParsedQuery());
 							if(!q.isMoreGeneralThanWithoutOptionals(currentNegPoint, 0, new HashMap<Integer, Integer>(), null)){
 								for(Query w: this.mostSpecialBoundary) {
 									if(!w.isMoreGeneralThanWithoutOptionals(q, 0, new HashMap<Integer, Integer>(), null)) {
@@ -185,33 +171,6 @@ public class CandidateElimination {
 			}
 		}
 		System.out.println("]");
-		System.out.println(this.positiveQueries.size());
-		if(this.mostGeneralBoundary.size() > 0) {
-			for(Query q: this.mostGeneralBoundary) {
-				System.out.println(q.getParsedQuery());
-				for(Query w: this.negativeQueries) {
-					//System.out.println(q.isMoreGeneralThan(w, 0, new HashMap<Integer, Integer>(), null));
-					
-					System.out.println(q.isMoreGeneralThanWithoutOptionals(w, 0, new HashMap<Integer, Integer>(), null));
-				}
-			}
-		}
-		
-		
-//		for(Query q: this.positiveQueries) {
-//			System.out.println(q.getParsedQuery());
-//		}
-//		System.out.println(this.positiveQueries.size());
-//		System.out.println("Removed: "+this.positiveQueries.get(15).getTriples().remove(3));
-//		System.out.println("Removed: "+this.positiveQueries.get(15).getTriples().remove(2));
-//		System.out.println("Removed: "+this.positiveQueries.get(15).getTriples().remove(0));
-//		for(Query q: this.positiveQueries) {
-//			System.out.println(q.
-//						isMoreGeneralThan(this.mostSpecialBoundary.iterator().next(), 0, new HashMap<Integer, Integer>(), null));
-//		}
-
-		
-		
 	}
 
     public void performElimication()
