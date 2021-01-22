@@ -1,4 +1,4 @@
-package org.dice_research.vspace;
+package src.test.java.org.dice_research.vspace;
 
 /*The test case DataTest1.csv contains different instances for cars and their features respectively.
  * OntologyTest1.csv contains the Hierarchical Data for the instances in DataTest1.csv
@@ -19,7 +19,7 @@ import org.junit.Before;
 import org.junit.jupiter.api.Test;
 import java.io.*;
 
-class Test2Gen_S {
+class Generalise_S_Test_DataTest1 {
 
 	CandidateElimination ceh = new CandidateElimination("Hierarchical", "/Users/parthsharma/Desktop/DataTest1.csv",
 			"/Users/parthsharma/Desktop/OntologyTest1.csv");
