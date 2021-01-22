@@ -43,5 +43,22 @@
     <version>2.7</version>
 </dependency>
 
+	<dependency>
+			<groupId>org.dice-research</groupId>
+			<artifactId>SPAB</artifactId>
+			<version>0.1.0-SNAPSHOT</version>
+			<scope>system</scope>
+			<systemPath>D:\SPAB-master\SPAB-master\target\SPAB-0.1.0-SNAPSHOT.jar</systemPath>
+		</dependency>
+		
+		
+		<dependency>
+			<groupId>org.dice-research</groupId>
+			<artifactId>SPAB-jar-with-dependencies</artifactId>
+			<version>0.1.0-SNAPSHOT</version>
+			<scope>system</scope>
+			<systemPath>D:\SPAB-master\SPAB-master\target\SPAB-jar-with-dependencies.jar</systemPath>
+		</dependency>
+
 </dependencies>
 </project>
