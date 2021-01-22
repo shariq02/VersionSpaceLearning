@@ -1,4 +1,3 @@
-package org.dice_research.vspace;
 import java.util.ArrayList;
 import java.util.BitSet;
 import java.util.HashSet;
@@ -6,6 +5,24 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.ListIterator;
 import java.util.Set;
+
+public class GeneralizeS {
+
+
+	HashSet<Hypothesis> min_generalizations(Hypothesis s, Hypothesis h) {
+		HashSet<Hypothesis> res = new HashSet<Hypothesis>();
+		Hypothesis newH = new Hypothesis(s.features);
+		ArrayList<Integer> compare = s.compareTo(h);
+		for (int i : compare) {
+			if (s.features[i].equals(Hypothesis.NONE)) {
+				newH.features[i] = h.features[i];
+			} else {
+				newH.features[i] = Hypothesis.ANY;
+			}
+		}
+		res.add(newH);
+		return res;
+	}
 
 import org.dice_research.SparqlUseCase.Query;
 import org.dice_research.SparqlUseCase.Triple;
@@ -15,7 +32,14 @@ public class GeneralizeS {
 	 * dataPoint
 	 * */
 	HashSet<Hypothesis> min_generalizations(HashSet<Hypothesis> s, String[] dataPoint, ArrayList<Ontology> fGraphList) {
+	 *  converts dataPoint to hypothesis then proceeds the same way as above
+	 *  this change was needed in order to be able to compare dataPoint values
+	 *  to hypothesis feature values (might need to further change the hypothesis
+	 *class to omit this change)
+	 */
+	HashSet<Hypothesis> min_generalizations(HashSet<Hypothesis> s, String[] dataPoint, ArrayList<Ontology> fGraphList, HashSet<Hypothesis> g ) {
 		HashSet<Hypothesis> res = new HashSet<Hypothesis>();
+		HashSet<Hypothesis> finalRes = new HashSet<Hypothesis>();
 		Hypothesis newH = null;
 		Vertices parent;
 		for (Hypothesis sp : s)
@@ -32,10 +56,24 @@ public class GeneralizeS {
 					if (newH != sp) res.add(newH);
 				}
 			}
-		return res;
+		
+		for (Hypothesis hyp_s: res)
+		{
+			for ( Hypothesis hyp_g : g)
+			{
+				if (hyp_s.isMoreSpecificThan(hyp_g, fGraphList))
+				{
+					finalRes.add(hyp_s);
+					break;
+				}
+			}
+		}
+		return finalRes;
 	}
 
-
+	/**
+	 * This function removes the hypotheses from specialized set of hypothesis which is inconsistent with data.
+	 */
 	public HashSet<Hypothesis> removeMember(HashSet<Hypothesis> S, String[] data, ArrayList<Ontology> f_pssibleValues)
 	{
 		HashSet<Hypothesis> spGList = new HashSet<Hypothesis>();
@@ -66,6 +104,21 @@ public class GeneralizeS {
 				if(cTriple.isMoreGeneralThan(qTriple)) {
 					cIter.remove();
 					qIter.remove();
+	/**
+	 * This function checks whether hypothesis in s boundary is more specific than at least one of the g boundary hypothesis or not. If not it
+	 * removes it from s boundary. 
+	 */
+
+	public HashSet<Hypothesis> compareG_Remove(HashSet<Hypothesis> S, HashSet<Hypothesis> G, ArrayList<Ontology> featureGraph)
+	{
+		HashSet<Hypothesis> finalRes = new HashSet<Hypothesis>();
+		for (Hypothesis hyp_s: S)
+		{
+			for ( Hypothesis hyp_g : G)
+			{
+				if (hyp_s.isMoreSpecificThan(hyp_g, featureGraph))
+				{
+					finalRes.add(hyp_s);
 					break;
 				}
 			}
@@ -141,5 +194,32 @@ public class GeneralizeS {
 		}
 		res.add(tmpQuery);
 		return res;
+	}
+		return finalRes;
+	}
+
+	/**
+	 * This function checks whether hypothesis in s boundary is more general than the other hypothesis in s boundary. If that is the case, this
+	 * block of function removes that general hypothesis from the s boundary.
+	 */
+	public HashSet<Hypothesis> removeGeneric(HashSet<Hypothesis> S, ArrayList<Ontology> featureGraph )
+	{
+		HashSet<Hypothesis> spGListFinal= new HashSet<Hypothesis>();
+		for (Hypothesis hyps : S)
+		{
+			int counter = 0;
+			for (Hypothesis hypotheses : S)
+			{
+				if(hyps == hypotheses) continue;
+				else if (hyps.isMoreGeneralThan(hypotheses, featureGraph))
+				{
+					counter ++;
+					break;
+				}
+			}
+			if (counter==0) spGListFinal.add(hyps);
+		}
+
+		return spGListFinal;
 	}
 }
