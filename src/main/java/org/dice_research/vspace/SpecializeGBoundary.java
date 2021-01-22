@@ -3,6 +3,7 @@ package org.dice_research.vspace;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Set;
 
 import org.dice_research.SparqlUseCase.Query;
@@ -147,52 +148,94 @@ public class SpecializeGBoundary {
 		return spGList;
 	}
 	/*
-	 * Minimally specializes the set of most general queries depending on the set of most special queries
+	 * Minimally specialize a query depending on the set of most special queries
 	 * */
-	public Set<Query> min_specializations(Query h, Set<Query> q){
+	public Set<Query> min_specializations(Query h, Query negPoint, Set<Query> q){
 		Set<Query> res = new HashSet<Query>();
-		
+		//main loop
+		System.out.println("NEW RUN: negPoint size="+negPoint.getTriples().size());
 		for(Query e: q) {
-			int triples = e.getTriples().size();
-			if(triples == 0) {
-				break;
+			if(h.isMostGeneral()) {
+				h = new Query(negPoint.getTriples().size());
 			}
 			
-			Query tmp = null;
-			Triple tmpTriple = null;
-			Triple qTriple = null;
+			//list of triples that we already considered (non-optional triples)
+			List<Integer> requiredTriplesToSkip = new ArrayList<Integer>();
+			for(int i=0; i<negPoint.getTriples().size(); i++) {
+				Query toSpecialize = new Query();
+				//copy all triples from h that do not have on all positions the ANY_ANY value
+				for(Triple w: h.getTriples()) {
+					if(!w.hasSameValues(new Triple("ANY_ANY", "ANY_ANY", "ANY_ANY"))) {
+						toSpecialize.getTriples().add(new Triple(w.getSubjectValue(), w.getPredicateValue(), w.getObjectValue()));
+					}
+				}
+				//add enough ANY_ANY value triples until size of triples of toSpecialize is the size of triples of negPoint
+				if(toSpecialize.getTriples().size() < negPoint.getTriples().size()) {
+					int size =toSpecialize.getTriples().size();
+					for(int m=0;m<negPoint.getTriples().size()-size;m++) {
+						toSpecialize.getTriples().add(new Triple("ANY_ANY","ANY_ANY","ANY_ANY"));
+					}
+				} else {
+					res.add(toSpecialize);
+					for(Query o: res) {
+						if(e.getTriples().size() > o.getTriples().size()) {
+							int size = o.getTriples().size();
+							for(int c=0; c< e.getTriples().size()-size;c++) {
+								o.getTriples().add(new Triple("ANY_ANY", "ANY_ANY", "ANY_ANY", true));
+							}
+						}
+					}
+					return res;
+				}
+				Triple t = null;
+				for(int j=0; j<e.getTriples().size(); j++) {
+					//System.out.println(toSpecialize.getTriples().get(i));
+					//System.out.println(" <-> "+e.getTriples().get(j));
+					if(!requiredTriplesToSkip.contains(j)
+						&& !e.getTriples().get(i).isOptional() 
+						&& !toSpecialize.getTriples().get(i).hasSameValues(e.getTriples().get(j))) {
+						t=e.getTriples().get(i);
+						requiredTriplesToSkip.add(j);
+						break;
+					}
+				}
+				
+				Triple qTriple = t;
+				Triple tmpTriple = null;
+				for(Triple w: toSpecialize.getTriples()) {
+					System.out.println("1: i"+i+" size"+toSpecialize.getTriples().size());
+					if(w.hasSameValues(new Triple("ANY_ANY", "ANY_ANY", "ANY_ANY"))) {
+						System.out.println("2");
+						tmpTriple = w;
+						break;
+					}
+				}
+				System.out.println("i:"+i+h.getParsedQuery());
+//				System.out.println(qTriple.getSubjectValue());
+//				System.out.println(tmpTriple.getSubjectValue());
+				if(!qTriple.getSubject().isMoreGeneralThan(tmpTriple.getSubject())) {
+					tmpTriple.getSubject().setValue(qTriple.getSubjectValue());
+				}
+				
+				if(!qTriple.getPredicate().isMoreGeneralThan(tmpTriple.getPredicate())) {
+					tmpTriple.getPredicate().setValue(qTriple.getPredicateValue());
+					
+				}
+				
+				if(!qTriple.getObject().isMoreGeneralThan(tmpTriple.getObject())) {
+					tmpTriple.getObject().setValue(qTriple.getObjectValue());
+				}
+				res.add(toSpecialize);
+			}
 			
-			for(int i=0; i<triples; i++) {
-				tmp = new Query(h);
-				//i-th triple of h
-				tmpTriple = tmp.getTriples().get(i);
-				//i-th triple of q
-				qTriple = e.getTriples().get(i);
-				
-				//specialize either h's subject, predicate or object to the respective q's value
-				if(qTriple.getSubject().getType().equals(TripleValue.IRI) || qTriple.getSubject().getType().equals(TripleValue.LITERAL)) {
-					if(!qTriple.getSubject().isMoreGeneralThan(tmpTriple.getSubject())) {
-						tmpTriple.getSubject().setValue(qTriple.getSubjectValue());
-						res.add(tmp);
-						continue;
+			for(Query o: res) {
+				if(e.getTriples().size() > o.getTriples().size()) {
+					int size = o.getTriples().size();
+					for(int c=0; c< e.getTriples().size()-size;c++) {
+						o.getTriples().add(new Triple("ANY_ANY", "ANY_ANY", "ANY_ANY", true));
 					}
 				}
 				
-				if(qTriple.getPredicate().getType().equals(TripleValue.IRI)) {
-					if(!qTriple.getPredicate().isMoreGeneralThan(tmpTriple.getPredicate())) {
-						tmpTriple.getPredicate().setValue(qTriple.getPredicateValue());
-						res.add(tmp);
-						continue;
-					}
-				}
-				
-				if(qTriple.getObject().getType().equals(TripleValue.IRI) || qTriple.getObject().getType().equals(TripleValue.LITERAL)) {
-					if(!qTriple.getObject().isMoreGeneralThan(tmpTriple.getObject())) {
-						tmpTriple.getObject().setValue(qTriple.getObjectValue());
-						res.add(tmp);
-						continue;
-					}
-				}
 			}
 		}
 		

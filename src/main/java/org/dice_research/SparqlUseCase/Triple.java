@@ -5,11 +5,19 @@ import java.util.List;
 
 public class Triple {
 	TripleValue s, p, o;
+	boolean optional = false;
 	
 	public Triple(String s, String p, String o) {
 		this.s = new TripleValue(s);
 		this.p = new TripleValue(p);
 		this.o = new TripleValue(o);
+	}
+	
+	public Triple(String s, String p, String o, boolean op) {
+		this.s = new TripleValue(s);
+		this.p = new TripleValue(p);
+		this.o = new TripleValue(o);
+		this.optional = true;
 	}
 	
 	@Override
@@ -40,6 +48,9 @@ public class Triple {
 	public String getObjectValue() {
 		return this.o.toString();
 	}
+	public boolean isOptional() {
+		return this.optional;
+	}
 	
 	/** Triple version of isMoreGeneralThan*/
 	public boolean isMoreGeneralThan(Triple t) {
@@ -65,6 +76,13 @@ public class Triple {
 			res.set(2);
 		}
 		return res;
+	}
+	
+	public boolean hasSameValues(Triple t) {
+		if(this.s.toString().equals(t.s.toString()) && this.p.toString().equals(t.p.toString()) && this.o.toString().equals(t.o.toString())) {
+			return true;
+		}
+		return false;
 	}
 	
 	/* Returns the index of a triple in y which is the most similar to triple t (similar in terms of the lowest dissagrement)

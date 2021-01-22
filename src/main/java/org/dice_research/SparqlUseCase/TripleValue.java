@@ -16,7 +16,11 @@ public class TripleValue {
 	//possible values apart from specific values
 	static List<String> anyValues = Arrays.asList(new String[] {"ANY_VARIABLE", "ANY_IRI", "ANY_LITERAL", "ANY_ANY"});
 	
-	public TripleValue(String v) {
+	public TripleValue(String s) {
+		determineValue(s);
+	}
+	
+	public void determineValue(String v) {
 		if(anyValues.contains(v)) {
 			this.value = v;
 			this.type = v.substring(v.indexOf("_")+1, v.length());
@@ -45,7 +49,7 @@ public class TripleValue {
 	}
 	
 	public void setValue(String v) {
-		this.value = v;
+		determineValue(v);
 	}
 	
 	/** TripleValue version of isMoreGeneralThan */
