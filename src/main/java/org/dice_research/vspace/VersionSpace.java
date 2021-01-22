@@ -1,3 +1,5 @@
+package org.dice_research.vspace;
+
 import java.util.HashSet;
 
 public class VersionSpace
