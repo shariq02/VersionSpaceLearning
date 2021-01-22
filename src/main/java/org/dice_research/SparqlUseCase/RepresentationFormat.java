@@ -1,6 +1,8 @@
 package org.dice_research.SparqlUseCase;
 
 import org.apache.jena.query.*;
+import org.apache.jena.query.Query;
+
 import java.io.BufferedReader;
 //import java.io.File;
 import java.io.FileNotFoundException;
@@ -80,6 +82,13 @@ public class RepresentationFormat {
 			
 			jenaQuery = QueryFactory.create(sparqlUnit.getJenaStringRepresentation());
 			
+			
+			
+			System.out.println("----------------------------------------------");
+			System.out.println("Representation I want");
+			System.out.println("----------------------------------------------");
+			System.out.println(jenaQuery.toString());
+			System.out.println("\n");
 			
 			System.out.println("----------------------------------------------");
 			System.out.println("Variable names after parsing for Query_" + (i + 1) + ":");
