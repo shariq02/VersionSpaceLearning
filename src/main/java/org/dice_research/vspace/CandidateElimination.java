@@ -1,16 +1,5 @@
 import java.io.*;
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.List;
-import java.util.ListIterator;
-import java.util.Set;
-
-import org.dice_research.SparqlUseCase.Query;
-import org.dice_research.SparqlUseCase.QueryReader;
-import org.dice_research.SparqlUseCase.SPARQLQueryParser;
-import org.dice_research.SparqlUseCase.Triple;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
@@ -48,19 +37,12 @@ public class CandidateElimination {
     public ArrayList<Ontology> featureGraph;
     private String mode;
     private String graphPath;
-    
-    //spab use case dependencies
-    private List<Query> positiveQueries;
-    private List<Query> negativeQueries;
-    private Set<Query> mostSpecialBoundary;
-    private Set<Query> mostGeneralBoundary;
     private Boolean inconsistancy;
     private ArrayList<VersionSpace> VS_hSet;
     
     /**
      * Constructor initialization and it does the candidate elimination on basis of the mode selection.
      */
-
 
     public CandidateElimination(String mode, String path)
     {
@@ -69,53 +51,9 @@ public class CandidateElimination {
 
     public CandidateElimination(String mode, String path, String graphPath)
     {
-    	if(mode.toLowerCase().equals("spab")) {
-        	//give the paths to the positive and negative lists of queries to the initializer
-    		spabInit(path, graphPath);
-        } else {
-        	initialize(mode,path);
-            this.graphPath = graphPath;
-        }
-        
+        initialize(mode,path);
+        this.graphPath = graphPath;
     }
-    
-    //constructor for the spab use case
-  	public void spabInit(String posQueriesPath, String negQueriesPath) {
-  		this.mostSpecialBoundary = new HashSet<Query>();
-  		this.mostGeneralBoundary = new HashSet<Query>();
-  		this.positiveQueries = new ArrayList<Query>();
-  		this.negativeQueries = new ArrayList<Query>();
-  		this.genS = new GeneralizeS();
-        this.spclG = new SpecializeGBoundary();
-  		
-  		//add the most specific/general query (query which has no triples) to the respective set
-  		this.mostSpecialBoundary.add(new Query());
-  		this.mostGeneralBoundary.add(new Query("*"));
-  		
-  		//should read the queries here, and add the parsed version in the positive or negative list
-  		List<String> posReadQueries = null;
-  		List<String> negReadQueries = null;
-		
-		try {
-			posReadQueries = QueryReader.readQueries(posQueriesPath);
-			for(String s: posReadQueries) {
-				Query q = new Query(s);
-				SPARQLQueryParser.parse(q);
-				this.positiveQueries.add(q);
-			}
-			negReadQueries = QueryReader.readQueries(negQueriesPath);
-			for(String s: negReadQueries) {
-				Query q = new Query(s);
-				SPARQLQueryParser.parse(q);
-				this.negativeQueries.add(q);
-			}
-		} catch(Exception e) {
-			e.printStackTrace();
-		}
-		
-  	}
-
-	public void initialize(String mode, String path)
 /**
  *  Variable initialization
  */
@@ -141,76 +79,7 @@ public class CandidateElimination {
         this.VS_hSet = new ArrayList<>();
         this.filePath = path;
         this.inconsistancy = false;
-    }	
-	
-	public void spabElimination() {
-		//process positive examples first
-		
-		for(ListIterator<Query> positivePointsIter = positiveQueries.listIterator(); positivePointsIter.hasNext();) {
-			Query currentPosPoint = positivePointsIter.next();
-			Set<Query> newSMembers = new HashSet<Query>();
-			for(Iterator<Query> sBoundaryIter = this.mostSpecialBoundary.iterator(); sBoundaryIter.hasNext();) {
-				Query currentS = sBoundaryIter.next();
-				if(!currentS.isMoreGeneralThan(currentPosPoint, 0, new HashMap<Integer, Integer>(), null)) {
-					sBoundaryIter.remove();
-					Set<Query> minGeneralizations = genS.min_generalizations(currentS, currentPosPoint);
-					for(Query q: minGeneralizations) {
-						if(q.isMoreGeneralThan(currentPosPoint, 0, new HashMap<Integer, Integer>(), null)){
-							for(Query w: this.mostGeneralBoundary) {
-								if(w.isMoreGeneralThan(q, 0, new HashMap<Integer, Integer>(), null)) {
-									newSMembers.add(q);
-									break;
-								}
-							}
-						}
-					}
-				}
-			}
-			this.mostSpecialBoundary.addAll(newSMembers);
-		}
-		
-		//process the negative examples
-		if(this.mostSpecialBoundary.size() > 0) {
-			for(ListIterator<Query> negativePointsIter = negativeQueries.listIterator(); negativePointsIter.hasNext();) {
-				Query currentNegPoint = negativePointsIter.next();
-				Set<Query> newGMembers = new HashSet<Query>();
-				for(Iterator<Query> gBoundaryIter = this.mostGeneralBoundary.iterator(); gBoundaryIter.hasNext();) {
-					Query currentG = gBoundaryIter.next();
-					if(currentG.isMoreGeneralThanWithoutOptionals(currentNegPoint, 0, new HashMap<Integer, Integer>(), null)) {
-						gBoundaryIter.remove();
-						
-						Set<Query> minSpecializations = spclG.min_specializations(currentG, currentNegPoint, this.mostSpecialBoundary);
-						for(Query q: minSpecializations) {
-							if(!q.isMoreGeneralThanWithoutOptionals(currentNegPoint, 0, new HashMap<Integer, Integer>(), null)){
-								for(Query w: this.mostSpecialBoundary) {
-									if(!w.isMoreGeneralThanWithoutOptionals(q, 0, new HashMap<Integer, Integer>(), null)) {
-										newGMembers.add(q);
-										break;
-									}
-								}
-							}
-						}
-					}
-				}
-				this.mostGeneralBoundary.addAll(newGMembers);
-			}
-		}
-		System.out.println("S:[");
-		System.out.println("");
-		if(this.mostSpecialBoundary.size() > 0) {
-			System.out.println(this.mostSpecialBoundary.iterator().next().getParsedQuery());
-		}
-		System.out.println("]");
-		System.out.println("");
-		System.out.println("G: [");
-		System.out.println("");
-		if(this.mostGeneralBoundary.size() > 0) {
-			for(Query q: this.mostGeneralBoundary) {
-				System.out.println(q.getParsedQuery());
-			}
-		}
-		System.out.println("]");
-	}
+    }
 
 /**
  * This piece of function performs candidate elimination. It reads and splits the data from file.

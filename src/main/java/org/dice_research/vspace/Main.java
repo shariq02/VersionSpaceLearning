@@ -14,9 +14,5 @@ public class Main {  public static void main(String[] argas) throws IOException 
         "C:\\Users\\Sharique\\Downloads\\VersionSpaceLearning\\VersionSpaceLearning"
         + "\\VersionSpaceLearning\\src\\dataOntology.csv");
     ceh.performElimication();
-	CandidateElimination ceb = new CandidateElimination("spab", "./src/test/resources/datafile/PositiveQueries.txt"
-																, "./src/test/resources/datafile/NegativeQueries.txt");
-	ceb.spabElimination();
-	
   }
 }
