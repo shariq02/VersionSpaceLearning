@@ -40,7 +40,10 @@ public class JenaParser extends SPARQLQueryParser {
 	public JenaParser() {
 		queries = new ArrayList<Query>();
 	}
-
+	
+	/**
+	 * Get jena query from string
+	 **/
 	public Query getJenaQueryRepresentation(String queryString) {
 
 		jenaQuery = QueryFactory.create(queryString);
