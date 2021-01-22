@@ -55,16 +55,16 @@ public class CandidateElimination {
      * Constructor initialization and it does the candidate elimination on basis of the mode selection.
      */
 
-    public CandidateElimination(String mode, String path)
-    {
-        initialize(mode,path);
-    }
-
-    public CandidateElimination(String mode, String path, String graphPath)
-    {
-        initialize(mode,path);
-        this.graphPath = graphPath;
-    }
+//    public CandidateElimination(String mode, String path)
+//    {
+//        initialize(mode,path);
+//    }
+//
+//    public CandidateElimination(String mode, String path, String graphPath)
+//    {
+//        initialize(mode,path);
+//        this.graphPath = graphPath;
+//    }
     
   //spab use case dependencies
     private List<Query> positiveQueries;
