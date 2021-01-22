@@ -1,0 +1,11 @@
+0,Large
+0,Small
+0,Medium
+1,Vegetables
+1,Fruits
+1,Vegetables,Potato,Tomato,Cauliflower,Broccoli
+1,Fruits,Apple,Orange,Pineapple
+2,Polyhedron
+2,Oval
+2,Round
+2,Polyhedron,Cube,Pyramid,Kite,Pentagon

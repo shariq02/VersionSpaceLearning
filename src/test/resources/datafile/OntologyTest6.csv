@@ -1,0 +1,10 @@
+0,Large
+0,Small
+0,Medium
+1,PKW
+1,LKW
+1,PKW,SLR,SLK,XJ,XS,Mini
+1,LKW,MAN,Volvo,Mercedes
+2,Cities
+2,Berlin
+2,Cities,Paderborn,Hannover,Munich
