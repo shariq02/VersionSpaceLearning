@@ -1,4 +1,4 @@
-package src.test.java.org.dice_research.vspace;
+package org.dice_research.vspace;
 
 /*The test case DataTest2.csv contains different instances for shapes and their features respectively.
  * OntologyTest2.csv contains the Hierarchical Data for the instances in DataTest2.csv
@@ -7,7 +7,7 @@ package src.test.java.org.dice_research.vspace;
  * @author Parth Sharma
  */
 import static org.junit.Assert.assertEquals;
-import static org.junit.jupiter.api.Assertions.*;
+
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
@@ -16,8 +16,7 @@ import java.util.ArrayList;
 import java.util.HashSet;
 
 import org.junit.Before;
-import org.junit.jupiter.api.Test;
-import java.io.*;
+import org.junit.Test;
 class Generalise_S_Test_DataTest2 {
 	
 	CandidateElimination ceh=new CandidateElimination("Hierarchical", "/Users/parthsharma/Desktop/DataTest2.csv",
@@ -65,7 +64,7 @@ class Generalise_S_Test_DataTest2 {
             ceh.featureValues=featureValues;
 		}
 		
-		ceh.datalen=datalen;
+		ceh.setDatalen(datalen);
 	}
 	@SuppressWarnings("resource")
 	@Test

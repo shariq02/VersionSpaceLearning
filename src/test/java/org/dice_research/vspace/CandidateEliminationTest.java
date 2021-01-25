@@ -103,20 +103,20 @@ public class CandidateEliminationTest {
 		 */
 		instanceTestCase = new String[] { "Large", "Octahedron", "No" };
 		inst = new Instance(instanceTestCase);
-		ce.inst_S.add(new Hypothesis(ce.datalen, "S"));
-		ce.inst_G.add(new Hypothesis(ce.datalen, "G"));
+		ce.getInst_S().add(new Hypothesis(ce.getDatalen(), "S"));
+		ce.getInst_G().add(new Hypothesis(ce.getDatalen(), "G"));
 		System.out.println("The instance is");
 		System.out.println(inst.toString());
-		ce.consistentG = ce.spclG.specialize(inst.getAttribs(), ce.inst_S, ce.featureGraph, ce.consistentG, "ce");
-		ce.inst_S = ce.genS.removeMember(ce.inst_S, inst.getAttribs(), ce.featureGraph);
-		ce.inst_G = ce.spclG.specialize(inst.getAttribs(), ce.inst_S, ce.featureGraph, ce.inst_G, "ce");
+		ce.setConsistentG(ce.getSpclG().specialize(inst.getAttribs(), ce.getInst_S(), ce.featureGraph, ce.getConsistentG(), "ce"));
+		ce.setInst_S(ce.getGenS().removeMember(ce.getInst_S(), inst.getAttribs(), ce.featureGraph));
+		ce.setInst_G(ce.getSpclG().specialize(inst.getAttribs(), ce.getInst_S(), ce.featureGraph, ce.getInst_G(), "ce"));
 
 		ce.mergeVersionSpace(inst);
 		hypothesisTestCase = new String[] { "Small", "Polyhedron" };
 		hypo = new Hypothesis(hypothesisTestCase);
-		for (Hypothesis hyp : ce.VS_hSet.get(0).getG())
+		for (Hypothesis hyp : ce.getVS_hSet().get(0).getG())
 			assertEquals(hypo, hyp);
-		for (Hypothesis hyp : ce.VS_hSet.get(0).getS())
+		for (Hypothesis hyp : ce.getVS_hSet().get(0).getS())
 			assertEquals(hypo, hyp);
 		/**
 		 * Testing the creation of New Version Space when the new instance can no more
@@ -126,8 +126,8 @@ public class CandidateEliminationTest {
 		 */
 		instanceTestCase = new String[] { "Large", "Cube", "Yes" };
 		inst = new Instance(instanceTestCase);
-		ce.inst_S.add(new Hypothesis(ce.datalen, "S"));
-		ce.inst_G.add(new Hypothesis(ce.datalen, "G"));
+		ce.getInst_S().add(new Hypothesis(ce.getDatalen(), "S"));
+		ce.getInst_G().add(new Hypothesis(ce.getDatalen(), "G"));
 		System.out.println("The instance is");
 		System.out.println(inst.toString());
 		/**
@@ -139,26 +139,26 @@ public class CandidateEliminationTest {
 		assertNotNull(ce.getG());
 		assertNotNull(ce.getS());
 
-		ce.inst_S = ce.genS.min_generalizations(ce.inst_S, inst.getAttribs(), ce.featureGraph, ce.inst_G);
-		ce.inst_G = ce.spclG.removeMember(ce.inst_S, ce.inst_G, ce.featureGraph);
+		ce.setInst_S(ce.getGenS().min_generalizations(ce.getInst_S(), inst.getAttribs(), ce.featureGraph, ce.getInst_G()));
+		ce.setInst_G(ce.getSpclG().removeMember(ce.getInst_S(), ce.getInst_G(), ce.featureGraph));
 
 		ce.mergeVersionSpace(inst);
 
 		hypothesisTestCase = new String[] { "Large", "Cube" };
 		hypo = new Hypothesis(hypothesisTestCase);
-		for (Hypothesis hyp : ce.VS_hSet.get(1).getS())
+		for (Hypothesis hyp : ce.getVS_hSet().get(1).getS())
 			assertEquals(hypo, hyp);
 
 		hypothesisTestCase = new String[] { "?", "Cube" };
 		hypo = new Hypothesis(hypothesisTestCase);
-		for (Hypothesis hyp : ce.VS_hSet.get(1).getG())
+		for (Hypothesis hyp : ce.getVS_hSet().get(1).getG())
 			assertEquals(hypo, hyp);
 
 		hypothesisTestCase = new String[] { "Small", "Polyhedron" };
 		hypo = new Hypothesis(hypothesisTestCase);
-		for (Hypothesis hyp : ce.VS_hSet.get(0).getG())
+		for (Hypothesis hyp : ce.getVS_hSet().get(0).getG())
 			assertEquals(hypo, hyp);
-		for (Hypothesis hyp : ce.VS_hSet.get(0).getS())
+		for (Hypothesis hyp : ce.getVS_hSet().get(0).getS())
 			assertEquals(hypo, hyp);
 
 		/**
@@ -174,29 +174,29 @@ public class CandidateEliminationTest {
 		 */
 		instanceTestCase = new String[] { "Large", "Apple", "Round", "Yes" };
 		inst = new Instance(instanceTestCase);
-		ce.inst_S.add(new Hypothesis(ce.datalen, "S"));
-		ce.inst_G.add(new Hypothesis(ce.datalen, "G"));
+		ce.getInst_S().add(new Hypothesis(ce.getDatalen(), "S"));
+		ce.getInst_G().add(new Hypothesis(ce.getDatalen(), "G"));
 		System.out.println("The instance is");
 		System.out.println(inst.toString());
-		ce.inst_S = ce.genS.min_generalizations(ce.inst_S, inst.getAttribs(), ce.featureGraph, ce.inst_G);
-		ce.inst_G = ce.spclG.removeMember(ce.inst_S, ce.inst_G, ce.featureGraph);
+		ce.setInst_S(ce.getGenS().min_generalizations(ce.getInst_S(), inst.getAttribs(), ce.featureGraph, ce.getInst_G()));
+		ce.setInst_G(ce.getSpclG().removeMember(ce.getInst_S(), ce.getInst_G(), ce.featureGraph));
 
 		ce.mergeVersionSpace(inst);
 		hypothesisTestCase = new String[] { "Large", "Vegetables", "?" };
 		hypo = new Hypothesis(hypothesisTestCase);
-		for (Hypothesis hyp : ce.VS_hSet.get(0).getS())
+		for (Hypothesis hyp : ce.getVS_hSet().get(0).getS())
 			assertEquals(hypo, hyp);
 		hypothesisTestCase = new String[] { "?", "Vegetables", "?" };
 		hypo = new Hypothesis(hypothesisTestCase);
-		for (Hypothesis hyp : ce.VS_hSet.get(0).getG())
+		for (Hypothesis hyp : ce.getVS_hSet().get(0).getG())
 			assertEquals(hypo, hyp);
 		hypothesisTestCase = new String[] { "Large", "Apple", "Round" };
 		hypo = new Hypothesis(hypothesisTestCase);
-		for (Hypothesis hyp : ce.VS_hSet.get(1).getS())
+		for (Hypothesis hyp : ce.getVS_hSet().get(1).getS())
 			assertEquals(hypo, hyp);
 		hypothesisTestCase = new String[] { "?", "?", "Round" };
 		hypo = new Hypothesis(hypothesisTestCase);
-		for (Hypothesis hyp : ce.VS_hSet.get(1).getG())
+		for (Hypothesis hyp : ce.getVS_hSet().get(1).getG())
 			assertEquals(hypo, hyp);
 
 		/**
@@ -206,29 +206,29 @@ public class CandidateEliminationTest {
 
 		instanceTestCase = new String[] { "Small", "Cauliflower", "Pyramid", "No" };
 		inst = new Instance(instanceTestCase);
-		ce.inst_S.add(new Hypothesis(ce.datalen, "S"));
-		ce.inst_G.add(new Hypothesis(ce.datalen, "G"));
+		ce.getInst_S().add(new Hypothesis(ce.getDatalen(), "S"));
+		ce.getInst_G().add(new Hypothesis(ce.getDatalen(), "G"));
 		System.out.println("The instance is");
 		System.out.println(inst.toString());
-		ce.consistentG = ce.spclG.specialize(inst.getAttribs(), ce.inst_S, ce.featureGraph, ce.consistentG, "ce");
-		ce.inst_S = ce.genS.removeMember(ce.inst_S, inst.getAttribs(), ce.featureGraph);
-		ce.inst_G = ce.spclG.specialize(inst.getAttribs(), ce.inst_S, ce.featureGraph, ce.inst_G, "ce");
+		ce.setConsistentG(ce.getSpclG().specialize(inst.getAttribs(), ce.getInst_S(), ce.featureGraph, ce.getConsistentG(), "ce"));
+		ce.setInst_S(ce.getGenS().removeMember(ce.getInst_S(), inst.getAttribs(), ce.featureGraph));
+		ce.setInst_G(ce.getSpclG().specialize(inst.getAttribs(), ce.getInst_S(), ce.featureGraph, ce.getInst_G(), "ce"));
 
 		ce.mergeVersionSpace(inst);
 
 		hypothesisTestCase = new String[] { "Large", "Vegetables", "?" };
 		hypo = new Hypothesis(hypothesisTestCase);
-		for (Hypothesis hyp : ce.VS_hSet.get(0).getS())
+		for (Hypothesis hyp : ce.getVS_hSet().get(0).getS())
 			assertEquals(hypo, hyp);
-		for (Hypothesis hyp : ce.VS_hSet.get(0).getG())
+		for (Hypothesis hyp : ce.getVS_hSet().get(0).getG())
 			assertEquals(hypo, hyp);
 		hypothesisTestCase = new String[] { "Large", "Apple", "Round" };
 		hypo = new Hypothesis(hypothesisTestCase);
-		for (Hypothesis hyp : ce.VS_hSet.get(1).getS())
+		for (Hypothesis hyp : ce.getVS_hSet().get(1).getS())
 			assertEquals(hypo, hyp);
 		hypothesisTestCase = new String[] { "?", "?", "Round" };
 		hypo = new Hypothesis(hypothesisTestCase);
-		for (Hypothesis hyp : ce.VS_hSet.get(1).getG())
+		for (Hypothesis hyp : ce.getVS_hSet().get(1).getG())
 			assertEquals(hypo, hyp);
 
 		/**
@@ -239,18 +239,18 @@ public class CandidateEliminationTest {
 
 		instanceTestCase = new String[] { "Large", "Pineapple", "Oval", "Yes" };
 		inst = new Instance(instanceTestCase);
-		ce.inst_S.add(new Hypothesis(ce.datalen, "S"));
-		ce.inst_G.add(new Hypothesis(ce.datalen, "G"));
+		ce.getInst_S().add(new Hypothesis(ce.getDatalen(), "S"));
+		ce.getInst_G().add(new Hypothesis(ce.getDatalen(), "G"));
 		System.out.println("The instance is");
 		System.out.println(inst.toString());
-		ce.inst_S = ce.genS.min_generalizations(ce.inst_S, inst.getAttribs(), ce.featureGraph, ce.inst_G);
-		ce.inst_G = ce.spclG.removeMember(ce.inst_S, ce.inst_G, ce.featureGraph);
+		ce.setInst_S(ce.getGenS().min_generalizations(ce.getInst_S(), inst.getAttribs(), ce.featureGraph, ce.getInst_G()));
+		ce.setInst_G(ce.getSpclG().removeMember(ce.getInst_S(), ce.getInst_G(), ce.featureGraph));
 
 		ce.mergeVersionSpace(inst);
 
 		hypothesisTestCase = new String[] { "Large", "Pineapple", "Oval" };
 		hypo = new Hypothesis(hypothesisTestCase);
-		for (Hypothesis hyp : ce.VS_hSet.get(2).getS())
+		for (Hypothesis hyp : ce.getVS_hSet().get(2).getS())
 			assertEquals(hypo, hyp);
 		hypothesisTestCase = new String[] { "?", "Pineapple", "?" };
 		hypo = new Hypothesis(hypothesisTestCase);
@@ -259,7 +259,7 @@ public class CandidateEliminationTest {
 		hypothesisTestCase = new String[] { "?", "?", "Oval" };
 		Hypothesis hypo1 = new Hypothesis(hypothesisTestCase);
 		holder.add(hypo1);
-		assertEquals(holder, ce.VS_hSet.get(2).getG());
+		assertEquals(holder, ce.getVS_hSet().get(2).getG());
 		holder.clear();
 		/**
 		 * Testing with different data file OntologyTest6.csv
@@ -269,19 +269,19 @@ public class CandidateEliminationTest {
 		ce.performElimication();
 		instanceTestCase = new String[] { "Medium", "Volvo", "Hannover", "Yes" };
 		inst = new Instance(instanceTestCase);
-		ce.inst_S.add(new Hypothesis(ce.datalen, "S"));
-		ce.inst_G.add(new Hypothesis(ce.datalen, "G"));
+		ce.getInst_S().add(new Hypothesis(ce.getDatalen(), "S"));
+		ce.getInst_G().add(new Hypothesis(ce.getDatalen(), "G"));
 		System.out.println("The instance is");
 		System.out.println(inst.toString());
-		ce.inst_S = ce.genS.min_generalizations(ce.inst_S, inst.getAttribs(), ce.featureGraph, ce.inst_G);
-		ce.inst_G = ce.spclG.removeMember(ce.inst_S, ce.inst_G, ce.featureGraph);
+		ce.setInst_S(ce.getGenS().min_generalizations(ce.getInst_S(), inst.getAttribs(), ce.featureGraph, ce.getInst_G()));
+		ce.setInst_G(ce.getSpclG().removeMember(ce.getInst_S(), ce.getInst_G(), ce.featureGraph));
 		ce.mergeVersionSpace(inst);
 
 		hypothesisTestCase = new String[] { "Large", "?", "?" };
 		hypo = new Hypothesis(hypothesisTestCase);
-		for (Hypothesis hyp : ce.VS_hSet.get(0).getS())
+		for (Hypothesis hyp : ce.getVS_hSet().get(0).getS())
 			assertEquals(hypo, hyp);
-		for (Hypothesis hyp : ce.VS_hSet.get(0).getG())
+		for (Hypothesis hyp : ce.getVS_hSet().get(0).getG())
 			assertEquals(hypo, hyp);
 
 		/**
@@ -290,7 +290,7 @@ public class CandidateEliminationTest {
 
 		hypothesisTestCase = new String[] { "Medium", "Volvo", "Hannover" };
 		hypo = new Hypothesis(hypothesisTestCase);
-		for (Hypothesis hyp : ce.VS_hSet.get(1).getS())
+		for (Hypothesis hyp : ce.getVS_hSet().get(1).getS())
 			assertEquals(hypo, hyp);
 		hypothesisTestCase = new String[] { "?", "LKW", "?" };
 		hypo = new Hypothesis(hypothesisTestCase);
@@ -301,7 +301,7 @@ public class CandidateEliminationTest {
 		hypothesisTestCase = new String[] { "Medium", "?", "?" };
 		hypo = new Hypothesis(hypothesisTestCase);
 		holder.add(hypo);
-		assertEquals(holder, ce.VS_hSet.get(1).getG());
+		assertEquals(holder, ce.getVS_hSet().get(1).getG());
 
 		/**
 		 * The third generated version space is tested.
@@ -309,20 +309,20 @@ public class CandidateEliminationTest {
 
 		instanceTestCase = new String[] { "Small", "Mini", "Paderborn", "Yes" };
 		inst = new Instance(instanceTestCase);
-		ce.inst_S.add(new Hypothesis(ce.datalen, "S"));
-		ce.inst_G.add(new Hypothesis(ce.datalen, "G"));
+		ce.getInst_S().add(new Hypothesis(ce.getDatalen(), "S"));
+		ce.getInst_G().add(new Hypothesis(ce.getDatalen(), "G"));
 		System.out.println("The instance is");
 		System.out.println(inst.toString());
-		ce.inst_S = ce.genS.min_generalizations(ce.inst_S, inst.getAttribs(), ce.featureGraph, ce.inst_G);
-		ce.inst_G = ce.spclG.removeMember(ce.inst_S, ce.inst_G, ce.featureGraph);
+		ce.setInst_S(ce.getGenS().min_generalizations(ce.getInst_S(), inst.getAttribs(), ce.featureGraph, ce.getInst_G()));
+		ce.setInst_G(ce.getSpclG().removeMember(ce.getInst_S(), ce.getInst_G(), ce.featureGraph));
 		ce.mergeVersionSpace(inst);
 
 		// checking that the boundary of the previous Version Spaces is unchanged
-		assertEquals(holder, ce.VS_hSet.get(1).getG());
+		assertEquals(holder, ce.getVS_hSet().get(1).getG());
 		holder.clear();
 		hypothesisTestCase = new String[] { "Small", "Mini", "Paderborn" };
 		hypo = new Hypothesis(hypothesisTestCase);
-		for (Hypothesis hyp : ce.VS_hSet.get(2).getS())
+		for (Hypothesis hyp : ce.getVS_hSet().get(2).getS())
 			assertEquals(hypo, hyp);
 
 		hypothesisTestCase = new String[] { "?", "Mini", "?" };
@@ -331,7 +331,7 @@ public class CandidateEliminationTest {
 		hypothesisTestCase = new String[] { "?", "?", "Paderborn" };
 		hypo = new Hypothesis(hypothesisTestCase);
 		holder.add(hypo);
-		assertEquals(holder, ce.VS_hSet.get(2).getG());
+		assertEquals(holder, ce.getVS_hSet().get(2).getG());
 
 	}
 

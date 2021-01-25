@@ -1,4 +1,4 @@
-package src.test.java.org.dice_research.vspace;
+package org.dice_research.vspace;
 
 /*The test case DataTest1.csv contains different instances for cars and their features respectively.
  * OntologyTest1.csv contains the Hierarchical Data for the instances in DataTest1.csv
@@ -7,7 +7,6 @@ package src.test.java.org.dice_research.vspace;
  */
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.jupiter.api.Assertions.*;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
@@ -16,7 +15,8 @@ import java.util.ArrayList;
 import java.util.HashSet;
 
 import org.junit.Before;
-import org.junit.jupiter.api.Test;
+import org.junit.Test;
+
 import java.io.*;
 
 class Generalise_S_Test_DataTest1 {
@@ -61,7 +61,7 @@ class Generalise_S_Test_DataTest1 {
 			ceh.featureValues = featureValues;
 		}
 
-		ceh.datalen = datalen;
+		ceh.setDatalen(datalen);
 	}
 
 	@SuppressWarnings("resource")

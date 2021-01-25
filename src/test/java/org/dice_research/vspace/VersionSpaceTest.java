@@ -28,13 +28,13 @@ public class VersionSpaceTest {
 	public void testSetS() {
 		versionSpace.setS(g);
 		System.out.println("In Test SetS");
-		assertEquals(g,versionSpace.S);
+		assertEquals(g,versionSpace.getS());
 	}
 	@Test
 	public void testSetG() {
 		versionSpace.setG(s);
 		System.out.println("In Test SetG");
-		assertEquals(s,versionSpace.G);
+		assertEquals(s,versionSpace.getG());
 	}
 	
 	@Test

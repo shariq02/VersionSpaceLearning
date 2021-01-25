@@ -31,7 +31,7 @@ public class HypothesisTest {
 		 * result (true or false) of the (1st hypothesis).isMoreGeneralThan(2nd hypothesis) call */
 		List<String> readData = new ArrayList<String>();
 		data = new ArrayList<Object[]>();
-		File file = new File("./src/test/java/data.txt");
+		File file = new File("./src/test/resources/datafile/data.txt");
 		if(file.exists()) {
 			try {
 				readData = Files.readAllLines(file.toPath(), Charset.defaultCharset());

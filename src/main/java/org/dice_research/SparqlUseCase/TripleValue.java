@@ -20,6 +20,10 @@ public class TripleValue {
 		determineValue(s);
 	}
 	
+	public TripleValue() {
+		// TODO Auto-generated constructor stub
+	}
+
 	public void determineValue(String v) {
 		if(anyValues.contains(v)) {
 			this.value = v;

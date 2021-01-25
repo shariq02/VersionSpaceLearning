@@ -34,8 +34,8 @@ public class RemoveSpecificTest {
 	 */
 	@Test
 	public void test() {
-		ce.graphPath = "src/test/resources/datafile/OntologyTest3.csv";
-		ce.datalen = 2;
+		ce.setGraphPath("src/test/resources/datafile/OntologyTest3.csv");
+		ce.setDatalen(2);
 		ce.makeGraph();
 		G.add(new Hypothesis(new String[] { "Small", "Polyhedron" }));
 		G.add(new Hypothesis(new String[] { "?", "Sphere" }));
@@ -62,8 +62,8 @@ public class RemoveSpecificTest {
 	 */
 	@Test
 	public void test1() {
-		ce.graphPath = "src/test/resources/datafile/OntologyTest4.csv";
-		ce.datalen = 3;
+		ce.setGraphPath("src/test/resources/datafile/OntologyTest4.csv");
+		ce.setDatalen(3);
 		ce.makeGraph();
 		G.add(new Hypothesis(new String[] { "?", "Vegetables", "Oval" }));
 		G.add(new Hypothesis(new String[] { "Large", "Potato", "Oval" }));
