@@ -200,8 +200,6 @@ public class SpecializeGBoundary {
 				}
 				Triple t = null;
 				for(int j=0; j<e.getTriples().size(); j++) {
-					//System.out.println(toSpecialize.getTriples().get(i));
-					//System.out.println(" <-> "+e.getTriples().get(j));
 					if(!requiredTriplesToSkip.contains(j)
 						&& !e.getTriples().get(i).isOptional() 
 						&& !toSpecialize.getTriples().get(i).hasSameValues(e.getTriples().get(j))) {
@@ -214,16 +212,12 @@ public class SpecializeGBoundary {
 				Triple qTriple = t;
 				Triple tmpTriple = null;
 				for(Triple w: toSpecialize.getTriples()) {
-					System.out.println("1: i"+i+" size"+toSpecialize.getTriples().size());
 					if(w.hasSameValues(new Triple("ANY_ANY", "ANY_ANY", "ANY_ANY"))) {
-						System.out.println("2");
 						tmpTriple = w;
 						break;
 					}
 				}
-				System.out.println("i:"+i+h.getParsedQuery());
-//				System.out.println(qTriple.getSubjectValue());
-//				System.out.println(tmpTriple.getSubjectValue());
+				
 				if(!qTriple.getSubject().isMoreGeneralThan(tmpTriple.getSubject())) {
 					tmpTriple.getSubject().setValue(qTriple.getSubjectValue());
 				}

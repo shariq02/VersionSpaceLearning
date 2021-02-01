@@ -4,8 +4,8 @@ import java.util.HashSet;
 
 public class VersionSpace
 {
-    private HashSet<Hypothesis> S ;
-    private HashSet<Hypothesis> G ;
+    public HashSet<Hypothesis> S ;
+    public HashSet<Hypothesis> G ;
 
     public HashSet<Hypothesis> getS() {
         return S;

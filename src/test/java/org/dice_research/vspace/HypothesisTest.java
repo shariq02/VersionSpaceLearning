@@ -7,10 +7,7 @@ import java.nio.charset.Charset;
 import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.HashSet;
 import java.util.List;
-
-import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
@@ -31,7 +28,7 @@ public class HypothesisTest {
 		 * result (true or false) of the (1st hypothesis).isMoreGeneralThan(2nd hypothesis) call */
 		List<String> readData = new ArrayList<String>();
 		data = new ArrayList<Object[]>();
-		File file = new File("./src/test/java/data.txt");
+		File file = new File("./src/test/resources/datafile/data.txt");
 		if(file.exists()) {
 			try {
 				readData = Files.readAllLines(file.toPath(), Charset.defaultCharset());

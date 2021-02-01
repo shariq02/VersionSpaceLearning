@@ -2,7 +2,6 @@ package org.dice_research.vspace;
 
 import java.io.*;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashSet;
 import java.util.HashMap;
 import java.util.List;
@@ -13,7 +12,6 @@ import java.util.Set;
 import org.dice_research.SparqlUseCase.Query;
 import org.dice_research.SparqlUseCase.QueryReader;
 import org.dice_research.SparqlUseCase.SPARQLQueryParser;
-import org.dice_research.SparqlUseCase.Triple;
 
 /**
  * @author Susmita Goswami, Parth sharma
@@ -50,35 +48,22 @@ public class CandidateElimination {
     private String graphPath;
     private Boolean inconsistancy;
     private ArrayList<VersionSpace> VS_hSet;
-    
-    /**
-     * Constructor initialization and it does the candidate elimination on basis of the mode selection.
-     */
 
-//    public CandidateElimination(String mode, String path)
-//    {
-//        initialize(mode,path);
-//    }
-//
-//    public CandidateElimination(String mode, String path, String graphPath)
-//    {
-//        initialize(mode,path);
-//        this.graphPath = graphPath;
-//    }
-    
-  //spab use case dependencies
+    //spab use case dependencies
     private List<Query> positiveQueries;
     private List<Query> negativeQueries;
     private Set<Query> mostSpecialBoundary;
     private Set<Query> mostGeneralBoundary;
-
+    
+    /**
+     * Constructor initialization and it does the candidate elimination on basis of the mode selection.
+     */
     public CandidateElimination(String mode, String path)
     {
         initialize(mode,path);
     }
 
-    public CandidateElimination(String mode, String path, String graphPath)
-    {
+    public CandidateElimination(String mode, String path, String graphPath) {
     	if(mode.toLowerCase().equals("spab")) {
         	//give the paths to the positive and negative lists of queries to the initializer
     		spabInit(path, graphPath);
@@ -188,23 +173,8 @@ public class CandidateElimination {
 					Query currentG = gBoundaryIter.next();
 					if(currentG.isMoreGeneralThanWithoutOptionals(currentNegPoint, 0, new HashMap<Integer, Integer>(), null)) {
 						gBoundaryIter.remove();
-						
 						Set<Query> minSpecializations = spclG.min_specializations(currentG, currentNegPoint, this.mostSpecialBoundary);
-						
-//						Query k = minSpecializations.iterator().next();
-//						System.out.println(currentNegPoint.getParsedQuery());
-//						System.out.println(k.getParsedQuery());
-//						System.out.println(k.isMoreGeneralThanWithoutOptionals(currentNegPoint, 0, new HashMap<Integer, Integer>(), null));
-//						for(Triple u: k.getTriples()) {
-//							System.out.println(u.getSubject().getType()+", "+u.getPredicate().getType()+", "+u.getObject().getType());
-//						}
-						System.out.println("Specialization: "+currentG.getParsedQuery()+"-->");
 						for(Query q: minSpecializations) {
-							System.out.println(q.getParsedQuery());
-						}
-						System.out.println("+++");
-						for(Query q: minSpecializations) {
-							//System.out.println(q.getParsedQuery()+" >=?"+ currentNegPoint.getParsedQuery());
 							if(!q.isMoreGeneralThanWithoutOptionals(currentNegPoint, 0, new HashMap<Integer, Integer>(), null)){
 								for(Query w: this.mostSpecialBoundary) {
 									if(!w.isMoreGeneralThanWithoutOptionals(q, 0, new HashMap<Integer, Integer>(), null)) {
@@ -234,33 +204,6 @@ public class CandidateElimination {
 			}
 		}
 		System.out.println("]");
-		System.out.println(this.positiveQueries.size());
-		if(this.mostGeneralBoundary.size() > 0) {
-			for(Query q: this.mostGeneralBoundary) {
-				System.out.println(q.getParsedQuery());
-				for(Query w: this.negativeQueries) {
-					//System.out.println(q.isMoreGeneralThan(w, 0, new HashMap<Integer, Integer>(), null));
-					
-					System.out.println(q.isMoreGeneralThanWithoutOptionals(w, 0, new HashMap<Integer, Integer>(), null));
-				}
-			}
-		}
-		
-		
-//		for(Query q: this.positiveQueries) {
-//			System.out.println(q.getParsedQuery());
-//		}
-//		System.out.println(this.positiveQueries.size());
-//		System.out.println("Removed: "+this.positiveQueries.get(15).getTriples().remove(3));
-//		System.out.println("Removed: "+this.positiveQueries.get(15).getTriples().remove(2));
-//		System.out.println("Removed: "+this.positiveQueries.get(15).getTriples().remove(0));
-//		for(Query q: this.positiveQueries) {
-//			System.out.println(q.
-//						isMoreGeneralThan(this.mostSpecialBoundary.iterator().next(), 0, new HashMap<Integer, Integer>(), null));
-//		}
-
-		
-		
 	}
     
 
@@ -355,8 +298,6 @@ public class CandidateElimination {
                 System.out.println("#######################################################################");
                 indx ++;
             }
-            //System.out.println("Master G is:");
-            //System.out.println(consistentG);
             inst_S.clear();
             inst_G.clear();
         }

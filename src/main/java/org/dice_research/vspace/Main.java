@@ -10,9 +10,9 @@ public class Main {
 
 		System.out.println("===============================");
 		System.out.println("Enter the choice from below : \n");
-		System.out.println("1. Simple categorical Data \n");
-		System.out.println("2. Hiearchical categorical Data \n");
-		System.out.println("3. SPAB USECASES \n");
+		System.out.println("1. Categorical Data \n");
+		System.out.println("2. Hiearchical Categorical Data \n");
+		System.out.println("3. SPARQL Queries as Data \n");
 
 		Scanner console = new Scanner(System.in);
 
@@ -35,7 +35,7 @@ public class Main {
 			ceh.performElimication();
 			break;
 
-		// For calling SPAB usecases
+		// For calling SPAB usecas
 		case 3:
 			CandidateElimination ces = new CandidateElimination("spab",
 					"./src/test/resources/datafile/PositiveQueries.txt",
