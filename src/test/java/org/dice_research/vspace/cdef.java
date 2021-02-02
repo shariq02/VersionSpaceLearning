@@ -1,5 +1,4 @@
 import static org.junit.Assert.*;
-
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
@@ -8,8 +7,9 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import org.junit.Test;
 
-public class TestGeneralizeS_compareGRemove {
-    @SuppressWarnings("resource")
+public class cdef {
+
+	@SuppressWarnings("resource")
     @Test
     public void compareGRemoveTest() throws IOException {
         ArrayList<HashSet<String>> featureValues = new ArrayList<>();
@@ -35,14 +35,20 @@ public class TestGeneralizeS_compareGRemove {
                 featureValues.get(i).add(datas[i]);
             }
         }
-        HashSet<Hypothesis> outputList;
-        GeneralizeS generalizeObject = new GeneralizeS();
+        SpecializeGBoundary specializeObject = new SpecializeGBoundary();
         CandidateElimination ceh = new CandidateElimination("Hierarchical", "E:\\Gitrepo\\IncrementalVersionSpaceMerging\\IncrementalVersionSpaceMerging\\src\\hierarchicalInstance_robot.csv",
                 "E:\\Gitrepo\\IncrementalVersionSpaceMerging\\IncrementalVersionSpaceMerging\\src\\dataOntology_robot.csv");
         ceh.makeGraph(featureValues);
-        S.add(new Hypothesis(datalen,"G"));
-        G.add(new Hypothesis(datalen, "S"));
-        HashSet<Hypothesis> finalRes = generalizeObject.compareG_Remove(S, G, ceh.getFeatureGraph());
-        assertEquals(finalRes.size(), 0);
+        String[] a= {"small","cube"};
+        String[] b= {"small","?"};
+        String[] c= {"large","cube"};
+        S.add(new Hypothesis(a));
+        G.add(new Hypothesis(b));
+        G.add(new Hypothesis(c));
+        HashSet<Hypothesis> outputList= new HashSet<Hypothesis>();
+        outputList.add(new Hypothesis(b));
+        HashSet<Hypothesis> finalRes = specializeObject.removeMember(S,G,ceh.getFeatureGraph());
+        assertEquals(finalRes,outputList);
     }
+
 }

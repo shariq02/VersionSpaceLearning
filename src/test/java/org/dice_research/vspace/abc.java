@@ -1,5 +1,3 @@
-package org.dice_research.vspace;
-
 import static org.junit.Assert.*;
 import java.io.BufferedReader;
 import java.io.File;
@@ -47,7 +45,7 @@ public class abc {
         S.add(new Hypothesis(b));
         HashSet<Hypothesis> outputList= new HashSet<Hypothesis>();
         outputList.add(new Hypothesis(a));
-        HashSet<Hypothesis> finalRes = generalizeObject.removeGeneric(S, ceh.featureGraph);
+        HashSet<Hypothesis> finalRes = generalizeObject.removeGeneric(S, ceh.getFeatureGraph());
         assertEquals(finalRes,outputList);
     }
 
