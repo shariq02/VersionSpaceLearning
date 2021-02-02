@@ -56,17 +56,19 @@ public class CandidateElimination {
     /**
      * Constructor initialization and it does the candidate elimination on basis of the mode selection.
      */
+   
+    public CandidateElimination()
+    {
+       
+    } 
+    
+       
     public CandidateElimination(String mode, String path)
     {
         initialize(mode,path);
     }
 
-    public CandidateElimination(String mode, String path, String graphPath)
-    {
-        initialize(mode,path);
-        this.graphPath = graphPath;
-    }
-    
+   
     public CandidateElimination(String mode, String path, String graphPath) {
     	if(mode.toLowerCase().equals("spab")) {
         	//give the paths to the positive and negative lists of queries to the initializer
