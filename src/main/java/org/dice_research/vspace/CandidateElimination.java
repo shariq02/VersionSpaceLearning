@@ -40,9 +40,7 @@ public class CandidateElimination {
     private HashSet<Hypothesis> placeholder_S;
     private HashSet<Hypothesis> placeholder_G;
     private HashSet<Hypothesis> consistentG ;
-  //private HashSet<Hypothesis> placeholder_incnstc;
     private String filePath;
-  //private String ontPath;
     private ArrayList<Ontology> featureGraph;
     private String mode;
     private String graphPath;
@@ -137,7 +135,6 @@ public class CandidateElimination {
         this.placeholder = new HashSet<>();
         this.placeholder_S = new HashSet<>();
         this.placeholder_G = new HashSet<>();
-      //this.placeholder_incnstc = new HashSet<>();
         this.consistentG = new HashSet<>();
         this.VS_hSet = new ArrayList<>();
         this.filePath = path;
@@ -420,7 +417,6 @@ public class CandidateElimination {
  * S and G boundaries are formed from the merged_S and merged_G by removing hypotheses which are more general or more specific than itself and it does it by using 
  * the following functions.
  */
-            //for (Hypothesis mergedH : merged_G) placeholder_incnstc.add(mergedH);
             merged_G = spclG.removeMember(S, merged_G, featureGraph);
             merged_G = spclG.removeMember(inst_S, merged_G, featureGraph);
 
@@ -429,7 +425,6 @@ public class CandidateElimination {
 
             G = spclG.removeSpecific(merged_G, featureGraph);
             S = genS.removeGeneric(merged_S, featureGraph);
-            //placeholder_incnstc.clear();
             merged_S.clear();
             merged_G.clear();
         /**
