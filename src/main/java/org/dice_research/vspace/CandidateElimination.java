@@ -40,10 +40,10 @@ public class CandidateElimination {
     private HashSet<Hypothesis> placeholder_S;
     private HashSet<Hypothesis> placeholder_G;
     private HashSet<Hypothesis> consistentG ;
-    private HashSet<Hypothesis> placeholder_incnstc;
+  //private HashSet<Hypothesis> placeholder_incnstc;
     private String filePath;
-    private String ontPath;
-    public ArrayList<Ontology> featureGraph;
+  //private String ontPath;
+    private ArrayList<Ontology> featureGraph;
     private String mode;
     private String graphPath;
     private Boolean inconsistancy;
@@ -63,6 +63,12 @@ public class CandidateElimination {
         initialize(mode,path);
     }
 
+    public CandidateElimination(String mode, String path, String graphPath)
+    {
+        initialize(mode,path);
+        this.graphPath = graphPath;
+    }
+    
     public CandidateElimination(String mode, String path, String graphPath) {
     	if(mode.toLowerCase().equals("spab")) {
         	//give the paths to the positive and negative lists of queries to the initializer
@@ -131,7 +137,7 @@ public class CandidateElimination {
         this.placeholder = new HashSet<>();
         this.placeholder_S = new HashSet<>();
         this.placeholder_G = new HashSet<>();
-        this.placeholder_incnstc = new HashSet<>();
+      //this.placeholder_incnstc = new HashSet<>();
         this.consistentG = new HashSet<>();
         this.VS_hSet = new ArrayList<>();
         this.filePath = path;
@@ -214,7 +220,7 @@ public class CandidateElimination {
  * It will help us to compare G boundaries later. Initial S and G hypotheses gets added to Version Space set.
  * From data a unique value set for all features are prepared.
  */
-    public void performElimication()
+    public void performElimination()
     {
         try {
         this.br = new BufferedReader(new FileReader(new File(this.filePath)));
@@ -414,7 +420,7 @@ public class CandidateElimination {
  * S and G boundaries are formed from the merged_S and merged_G by removing hypotheses which are more general or more specific than itself and it does it by using 
  * the following functions.
  */
-            for (Hypothesis mergedH : merged_G) placeholder_incnstc.add(mergedH);
+            //for (Hypothesis mergedH : merged_G) placeholder_incnstc.add(mergedH);
             merged_G = spclG.removeMember(S, merged_G, featureGraph);
             merged_G = spclG.removeMember(inst_S, merged_G, featureGraph);
 
@@ -423,7 +429,7 @@ public class CandidateElimination {
 
             G = spclG.removeSpecific(merged_G, featureGraph);
             S = genS.removeGeneric(merged_S, featureGraph);
-            placeholder_incnstc.clear();
+            //placeholder_incnstc.clear();
             merged_S.clear();
             merged_G.clear();
         /**
@@ -457,6 +463,8 @@ public class CandidateElimination {
         }
 
     }
-
+	public ArrayList<Ontology> getFeatureGraph() {
+		return featureGraph;
+	}
 }
 
