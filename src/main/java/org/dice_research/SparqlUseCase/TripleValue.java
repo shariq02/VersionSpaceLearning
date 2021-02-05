@@ -8,13 +8,13 @@ public class TripleValue {
 	String type;
 	
 	//possible types
-	static public String VARIABLE = "VARIABLE";
-	static public String IRI = "IRI";
-	static public String LITERAL = "LITERAL";
-	static public String ANY = "ANY";
+	public static final String VARIABLE = "VARIABLE";
+	public static final String IRI = "IRI";
+	public static final String LITERAL = "LITERAL";
+	public static final String ANY = "ANY";
 	
 	//possible values apart from specific values
-	static List<String> anyValues = Arrays.asList(new String[] {"ANY_VARIABLE", "ANY_IRI", "ANY_LITERAL", "ANY_ANY"});
+	public static final List<String> anyValues = Arrays.asList(new String[] {"ANY_VARIABLE", "ANY_IRI", "ANY_LITERAL", "ANY_ANY"});
 	
 	public TripleValue(String s) {
 		determineValue(s);

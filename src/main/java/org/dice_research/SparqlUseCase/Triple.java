@@ -1,5 +1,6 @@
 package org.dice_research.SparqlUseCase;
 
+import java.util.Arrays;
 import java.util.BitSet;
 import java.util.List;
 
@@ -25,6 +26,20 @@ public class Triple {
 		return s+" "+p+" "+o;
 	}
 	
+	@Override
+	public boolean equals(Object o) {
+		if(this.hashCode() == ((Triple)o).hashCode()) {
+			return true;
+		}
+		return false;
+	}
+	
+	@Override
+	public int hashCode() {
+		String[] values = new String[] {this.getSubjectValue(), this.getObjectValue(), this.getPredicateValue()};
+		return Arrays.deepHashCode(values);
+	}
+	
 	public TripleValue getSubject() {
 		return this.s;
 	}
@@ -48,6 +63,11 @@ public class Triple {
 	public String getObjectValue() {
 		return this.o.toString();
 	}
+	
+	public void setOptional(boolean op) {
+		this.optional = op;
+	}
+	
 	public boolean isOptional() {
 		return this.optional;
 	}
@@ -66,13 +86,13 @@ public class Triple {
 	public BitSet getDifference(Triple t) {
 		BitSet res = new BitSet(3);
 		
-		if(!s.isMoreGeneralThan(t.s)) {
+		if(!this.s.isMoreGeneralThan(t.s)) {
 			res.set(0);
 		}
-		if(!p.isMoreGeneralThan(t.p)) {
+		if(!this.p.isMoreGeneralThan(t.p)) {
 			res.set(1);
 		}
-		if(!o.isMoreGeneralThan(t.o)) {
+		if(!this.o.isMoreGeneralThan(t.o)) {
 			res.set(2);
 		}
 		return res;
@@ -88,30 +108,30 @@ public class Triple {
 	/* Returns the index of a triple in y which is the most similar to triple t (similar in terms of the lowest dissagrement)
 	 * */
 	public static int indexOfMostSimilar(Triple t, List<Triple> y) {
-		int score = 0;
+		int score = Integer.MAX_VALUE;
 		int index = -1;
 		for(Triple i: y) {
 			int currentScore = 0;
 			BitSet difference = t.getDifference(i);
 			if(difference.get(0)) {
 				currentScore++;
-				if(t.getSubject().getType().equals(i.getSubject().getType())) {
+				if(!t.getSubject().getType().equals(i.getSubject().getType())) {
 				currentScore+=3;
 				}
 			}
 			if(difference.get(1)) {
 				currentScore++;
-				if(t.getPredicate().getType().equals(i.getPredicate().getType())) {
+				if(!t.getPredicate().getType().equals(i.getPredicate().getType())) {
 					currentScore+=3;
 				}
 			}
 			if(difference.get(2)) {
 				currentScore++;
-				if(t.getObject().getType().equals(i.getObject().getType())) {
+				if(!t.getObject().getType().equals(i.getObject().getType())) {
 					currentScore+=3;
 				}
 			}
-			if(currentScore > score) {
+			if(currentScore < score) {
 				score = currentScore;
 				index = y.indexOf(i);
 			}

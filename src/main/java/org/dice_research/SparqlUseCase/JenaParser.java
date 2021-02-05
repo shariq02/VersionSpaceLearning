@@ -13,8 +13,8 @@ import org.apache.jena.sparql.syntax.ElementPathBlock;
 import org.apache.jena.sparql.syntax.ElementVisitorBase;
 import org.apache.jena.sparql.syntax.ElementWalker;
 
-import org.dice_research.spab.SpabApi;
-import org.dice_research.spab.input.SparqlUnit;
+//import org.dice_research.spab.SpabApi;
+//import org.dice_research.spab.input.SparqlUnit;
 
 /**
  * converts the query string into Jena queries and triples
@@ -110,12 +110,12 @@ public class JenaParser extends SPARQLQueryParser {
 
 	public static void parse(org.dice_research.SparqlUseCase.Query query) {
 		String queryStr = query.query.toString();
-		SpabApi spab = new SpabApi();
-		SparqlUnit sparqlUnit;
-		spab.addNegative(queryStr);
-		sparqlUnit = spab.getInput().getNegatives().get(0);
-		jenaQuery = QueryFactory.create(sparqlUnit.getJenaStringRepresentation());
-		originalQuery = QueryFactory.create(sparqlUnit.getOriginalString());
+//		SpabApi spab = new SpabApi();
+//		SparqlUnit sparqlUnit;
+//		spab.addNegative(queryStr);
+//		sparqlUnit = spab.getInput().getNegatives().get(0);
+//		jenaQuery = QueryFactory.create(sparqlUnit.getJenaStringRepresentation());
+//		originalQuery = QueryFactory.create(sparqlUnit.getOriginalString());
 		
 		List<String> qSubjects = new ArrayList<String>();
 		List<String> qPredicates = new ArrayList<String>();
@@ -168,5 +168,4 @@ public class JenaParser extends SPARQLQueryParser {
 		query.prefixes = jenaQuery.getPrefixMapping().getNsPrefixMap();
 
 	}
-
 }

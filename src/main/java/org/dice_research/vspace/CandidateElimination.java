@@ -40,8 +40,10 @@ public class CandidateElimination {
     private HashSet<Hypothesis> placeholder_S;
     private HashSet<Hypothesis> placeholder_G;
     private HashSet<Hypothesis> consistentG ;
+    private HashSet<Hypothesis> placeholder_incnstc;
     private String filePath;
-    private ArrayList<Ontology> featureGraph;
+    private String ontPath;
+    public ArrayList<Ontology> featureGraph;
     private String mode;
     private String graphPath;
     private Boolean inconsistancy;
@@ -56,19 +58,11 @@ public class CandidateElimination {
     /**
      * Constructor initialization and it does the candidate elimination on basis of the mode selection.
      */
-   
-    public CandidateElimination()
-    {
-       
-    } 
-    
-       
     public CandidateElimination(String mode, String path)
     {
         initialize(mode,path);
     }
 
-   
     public CandidateElimination(String mode, String path, String graphPath) {
     	if(mode.toLowerCase().equals("spab")) {
         	//give the paths to the positive and negative lists of queries to the initializer
@@ -137,6 +131,7 @@ public class CandidateElimination {
         this.placeholder = new HashSet<>();
         this.placeholder_S = new HashSet<>();
         this.placeholder_G = new HashSet<>();
+        this.placeholder_incnstc = new HashSet<>();
         this.consistentG = new HashSet<>();
         this.VS_hSet = new ArrayList<>();
         this.filePath = path;
@@ -229,9 +224,9 @@ public class CandidateElimination {
             if (datalen == 0)
             {
                 datalen = datas.length -1;
-                S.add(new Hypothesis(datalen,"S"));
-                G.add(new Hypothesis(datalen,"G"));
-                consistentG.add(new Hypothesis(datalen,"G"));
+                S.add(new Hypothesis(datalen,false));
+                G.add(new Hypothesis(datalen,true));
+                consistentG.add(new Hypothesis(datalen,true));
                 VS_hSet.add(new VersionSpace(S,G));
                 for (int i = 1; i <= datalen; i++)
                 {
@@ -261,8 +256,8 @@ public class CandidateElimination {
          * placeholder_S and placeholder_G used to store temporary hypothesis
          */
 
-        placeholder_S.add(new Hypothesis(datalen,"S"));
-        placeholder_G.add(new Hypothesis(datalen,"G"));
+        placeholder_S.add(new Hypothesis(datalen,false));
+        placeholder_G.add(new Hypothesis(datalen,true));
         
         /**
          * inst_S and inst_G is single instance specific S and G boundary
@@ -276,8 +271,8 @@ public class CandidateElimination {
 
         for(Instance inst: instances)
         {
-            inst_S.add(new Hypothesis(datalen,"S"));
-            inst_G.add(new Hypothesis(datalen,"G"));
+            inst_S.add(new Hypothesis(datalen,false));
+            inst_G.add(new Hypothesis(datalen,true));
             System.out.println("The instance is");
             System.out.println(inst.toString());
             if(inst.getLabel().equals("Yes"))
@@ -426,7 +421,7 @@ public class CandidateElimination {
             merged_S = genS.compareG_Remove(merged_S, inst_G, featureGraph);
 
             G = spclG.removeSpecific(merged_G, featureGraph);
-            S = genS.removeGeneric(merged_S, featureGraph);
+            S = genS.removeGeneric(merged_S, featureGraph);	
             merged_S.clear();
             merged_G.clear();
         /**
@@ -460,8 +455,8 @@ public class CandidateElimination {
         }
 
     }
-	public ArrayList<Ontology> getFeatureGraph() {
-		return featureGraph;
+    
+    public ArrayList<Ontology> getFeatureGraph() {	
+		return featureGraph;	
 	}
 }
-

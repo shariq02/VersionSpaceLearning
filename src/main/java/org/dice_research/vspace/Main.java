@@ -24,7 +24,7 @@ public class Main {
 		// For Calling Normal data
 		case 1:
 			CandidateElimination ce = new CandidateElimination("Normal", filePath);
-			ce.performElimication();
+			ce.performElimination();
 			break;
 
 		// For Calling Hierarchical data
@@ -32,7 +32,7 @@ public class Main {
 		case 2:
 			CandidateElimination ceh = new CandidateElimination("Hierarchical",
 					"./src/test/resources/datafile/DataTest4.csv", "./src/test/resources/datafile/OntologyTest4.csv");
-			ceh.performElimication();
+			ceh.performElimination();
 			break;
 
 		// For calling SPAB usecas

@@ -150,12 +150,13 @@ public class GeneralizeS {
 				}
 			}
 		}
-		
+
 		//nothing to generalize
 		if(qTriples.size() == 0) {
 			return null;
 		}
 		
+		//make a copy of h
 		Query tmpQuery = new Query(h);
 		//no candidates exist, so add all triples from q as new triples in the query to return
 		if(candidateTriples.size() == 0) {
@@ -167,7 +168,6 @@ public class GeneralizeS {
 		//check if we can generalize any triple in candidate triples such that it will be more general
 		//than some other triple in the unmatched triples. if no such triple is found a new one will be
 		//constructed to match the unmatched triple
-		//for(Triple cand: candidateTriples) {
 		for(ListIterator<Triple> iter = candidateTriples.listIterator(); iter.hasNext();) {
 			//no unmatched triples left
 			if(qTriples.size() == 0) {
@@ -222,5 +222,4 @@ public class GeneralizeS {
 		res.add(tmpQuery);
 		return res;
 	}
-
 }
