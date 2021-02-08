@@ -127,8 +127,12 @@ public class GeneralizeS {
 		return spGListFinal;
 	}
 	
-	/*
+	/**
 	 * Finds the minimal generalization for query h such that it is more general than query q
+	 * 
+	 * @param h Query to be generalized
+	 * @param q Positive query to be expressed by h after generalization
+	 * @return Set of the minimally generalized query h
 	 * */
 	public Set<Query> min_generalizations(Query h, Query q){
 		Set<Query> res = new HashSet<Query>();
@@ -216,7 +220,7 @@ public class GeneralizeS {
 		//add all still remaining triples from q for which no generalization was found (no candidate was left)
 		if(qTriples.size()>0) {
 			for(Triple r: qTriples) {
-				tmpQuery.getTriples().add(new Triple(r.getSubjectValue(), r.getPredicateValue(), r.getObjectValue(), true));
+				tmpQuery.getTriples().add(new Triple(r.getSubjectValue(), r.getPredicateValue(), r.getObjectValue()));
 			}
 		}
 		res.add(tmpQuery);

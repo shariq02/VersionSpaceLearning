@@ -4,8 +4,8 @@ import java.util.Arrays;
 import java.util.List;
 
 public class TripleValue {
-	String value;
-	String type;
+	private String value;
+	private String type;
 	
 	//possible types
 	public static final String VARIABLE = "VARIABLE";
@@ -52,7 +52,11 @@ public class TripleValue {
 		determineValue(v);
 	}
 	
-	/** TripleValue version of isMoreGeneralThan */
+	/** TripleValue version of isMoreGeneralThan
+	 * 
+	 * @param v The triplevalue which this triplevalue is checked against for generality
+	 * @return true if this triplevalue is more general than v
+	 */
 	public boolean isMoreGeneralThan(TripleValue v) {
 		if(this.type.equals(v.type) || this.type.equals(ANY)) {
 			if(this.type.equals(TripleValue.ANY)) {

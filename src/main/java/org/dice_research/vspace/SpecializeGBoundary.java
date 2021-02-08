@@ -2,6 +2,7 @@ package org.dice_research.vspace;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
@@ -154,38 +155,97 @@ public class SpecializeGBoundary {
 		return spGListFinal;
 	}
 
-	/*
+	/**
 	 * Minimally specialize a query depending on the set of most special queries
+	 * 
+	 * @param h Query to be specialized
+	 * @param S Set of most positive queries
+	 * @return Set of specialized queries towards S
 	 */
-	public Set<Query> min_specializations(Query h, Query negPoint, Set<Query> q) {
+	public Set<Query> min_specializations(Query h, Set<Query> q) {
 		Set<Query> res = new HashSet<Query>();
-
 		// main loop
-		for (Query e : q) {
+		for (Query S : q) {
 			if (h.isMostGeneral()) {
-				h = new Query(e.getTriples().size());
+				h = new Query(S.getTriples().size());
 			}
-
 			List<Query> specialized = new ArrayList<Query>();
-			int sizeOfTriples = e.getTriples().size();
+			int sizeOfTriples = S.getTriples().size();
 			for (int i = 0; i < sizeOfTriples; i++) {
 				Query newQ = new Query(h);
 				if (!newQ.getTriples().get(i).hasSameValues(new Triple("ANY_ANY", "ANY_ANY", "ANY_ANY"))) {
 					continue;
 				}
-				newQ.getTriples().set(i, new Triple(e.getTriples().get(i).getSubjectValue(),
-						e.getTriples().get(i).getPredicateValue(), e.getTriples().get(i).getObjectValue()));
-
-				for (int j = (i + 1) % sizeOfTriples, k=0; k < sizeOfTriples-1; j=(j+1)%sizeOfTriples, k++) {
-					if (!newQ.getTriples().get(j).hasSameValues(new Triple("ANY_ANY", "ANY_ANY", "ANY_ANY"))) {
-						continue;
-					}
-					newQ.getTriples().set(j, new Triple("ANY_ANY", "ANY_ANY", "ANY_ANY", true));
-				}
+				newQ.getTriples().set(i, new Triple(S.getTriples().get(i).getSubjectValue(),
+						S.getTriples().get(i).getPredicateValue(), S.getTriples().get(i).getObjectValue()));
 				specialized.add(newQ);
 			}
 			res.addAll(specialized);
 		}
 		return res;
+	}
+
+	/**
+	 * Applies min_specializations recursively to h until the specializations (if
+	 * they exist) produced no longer cover negPoint
+	 * 
+	 * @param toSpecialize Specializations that are recursively passed until goal is
+	 *                     achieved (on first call should be null)
+	 * @param h            Query to be specialized
+	 * @param negPoint     Negatively labeled query
+	 * @param S            Set of most positive queries
+	 * @return Set of specialized queries towards S
+	 */
+	public Set<Query> recursiveMinSpecialization(Set<Query> toSpecialize, Query h, Query negPoint, Set<Query> S) {
+		Set<Query> specialized = null;
+		if (toSpecialize == null) {
+			specialized = min_specializations(h, S);
+		} else {
+			specialized = new HashSet<Query>();
+			for (Query cand : toSpecialize) {
+				Set<Query> temp = min_specializations(cand, S);
+				specialized.addAll(temp);
+			}
+		}
+		boolean goFurther = false;
+		Set<Query> toSpecializeFurther = new HashSet<Query>();
+		for (Query s : S) {
+			for (Query q : specialized) {
+				if (q.isMoreGeneralThan(negPoint, 0, new HashMap<Integer, Integer>(), null) && canSpecialize(q, s)) {
+					goFurther = true;
+				}
+				toSpecializeFurther.add(new Query(q));
+			}
+		}
+		if (goFurther) {
+			return recursiveMinSpecialization(toSpecializeFurther, h, negPoint, S);
+		}
+		return specialized;
+	}
+
+	/**
+	 * Checks whether query from can be further specialized to to
+	 * 
+	 * @param from Query
+	 * @param to   Query
+	 * @return true if from can be further specialized towards to, false otherwise
+	 */
+	public boolean canSpecialize(Query from, Query to) {
+		if (from.getTriples().size() != to.getTriples().size()) {
+			return false;
+		}
+		int counter = 0;
+		for (Triple i : from.getTriples()) {
+			for (Triple j : to.getTriples()) {
+				if (i.hasSameValues(j)) {
+					counter++;
+					break;
+				}
+			}
+		}
+		if (counter == to.getTriples().size()) {
+			return false;
+		}
+		return true;
 	}
 }

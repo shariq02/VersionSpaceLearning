@@ -35,12 +35,12 @@ public class Main {
 			ceh.performElimination();
 			break;
 
-		// For calling SPAB usecas
+		// For calling SPAB usecase
 		case 3:
 			CandidateElimination ces = new CandidateElimination("spab",
-					"./src/test/resources/datafile/PositiveQueries.txt",
-					"./src/test/resources/datafile/NegativeQueries.txt");
-			ces.spabElimination(); // at present it is not in current branch
+					"./src/test/resources/datafile/virtuoso-pos.txt",
+					"./src/test/resources/datafile/virtuoso-neg.txt");
+			ces.spabElimination();
 			break;
 
 		default:

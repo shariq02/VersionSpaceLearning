@@ -20,6 +20,6 @@ public class QueryReader {
 		} else {
 			throw new FileNotFoundException();
 		}
-		return new ArrayList<String>(Arrays.asList(fileContent.split("---")));
+		return new ArrayList<String>(Arrays.asList(fileContent.split("\n")));
 	}
 }

@@ -119,7 +119,7 @@ public class Query {
 			sb.append(this.statements.get(0).getType());
 			sb.append(" ");
 			if(this.statements.get(0).getType().equals("SELECT")) {
-				Map<String, String> vars = ((SelectStatement) this.statements.get(0)).getVariables();
+				Map<String, String> vars = ((SelectStatement)this.statements.get(0)).getVariables();
 				if(vars.containsValue("*")) {
 					sb.append("*  ");
 				} else {
@@ -187,7 +187,13 @@ public class Query {
 			this.triples.add(new Triple(t.getSubjectValue(), t.getPredicateValue(), t.getObjectValue()));
 		}
 	}
-	
+	/**
+	 * Renames variables from their original name to "?vN" where N stands for a natural number that
+	 * is incremented after each single variable rename
+	 * 
+	 * @param statements List of statements in which to search for variables
+	 * @param triples List of triples to search for variables to rename
+	 *  */
 	public boolean renameVariables(List<Statement> statements, List<Triple> triples) {
 		for(Statement s: statements) {
 			Map<String, String> vars;
@@ -223,7 +229,9 @@ public class Query {
 		}
 		return true;
 	}
-	
+	/**
+	 * Replaces the prefixes of this query's triple patterns with the IRIs they abbreviate
+	 * */
 	public void replacePrefixVariables() {
 		for(Triple t: triples) {
 			String[] parts;
@@ -247,10 +255,22 @@ public class Query {
 			}
 		}
 	}
-
+	/**
+	 * Determines whether this query is more general than query q
+	 * 
+	 * @param q The query which this query is compared against
+	 * @param start The index at which q's triple to start with
+	 * @param assignedTriples Map which maps the indexes of the already matched triples
+	 *  					  where the key is the index of one of this query's triples and the
+	 *  					  value is the index of one of q's triples
+	 * @param switched List which keeps track of this query's triples indexes that have been reassigned
+	 * 				   so that they are no longer eligible for further reassignment
+	 * */
 	public boolean isMoreGeneralThan(Query q, int start, Map<Integer, Integer> assignedTriples, List<Integer> switched) {
 		if(this.mostGeneral) {
 			return true;
+		} else if(q.mostGeneral) {
+			return false;
 		}
 		if(assignedTriples != null) {
 			if(assignedTriples.size() == q.triples.size()) {
@@ -274,7 +294,6 @@ public class Query {
 		
 		for(Map.Entry<Integer, Integer> entry: assignedTriples.entrySet()) {
 			if(this.triples.get(entry.getKey()).isMoreGeneralThan(t)) {
-				
 				if(switched != null) {
 					if(switched.contains(entry.getKey())) {
 						continue;
@@ -296,54 +315,4 @@ public class Query {
 		//no triple in this.triples is more general than triple t from query q
 		return false;
 	}
-	
-	public boolean isMoreGeneralThanWithoutOptionals(Query q, int start, Map<Integer, Integer> assignedTriples, List<Integer> switched) {
-		if(this.mostGeneral) {
-			return true;
-		}
-		if(assignedTriples != null) {
-			if(assignedTriples.size() == q.triples.size()) {
-				return true;
-			}
-			if(assignedTriples.containsValue(start)) {
-				return isMoreGeneralThanWithoutOptionals(q, start+1, assignedTriples, null);
-			}
-		}
-
-		Triple t = q.triples.get(start);
-		for(int k=0; k<this.triples.size();k++) {
-			if(assignedTriples.containsKey(k) || this.triples.get(k).isOptional()) {
-				continue;
-			}
-			if(this.triples.get(k).isMoreGeneralThan(t)) {
-				assignedTriples.put(k, start);
-				return isMoreGeneralThanWithoutOptionals(q, start+1, assignedTriples, null);
-			} 
-		}
-		
-		for(Map.Entry<Integer, Integer> entry: assignedTriples.entrySet()) {
-			if(!this.triples.get(entry.getKey()).isOptional() && this.triples.get(entry.getKey()).isMoreGeneralThan(t)) {
-				
-				if(switched != null) {
-					if(switched.contains(entry.getKey())) {
-						continue;
-					}
-				}
-				//holds the index of the triple in q whose match has been reassigned,
-				//thus we need to find another match for it
-				int temp = entry.getValue();
-				assignedTriples.put(entry.getKey(), start);
-				if(switched != null) {
-					switched.add(entry.getKey());
-				} else {
-					switched = new ArrayList<Integer>();
-					switched.add(entry.getKey());
-				}
-				return isMoreGeneralThanWithoutOptionals(q, temp, assignedTriples, switched);
-			}
-		}
-		//no triple in this.triples is more general than triple t from query q
-		return false;
-	}
-
 }
