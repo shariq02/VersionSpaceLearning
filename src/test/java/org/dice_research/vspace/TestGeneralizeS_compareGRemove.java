@@ -21,7 +21,7 @@ public class TestGeneralizeS_compareGRemove {
         int datalen = 0;
         HashSet<Hypothesis> S = new HashSet<>();
         HashSet<Hypothesis> G = new HashSet<>();
-        br = new BufferedReader(new FileReader(new File("E:\\Gitrepo\\IncrementalVersionSpaceMerging\\IncrementalVersionSpaceMerging\\src\\hierarchicalInstance_robot.csv")));
+        br = new BufferedReader(new FileReader(new File("/src/hierarchicalInstance_robot.csv")));
         while((line = br.readLine()) != null) {
             datas = line.split(",");
             instances.add(new Instance(datas));
@@ -37,11 +37,11 @@ public class TestGeneralizeS_compareGRemove {
         }
         HashSet<Hypothesis> outputList;
         GeneralizeS generalizeObject = new GeneralizeS();
-        CandidateElimination ceh = new CandidateElimination("Hierarchical", "E:\\Gitrepo\\IncrementalVersionSpaceMerging\\IncrementalVersionSpaceMerging\\src\\hierarchicalInstance_robot.csv",
-                "E:\\Gitrepo\\IncrementalVersionSpaceMerging\\IncrementalVersionSpaceMerging\\src\\dataOntology_robot.csv");
+        CandidateElimination ceh = new CandidateElimination("Hierarchical", "/src/hierarchicalInstance_robot.csv",
+                "/src/dataOntology_robot.csv");
         ceh.makeGraph(featureValues);
-        S.add(new Hypothesis(datalen,"G"));
-        G.add(new Hypothesis(datalen, "S"));
+        S.add(new Hypothesis(datalen,true));
+        G.add(new Hypothesis(datalen,false));
         HashSet<Hypothesis> finalRes = generalizeObject.compareG_Remove(S, G, ceh.getFeatureGraph());
         assertEquals(finalRes.size(), 0);
     }

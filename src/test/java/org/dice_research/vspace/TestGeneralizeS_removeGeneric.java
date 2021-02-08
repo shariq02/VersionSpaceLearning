@@ -7,7 +7,7 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import org.junit.Test;
 
-public class cdef {
+public class TestGeneralizeS_removeGeneric {
 
 	@SuppressWarnings("resource")
     @Test
@@ -21,7 +21,7 @@ public class cdef {
         int datalen = 0;
         HashSet<Hypothesis> S = new HashSet<>();
         HashSet<Hypothesis> G = new HashSet<>();
-        br = new BufferedReader(new FileReader(new File("E:\\Gitrepo\\IncrementalVersionSpaceMerging\\IncrementalVersionSpaceMerging\\src\\hierarchicalInstance_robot.csv")));
+        br = new BufferedReader(new FileReader(new File("/src/hierarchicalInstance_robot.csv")));
         while((line = br.readLine()) != null) {
             datas = line.split(",");
             instances.add(new Instance(datas));
@@ -35,19 +35,17 @@ public class cdef {
                 featureValues.get(i).add(datas[i]);
             }
         }
-        SpecializeGBoundary specializeObject = new SpecializeGBoundary();
-        CandidateElimination ceh = new CandidateElimination("Hierarchical", "E:\\Gitrepo\\IncrementalVersionSpaceMerging\\IncrementalVersionSpaceMerging\\src\\hierarchicalInstance_robot.csv",
-                "E:\\Gitrepo\\IncrementalVersionSpaceMerging\\IncrementalVersionSpaceMerging\\src\\dataOntology_robot.csv");
+        GeneralizeS generalizeObject = new GeneralizeS();
+        CandidateElimination ceh = new CandidateElimination("Hierarchical", "/src/hierarchicalInstance_robot.csv",
+                "/src/dataOntology_robot.csv");
         ceh.makeGraph(featureValues);
         String[] a= {"small","cube"};
         String[] b= {"small","?"};
-        String[] c= {"large","cube"};
         S.add(new Hypothesis(a));
-        G.add(new Hypothesis(b));
-        G.add(new Hypothesis(c));
+        S.add(new Hypothesis(b));
         HashSet<Hypothesis> outputList= new HashSet<Hypothesis>();
-        outputList.add(new Hypothesis(b));
-        HashSet<Hypothesis> finalRes = specializeObject.removeMember(S,G,ceh.getFeatureGraph());
+        outputList.add(new Hypothesis(a));
+        HashSet<Hypothesis> finalRes = generalizeObject.removeGeneric(S, ceh.getFeatureGraph());
         assertEquals(finalRes,outputList);
     }
 
