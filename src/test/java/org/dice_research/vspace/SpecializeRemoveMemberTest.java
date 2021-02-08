@@ -23,9 +23,7 @@ public class SpecializeRemoveMemberTest {
 	int datalen = 0;
     HashSet<Hypothesis> S = new HashSet<>();
     HashSet<Hypothesis> G = new HashSet<>();
-    br = new BufferedReader(new FileReader(new File("C:\\Users\\Sharique\\Desktop\\Study_Materials"
-            + "\\Master\\Data_Science_Project\\VersionSpaceLearning\\code\\src"
-            + "\\test\\resources\\datafile\\data.csv")));
+    br = new BufferedReader(new FileReader(new File("/src/test/resources/datafile/data.csv")));
     while((line = br.readLine()) != null) {
       datas = line.split(",");
       instances.add(new Instance(datas));

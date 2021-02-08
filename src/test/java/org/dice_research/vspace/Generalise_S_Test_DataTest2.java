@@ -22,7 +22,7 @@ import org.junit.Test;
 import java.io.*;
 class Generalise_S_Test_DataTest2 {
 	
-	CandidateElimination ceh=new CandidateElimination("Hierarchical", "/Users/parthsharma/Desktop/DataTest2.csv",
+	CandidateElimination ceh=new CandidateElimination("Hierarchical", "/src/test/resources/datafile/DataTest2.csv",
             "/Users/parthsharma/Desktop/OntologyTest2.csv");
 	int datalen = 0;
 	HashSet<Hypothesis> S = new HashSet<>();
@@ -37,7 +37,7 @@ class Generalise_S_Test_DataTest2 {
 		BufferedReader br;
 		
 		
-		br=new BufferedReader(new FileReader(new File("/Users/parthsharma/Desktop/DataTest2.csv")));
+		br=new BufferedReader(new FileReader(new File("/src/test/resources/datafile/DataTest2.csv")));
 		
 		String line="";
 		
@@ -64,10 +64,10 @@ class Generalise_S_Test_DataTest2 {
                 featureValues.get(i).add(datas[i]);
             }
             
-            ceh.featureValues=featureValues;
+            ceh.setFeatureValues(featureValues);
 		}
 		
-		ceh.datalen=datalen;
+		ceh.setDatalen(datalen);
 	}
 	@SuppressWarnings("resource")
 	@Test
@@ -81,7 +81,7 @@ class Generalise_S_Test_DataTest2 {
                 System.out.println(inst.toString());
                 if(inst.getLabel().equals("Yes"))
                 {
-                    S = gs.min_generalizations(S, inst.getAttribs(),ceh.featureGraph, G);
+                    S = gs.min_generalizations(S, inst.getAttribs(),ceh.getFeatureGraph(), G);
                     for(Hypothesis hyp:S)
                     	Output.add(hyp);
                 }
@@ -105,9 +105,9 @@ class Generalise_S_Test_DataTest2 {
 		for (Instance inst : instances) {
 			System.out.println(inst.toString());
 			if (inst.getLabel().equals("Yes")) {
-				S = gs.min_generalizations(S, inst.getAttribs(), ceh.featureGraph, G);
+				S = gs.min_generalizations(S, inst.getAttribs(), ceh.getFeatureGraph(), G);
 			} else {
-				S = genS.removeMember(S, inst.getAttribs(), ceh.featureGraph);
+				S = genS.removeMember(S, inst.getAttribs(), ceh.getFeatureGraph());
 			}
 		}
 		String[] out2 = { "Shapes", "Small", "?" };

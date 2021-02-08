@@ -18,7 +18,7 @@ public class FileUtils {
    * Below method will call the latest file in the directory
    * At present, this code has a bug, 
    */
-  public static String pickLatestFile(String directoryFilePath) {
+  public static String pickLatestFile(String directoryFilePath) throws IOException {
     String folder = new String(directoryFilePath);
     File dir = new File(folder);
     File[] files = dir.listFiles();

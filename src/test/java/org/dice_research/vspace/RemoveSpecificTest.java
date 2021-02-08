@@ -34,13 +34,13 @@ public class RemoveSpecificTest {
 	 */
 	@Test
 	public void test() {
-		ce.graphPath = "src/test/resources/datafile/OntologyTest3.csv";
-		ce.datalen = 2;
+		ce.setGraphPath("src/test/resources/datafile/OntologyTest3.csv");
+		ce.setDatalen(2);
 		ce.makeGraph();
 		G.add(new Hypothesis(new String[] { "Small", "Polyhedron" }));
 		G.add(new Hypothesis(new String[] { "?", "Sphere" }));
 		G.add(new Hypothesis(new String[] { "?", "Polyhedron" }));
-		G = sgb.removeSpecific(G, ce.featureGraph);
+		G = sgb.removeSpecific(G, ce.getFeatureGraph());
 		ExpOut.add(new Hypothesis(new String[] { "?", "Polyhedron" }));
 		ExpOut.add(new Hypothesis(new String[] { "?", "Sphere" }));
 
@@ -49,7 +49,7 @@ public class RemoveSpecificTest {
 
 		G.add(new Hypothesis(new String[] { "Large", "?" }));
 		G.add(new Hypothesis(new String[] { "?", "Pyramid" }));
-		G = sgb.removeSpecific(G, ce.featureGraph);
+		G = sgb.removeSpecific(G, ce.getFeatureGraph());
 		ExpOut.add(new Hypothesis(new String[] { "?", "Sphere" }));
 		ExpOut.add(new Hypothesis(new String[] { "?", "Polyhedron" }));
 		ExpOut.add(new Hypothesis(new String[] { "Large", "?" }));
@@ -62,8 +62,8 @@ public class RemoveSpecificTest {
 	 */
 	@Test
 	public void test1() {
-		ce.graphPath = "src/test/resources/datafile/OntologyTest4.csv";
-		ce.datalen = 3;
+		ce.setGraphPath("src/test/resources/datafile/OntologyTest4.csv");
+		ce.setDatalen(3);
 		ce.makeGraph();
 		G.add(new Hypothesis(new String[] { "?", "Vegetables", "Oval" }));
 		G.add(new Hypothesis(new String[] { "Large", "Potato", "Oval" }));
@@ -71,14 +71,14 @@ public class RemoveSpecificTest {
 
 		ExpOut.add(new Hypothesis(new String[] { "?", "Vegetables", "Oval" }));
 		ExpOut.add(new Hypothesis(new String[] { "?", "Vegetables", "Round" }));
-		G = sgb.removeSpecific(G, ce.featureGraph);
+		G = sgb.removeSpecific(G, ce.getFeatureGraph());
 
 		assertEquals(ExpOut, G);
 
 		G.add(new Hypothesis(new String[] { "?", "Fruits", "Cube" }));
 		G.add(new Hypothesis(new String[] { "?", "Fruits", "Polyhedron" }));
 		ExpOut.add(new Hypothesis(new String[] { "?", "Fruits", "Polyhedron" }));
-		G = sgb.removeSpecific(G, ce.featureGraph);
+		G = sgb.removeSpecific(G, ce.getFeatureGraph());
 
 		assertEquals(ExpOut, G);
 	}

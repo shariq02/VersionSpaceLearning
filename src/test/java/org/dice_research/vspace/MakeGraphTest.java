@@ -22,9 +22,7 @@ public class MakeGraphTest {
     int datalen = 0;
     HashSet<Hypothesis> sp = new HashSet<>();
     HashSet<Hypothesis> gn = new HashSet<>();
-    br = new BufferedReader(new FileReader(new File("C:\\Users\\Sharique\\Desktop\\"
-    + "Study_Materials\\Master\\Data_Science_Project\\VersionSpaceLearning\\"
-    + "code\\src\\test\\resources\\datafile\\DataTest1.csv")));
+    br = new BufferedReader(new FileReader(new File("/src/test/resources/datafile/DataTest1.csv")));
     while ((line = br.readLine()) != null) { 
       datas = line.split(",");
       instances.add(new Instance(datas));

@@ -36,6 +36,10 @@ public class Hypothesis {
 		}
 	}
 
+	public Hypothesis(int datalen, String string) {
+		// TODO Auto-generated constructor stub
+	}
+
 	public String[] getFeatures() {
 		return features;
 	}

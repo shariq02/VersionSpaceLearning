@@ -1,3 +1,5 @@
+package org.dice_research.vspace;
+
 import static org.junit.Assert.*;
 import java.io.BufferedReader;
 import java.io.File;
@@ -21,7 +23,7 @@ public class TestSpecializeGBoundary_removeMember {
         int datalen = 0;
         HashSet<Hypothesis> S = new HashSet<>();
         HashSet<Hypothesis> G = new HashSet<>();
-        br = new BufferedReader(new FileReader(new File("/src/hierarchicalInstance_robot.csv")));
+        br = new BufferedReader(new FileReader(new File("/src/test/resources/datafile/DataTest1.csv")));
         while((line = br.readLine()) != null) {
             datas = line.split(",");
             instances.add(new Instance(datas));
@@ -36,8 +38,8 @@ public class TestSpecializeGBoundary_removeMember {
             }
         }
         SpecializeGBoundary specializeObject = new SpecializeGBoundary();
-        CandidateElimination ceh = new CandidateElimination("Hierarchical", "/src/hierarchicalInstance_robot.csv",
-                "/src/dataOntology_robot.csv");
+        CandidateElimination ceh = new CandidateElimination("Hierarchical", "/src/test/resources/datafile/DataTest1.csv",
+                "/src/test/resources/datafile/OntologyTest1.csv");
         ceh.makeGraph(featureValues);
         String[] a= {"small","cube"};
         String[] b= {"small","?"};

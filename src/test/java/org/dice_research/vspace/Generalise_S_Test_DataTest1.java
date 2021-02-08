@@ -19,8 +19,8 @@ import java.io.*;
 
 class Generalise_S_Test_DataTest1 {
 
-	CandidateElimination ceh = new CandidateElimination("Hierarchical", "/Users/parthsharma/Desktop/DataTest1.csv",
-			"/Users/parthsharma/Desktop/OntologyTest1.csv");
+	CandidateElimination ceh = new CandidateElimination("Hierarchical", "/src/test/resources/datafile/DataTest1.csv",
+			"/src/test/resources/datafile/OntologyTest1.csv");
 	int datalen = 0;
 	HashSet<Hypothesis> S = new HashSet<>();
 	HashSet<Hypothesis> G = new HashSet<>();
@@ -32,7 +32,7 @@ class Generalise_S_Test_DataTest1 {
 	@Before
 	public void init() throws IOException {
 		BufferedReader br;
-		br = new BufferedReader(new FileReader(new File("/Users/parthsharma/Desktop/DataTest1.csv")));
+		br = new BufferedReader(new FileReader(new File("/src/test/resources/datafile/DataTest1.csv")));
 
 		String line = "";
 
@@ -56,10 +56,10 @@ class Generalise_S_Test_DataTest1 {
 				featureValues.get(i).add(datas[i]);
 			}
 
-			ceh.featureValues = featureValues;
+			ceh.setFeatureValues(featureValues);
 		}
 
-		ceh.datalen = datalen;
+		ceh.setDatalen(datalen);
 	}
 
 	@SuppressWarnings("resource")
@@ -72,7 +72,7 @@ class Generalise_S_Test_DataTest1 {
 		for (Instance inst : instances) {
 			System.out.println(inst.toString());
 			if (inst.getLabel().equals("Yes")) {
-				S = gs.min_generalizations(S, inst.getAttribs(), ceh.featureGraph, G);
+				S = gs.min_generalizations(S, inst.getAttribs(), ceh.getFeatureGraph(), G);
 				for (Hypothesis hyp : S) {
 					Output.add(hyp);
 				}

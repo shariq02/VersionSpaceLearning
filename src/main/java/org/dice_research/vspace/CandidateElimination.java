@@ -42,7 +42,7 @@ public class CandidateElimination {
 	private HashSet<Hypothesis> consistentG;
 	private HashSet<Hypothesis> placeholder_incnstc;
 	private String filePath;
-	public ArrayList<Ontology> featureGraph;
+	private ArrayList<Ontology> featureGraph;
 	private String mode;
 	private String graphPath;
 	private Boolean inconsistancy;
@@ -69,9 +69,13 @@ public class CandidateElimination {
 			spabInit(path, graphPath);
 		} else {
 			initialize(mode, path);
-			this.graphPath = graphPath;
+			this.setGraphPath(graphPath);
 		}
 
+	}
+
+	public CandidateElimination() {
+		// TODO Auto-generated constructor stub
 	}
 
 	// constructor for the spab use case
@@ -80,8 +84,8 @@ public class CandidateElimination {
 		this.mostGeneralBoundary = new HashSet<Query>();
 		this.positiveQueries = new ArrayList<Query>();
 		this.negativeQueries = new ArrayList<Query>();
-		this.genS = new GeneralizeS();
-		this.spclG = new SpecializeGBoundary();
+		this.setGenS(new GeneralizeS());
+		this.setSpclG(new SpecializeGBoundary());
 
 		// add the most specific/general query (query which has no triples) to the
 		// respective set
@@ -118,22 +122,22 @@ public class CandidateElimination {
 	public void initialize(String mode, String path) {
 		this.mode = mode;
 		this.instances = new ArrayList<>();
-		this.featureValues = new ArrayList<>();
-		this.datalen = 0;
-		this.genS = new GeneralizeS();
-		this.spclG = new SpecializeGBoundary();
+		this.setFeatureValues(new ArrayList<>());
+		this.setDatalen(0);
+		this.setGenS(new GeneralizeS());
+		this.setSpclG(new SpecializeGBoundary());
 		this.S = new HashSet<>();
 		this.G = new HashSet<>();
-		this.inst_S = new HashSet<>();
-		this.inst_G = new HashSet<>();
+		this.setInst_S(new HashSet<>());
+		this.setInst_G(new HashSet<>());
 		this.merged_S = new HashSet<>();
 		this.merged_G = new HashSet<>();
 		this.placeholder = new HashSet<>();
 		this.placeholder_S = new HashSet<>();
 		this.placeholder_G = new HashSet<>();
 		this.placeholder_incnstc = new HashSet<>();
-		this.consistentG = new HashSet<>();
-		this.VS_hSet = new ArrayList<>();
+		this.setConsistentG(new HashSet<>());
+		this.setVS_hSet(new ArrayList<>());
 		this.filePath = path;
 		this.inconsistancy = false;
 	}
@@ -148,7 +152,7 @@ public class CandidateElimination {
 				Query currentS = sBoundaryIter.next();
 				if (!currentS.isMoreGeneralThan(currentPosPoint, 0, new HashMap<Integer, Integer>(), null)) {
 					sBoundaryIter.remove();
-					Set<Query> minGeneralizations = genS.min_generalizations(currentS, currentPosPoint);
+					Set<Query> minGeneralizations = getGenS().min_generalizations(currentS, currentPosPoint);
 					for (Query q : minGeneralizations) {
 						if (q.isMoreGeneralThan(currentPosPoint, 0, new HashMap<Integer, Integer>(), null)) {
 							for (Query w : this.mostGeneralBoundary) {
@@ -174,7 +178,7 @@ public class CandidateElimination {
 					Query currentG = gBoundaryIter.next();
 					if (currentG.isMoreGeneralThan(currentNegPoint, 0, new HashMap<Integer, Integer>(), null)) {
 						gBoundaryIter.remove();
-						Set<Query> minSpecializations = spclG.recursiveMinSpecialization(null, currentG,
+						Set<Query> minSpecializations = getSpclG().recursiveMinSpecialization(null, currentG,
 								currentNegPoint, this.mostSpecialBoundary);
 						for (Query q : minSpecializations) {
 							if (!q.isMoreGeneralThan(currentNegPoint, 0, new HashMap<Integer, Integer>(), null)) {
@@ -225,18 +229,18 @@ public class CandidateElimination {
 			while ((line = br.readLine()) != null) {
 				datas = line.split(",");
 				instances.add(new Instance(datas));
-				if (datalen == 0) {
-					datalen = datas.length - 1;
-					S.add(new Hypothesis(datalen, false));
-					G.add(new Hypothesis(datalen, true));
-					consistentG.add(new Hypothesis(datalen, true));
-					VS_hSet.add(new VersionSpace(S, G));
-					for (int i = 1; i <= datalen; i++) {
-						featureValues.add(new HashSet<>());
+				if (getDatalen() == 0) {
+					setDatalen(datas.length - 1);
+					S.add(new Hypothesis(getDatalen(), false));
+					G.add(new Hypothesis(getDatalen(), true));
+					getConsistentG().add(new Hypothesis(getDatalen(), true));
+					getVS_hSet().add(new VersionSpace(S, G));
+					for (int i = 1; i <= getDatalen(); i++) {
+						getFeatureValues().add(new HashSet<>());
 					}
 				}
-				for (int i = 0; i < datalen; i++) {
-					featureValues.get(i).add(datas[i]);
+				for (int i = 0; i < getDatalen(); i++) {
+					getFeatureValues().get(i).add(datas[i]);
 				}
 			}
 
@@ -249,7 +253,7 @@ public class CandidateElimination {
 		 * It checks the mode and makes the corresponding feature graph.
 		 */
 		if (this.mode.equals("Normal"))
-			makeGraph(featureValues);
+			makeGraph(getFeatureValues());
 		else
 			makeGraph();
 
@@ -257,8 +261,8 @@ public class CandidateElimination {
 		 * placeholder_S and placeholder_G used to store temporary hypothesis
 		 */
 
-		placeholder_S.add(new Hypothesis(datalen, false));
-		placeholder_G.add(new Hypothesis(datalen, true));
+		placeholder_S.add(new Hypothesis(getDatalen(), false));
+		placeholder_G.add(new Hypothesis(getDatalen(), true));
 
 		/**
 		 * inst_S and inst_G is single instance specific S and G boundary If the label
@@ -272,23 +276,23 @@ public class CandidateElimination {
 		 */
 
 		for (Instance inst : instances) {
-			inst_S.add(new Hypothesis(datalen, false));
-			inst_G.add(new Hypothesis(datalen, true));
+			getInst_S().add(new Hypothesis(getDatalen(), false));
+			getInst_G().add(new Hypothesis(getDatalen(), true));
 			System.out.println("The instance is");
 			System.out.println(inst.toString());
 			if (inst.getLabel().equals("Yes")) {
-				inst_S = genS.min_generalizations(inst_S, inst.getAttribs(), featureGraph, inst_G);
-				inst_G = spclG.removeMember(inst_S, inst_G, featureGraph);
+				setInst_S(getGenS().min_generalizations(getInst_S(), inst.getAttribs(), featureGraph, getInst_G()));
+				setInst_G(getSpclG().removeMember(getInst_S(), getInst_G(), featureGraph));
 			} else {
-				consistentG = spclG.specialize(inst.getAttribs(), inst_S, featureGraph, consistentG, "ce");
-				inst_S = genS.removeMember(inst_S, inst.getAttribs(), featureGraph);
-				inst_G = spclG.specialize(inst.getAttribs(), inst_S, featureGraph, inst_G, "ce");
+				setConsistentG(getSpclG().specialize(inst.getAttribs(), getInst_S(), featureGraph, getConsistentG(), "ce"));
+				setInst_S(getGenS().removeMember(getInst_S(), inst.getAttribs(), featureGraph));
+				setInst_G(getSpclG().specialize(inst.getAttribs(), getInst_S(), featureGraph, getInst_G(), "ce"));
 
 			}
 			mergeVersionSpace(inst);
-			System.out.println("Total Version space found: " + Integer.toString(VS_hSet.size()));
+			System.out.println("Total Version space found: " + Integer.toString(getVS_hSet().size()));
 			int indx = 1;
-			for (VersionSpace vs : VS_hSet) {
+			for (VersionSpace vs : getVS_hSet()) {
 				System.out.println("S boundary of VS" + String.valueOf(indx) + " is: ");
 				System.out.println(vs.getS());
 				System.out.println("G boundary of VS" + String.valueOf(indx) + " is: ");
@@ -296,8 +300,8 @@ public class CandidateElimination {
 				System.out.println("#######################################################################");
 				indx++;
 			}
-			inst_S.clear();
-			inst_G.clear();
+			getInst_S().clear();
+			getInst_G().clear();
 		}
 	}
 
@@ -330,11 +334,11 @@ public class CandidateElimination {
 
 	public void makeGraph() {
 		featureGraph = new ArrayList<>();
-		for (int i = 1; i <= this.datalen; i++) {
+		for (int i = 1; i <= this.getDatalen(); i++) {
 			featureGraph.add(new Ontology());
 		}
 		try {
-			this.br = new BufferedReader(new FileReader(new File(this.graphPath)));
+			this.br = new BufferedReader(new FileReader(new File(this.getGraphPath())));
 			while ((line = br.readLine()) != null) {
 				datas = line.split(",");
 				Ontology grph = featureGraph.get(Integer.parseInt(datas[0]));
@@ -368,14 +372,14 @@ public class CandidateElimination {
 	 * 
 	 */
 
-	private void mergeVersionSpace(Instance inst) {
-		int versionSpaceLength = VS_hSet.size();
+	void mergeVersionSpace(Instance inst) {
+		int versionSpaceLength = getVS_hSet().size();
 		int counter = 1;
-		for (VersionSpace vs : VS_hSet) {
+		for (VersionSpace vs : getVS_hSet()) {
 			this.S = vs.getS();
 			this.G = vs.getG();
 			for (Hypothesis hypo_s1 : S) {
-				for (Hypothesis hypo_s2 : inst_S) {
+				for (Hypothesis hypo_s2 : getInst_S()) {
 					if (hypo_s1.isMoreGeneralThan(hypo_s2, featureGraph))
 						merged_S.add(hypo_s1);
 					else if (hypo_s1.isMoreSpecificThan(hypo_s2, featureGraph))
@@ -384,7 +388,7 @@ public class CandidateElimination {
 						merged_S.add(hypo_s1);
 					else {
 						placeholder.add(hypo_s1);
-						placeholder = genS.min_generalizations(placeholder, hypo_s2.features, featureGraph,
+						placeholder = getGenS().min_generalizations(placeholder, hypo_s2.features, featureGraph,
 								placeholder_G);
 						for (Hypothesis pholder_hypo : placeholder)
 							merged_S.add(pholder_hypo);
@@ -394,7 +398,7 @@ public class CandidateElimination {
 			}
 
 			for (Hypothesis hypo_g1 : G) {
-				for (Hypothesis hypo_g2 : inst_G) {
+				for (Hypothesis hypo_g2 : getInst_G()) {
 					if (hypo_g1.isMoreSpecificThan(hypo_g2, featureGraph))
 						merged_G.add(hypo_g1);
 					else if (hypo_g1.isMoreGeneralThan(hypo_g2, featureGraph))
@@ -403,7 +407,7 @@ public class CandidateElimination {
 						merged_G.add(hypo_g1);
 					else {
 						placeholder.add(hypo_g1);
-						placeholder = spclG.specialize(hypo_g2.features, placeholder_S, featureGraph, placeholder,
+						placeholder = getSpclG().specialize(hypo_g2.features, placeholder_S, featureGraph, placeholder,
 								"ivsm");
 						for (Hypothesis pholder_gHypo : placeholder)
 							merged_G.add(pholder_gHypo);
@@ -418,14 +422,14 @@ public class CandidateElimination {
 			 * merged_G by removing hypotheses which are more general or more specific than
 			 * itself and it does it by using the following functions.
 			 */
-			merged_G = spclG.removeMember(S, merged_G, featureGraph);
-			merged_G = spclG.removeMember(inst_S, merged_G, featureGraph);
+			merged_G = getSpclG().removeMember(S, merged_G, featureGraph);
+			merged_G = getSpclG().removeMember(getInst_S(), merged_G, featureGraph);
 
-			merged_S = genS.compareG_Remove(merged_S, G, featureGraph);
-			merged_S = genS.compareG_Remove(merged_S, inst_G, featureGraph);
+			merged_S = getGenS().compareG_Remove(merged_S, G, featureGraph);
+			merged_S = getGenS().compareG_Remove(merged_S, getInst_G(), featureGraph);
 
-			G = spclG.removeSpecific(merged_G, featureGraph);
-			S = genS.removeGeneric(merged_S, featureGraph);
+			G = getSpclG().removeSpecific(merged_G, featureGraph);
+			S = getGenS().removeGeneric(merged_S, featureGraph);
 			merged_S.clear();
 			merged_G.clear();
 			/**
@@ -433,8 +437,8 @@ public class CandidateElimination {
 			 * cover the instance hence the inconsistency flag is set.
 			 */
 			if (!(S.isEmpty() || G.isEmpty())) {
-				vs.setS(genS.removeGeneric(S, featureGraph));
-				vs.setG(spclG.removeSpecific(G, featureGraph));
+				vs.setS(getGenS().removeGeneric(S, featureGraph));
+				vs.setG(getSpclG().removeSpecific(G, featureGraph));
 				inconsistancy = false;
 				if (inst.getLabel().equals("Yes") || counter == versionSpaceLength) // loop continues only for negative
 																					// label
@@ -452,18 +456,90 @@ public class CandidateElimination {
 		 */
 
 		if (inconsistancy) {
-			consistentG = spclG.removeSpecific(consistentG, featureGraph);
+			setConsistentG(getSpclG().removeSpecific(getConsistentG(), featureGraph));
 			/**
 			 * Hypothesis are removed from g boundary which is not consistent with s
 			 * boundary.
 			 */
-			VS_hSet.add(new VersionSpace(genS.removeGeneric(inst_S, featureGraph),
-					spclG.removeMember(genS.removeGeneric(inst_S, featureGraph), consistentG, featureGraph)));
+			getVS_hSet().add(new VersionSpace(getGenS().removeGeneric(getInst_S(), featureGraph),
+					getSpclG().removeMember(getGenS().removeGeneric(getInst_S(), featureGraph), getConsistentG(), featureGraph)));
 		}
 
 	}
 
 	public ArrayList<Ontology> getFeatureGraph() {
 		return featureGraph;
+	}
+
+	public int getDatalen() {
+		return datalen;
+	}
+
+	public void setDatalen(int datalen) {
+		this.datalen = datalen;
+	}
+
+	public ArrayList<HashSet<String>> getFeatureValues() {
+		return featureValues;
+	}
+
+	public void setFeatureValues(ArrayList<HashSet<String>> featureValues) {
+		this.featureValues = featureValues;
+	}
+
+	public String getGraphPath() {
+		return graphPath;
+	}
+
+	public void setGraphPath(String graphPath) {
+		this.graphPath = graphPath;
+	}
+
+	public HashSet<Hypothesis> getConsistentG() {
+		return consistentG;
+	}
+
+	public void setConsistentG(HashSet<Hypothesis> consistentG) {
+		this.consistentG = consistentG;
+	}
+
+	public HashSet<Hypothesis> getInst_S() {
+		return inst_S;
+	}
+
+	public void setInst_S(HashSet<Hypothesis> inst_S) {
+		this.inst_S = inst_S;
+	}
+
+	public HashSet<Hypothesis> getInst_G() {
+		return inst_G;
+	}
+
+	public void setInst_G(HashSet<Hypothesis> inst_G) {
+		this.inst_G = inst_G;
+	}
+
+	public GeneralizeS getGenS() {
+		return genS;
+	}
+
+	public void setGenS(GeneralizeS genS) {
+		this.genS = genS;
+	}
+
+	public SpecializeGBoundary getSpclG() {
+		return spclG;
+	}
+
+	public void setSpclG(SpecializeGBoundary spclG) {
+		this.spclG = spclG;
+	}
+
+	public ArrayList<VersionSpace> getVS_hSet() {
+		return VS_hSet;
+	}
+
+	public void setVS_hSet(ArrayList<VersionSpace> vS_hSet) {
+		VS_hSet = vS_hSet;
 	}
 }

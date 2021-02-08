@@ -26,7 +26,7 @@ public class SpecializeGTest
 		int datalen = 0;
         HashSet<Hypothesis> S = new HashSet<>();
         HashSet<Hypothesis> G = new HashSet<>();
-        br = new BufferedReader(new FileReader(new File("C:\\Users\\Sharique\\Desktop\\Study_Materials\\Master\\Data_Science_Project\\VersionSpaceLearning\\code\\src\\test\\resources\\datafile\\data.csv")));
+        br = new BufferedReader(new FileReader(new File("/src/test/resources/datafile/data.csv")));
         while ((line = br.readLine()) != null) {
             datas = line.split(",");
             instances.add(new Instance(datas));
@@ -51,7 +51,7 @@ public class SpecializeGTest
         HashSet<Hypothesis> specializedHypothesisSet = new HashSet<Hypothesis>();
         specializedHypothesisSet.addAll(S);
         featureGraph = CandidateElimination.makeGraph(featureValues);
-        outputList =  specializeObject.specialize(negativeData, specializedHypothesisSet, featureGraph, G);
+        outputList =  specializeObject.specialize(negativeData, specializedHypothesisSet, featureGraph, G, line);
         String[] expectedFeatureSet1 =  {"?","?","?","?","?","Same"};
         String[] expectedFeatureSet2 =  {"?","Warm","?","?","?","?"};
         String[] expectedFeatureSet3 =  {"?","?","Normal","?","?","?"};
@@ -83,7 +83,7 @@ public class SpecializeGTest
 		int datalen = 0;
         HashSet<Hypothesis> S = new HashSet<>();
         HashSet<Hypothesis> G = new HashSet<>();
-        br = new BufferedReader(new FileReader(new File("C:\\Users\\Sharique\\Desktop\\Study_Materials\\Master\\Data_Science_Project\\VersionSpaceLearning\\code\\src\\test\\resources\\datafile\\negativedata.csv")));
+        br = new BufferedReader(new FileReader(new File("/src/test/resources/datafile/negativedata.csv")));
         while ((line = br.readLine()) != null) {
             datas = line.split(",");
             instances.add(new Instance(datas));
@@ -108,7 +108,7 @@ public class SpecializeGTest
         HashSet<Hypothesis> specializedHypothesisSet = new HashSet<Hypothesis>();
         specializedHypothesisSet.addAll(S);
         featureGraph = CandidateElimination.makeGraph(featureValues);
-        outputList =  specializeObject.specialize(negativeData, specializedHypothesisSet, featureGraph, G);
+        outputList =  specializeObject.specialize(negativeData, specializedHypothesisSet, featureGraph, G, line);
         
         String[] expectedFeatureSet2 =  {"?","?","triangle"};
         String[] expectedFeatureSet3 =  {"?","blue","?"};
@@ -137,7 +137,7 @@ public class SpecializeGTest
 		int datalen = 0;
         HashSet<Hypothesis> S = new HashSet<>();
         HashSet<Hypothesis> G = new HashSet<>();
-        br = new BufferedReader(new FileReader(new File("C:\\Users\\Sharique\\Desktop\\Study_Materials\\Master\\Data_Science_Project\\VersionSpaceLearning\\code\\src\\test\\resources\\datafile\\negativedata.csv")));
+        br = new BufferedReader(new FileReader(new File("/src/test/resources/datafile/negativedata.csv")));
         while ((line = br.readLine()) != null) {
             datas = line.split(",");
             instances.add(new Instance(datas));
@@ -162,7 +162,7 @@ public class SpecializeGTest
         HashSet<Hypothesis> specializedHypothesisSet = new HashSet<Hypothesis>();
         specializedHypothesisSet.addAll(S);
         featureGraph = CandidateElimination.makeGraph(featureValues);
-        outputList =  specializeObject.specialize(negativeData, specializedHypothesisSet, featureGraph, G);
+        outputList =  specializeObject.specialize(negativeData, specializedHypothesisSet, featureGraph, G, line);
         String[] expectedFeatureSet1 = {"big","?","?"};
         String[] expectedFeatureSet2 = {"?","?","circle"};
         String[] expectedFeatureSet3 = {"?","blue","?"};
@@ -187,7 +187,7 @@ public class SpecializeGTest
 		int datalen = 0;
         HashSet<Hypothesis> S = new HashSet<>();
         HashSet<Hypothesis> G = new HashSet<>();
-        br = new BufferedReader(new FileReader(new File("C:\\Users\\Sharique\\Desktop\\Study_Materials\\Master\\Data_Science_Project\\VersionSpaceLearning\\code\\src\\test\\resources\\datafile\\fish_database.csv")));
+        br = new BufferedReader(new FileReader(new File("/src/test/resources/datafile/fish_database.csv")));
         while ((line = br.readLine()) != null) {
             datas = line.split(",");
             instances.add(new Instance(datas));
@@ -212,7 +212,7 @@ public class SpecializeGTest
         HashSet<Hypothesis> specializedHypothesisSet = new HashSet<Hypothesis>();
         specializedHypothesisSet.addAll(S);
         featureGraph = CandidateElimination.makeGraph(featureValues);
-        outputList =  specializeObject.specialize(negativeData, specializedHypothesisSet, featureGraph, G);
+        outputList =  specializeObject.specialize(negativeData, specializedHypothesisSet, featureGraph, G, line);
         String[] expectedFeatureSet1 = {"catfish","?","?"};
         String[] expectedFeatureSet2 = {"carp","?","?"};
         String[] expectedFeatureSet3 = {"bass","?","?"};
@@ -243,7 +243,7 @@ public class SpecializeGTest
 		int datalen = 0;
         HashSet<Hypothesis> S = new HashSet<>();
         HashSet<Hypothesis> G = new HashSet<>();
-        br = new BufferedReader(new FileReader(new File("C:\\Users\\Sharique\\Desktop\\Study_Materials\\Master\\Data_Science_Project\\VersionSpaceLearning\\code\\src\\test\\resources\\datafile\\StudentsPerformance.csv")));
+        br = new BufferedReader(new FileReader(new File("/src/test/resources/datafile/StudentsPerformance.csv")));
         while ((line = br.readLine()) != null) {
             datas = line.split(",");
             instances.add(new Instance(datas));
@@ -268,7 +268,7 @@ public class SpecializeGTest
         HashSet<Hypothesis> specializedHypothesisSet = new HashSet<Hypothesis>();
         specializedHypothesisSet.addAll(S);
         featureGraph = CandidateElimination.makeGraph(featureValues);
-        outputList =  specializeObject.specialize(negativeData, specializedHypothesisSet, featureGraph, G);
+        outputList =  specializeObject.specialize(negativeData, specializedHypothesisSet, featureGraph, G, line);
         String[] expectedFeatureSet1 = {"female","?","?","?"};
         String[] expectedFeatureSet2 = {"?","master","?","?"};
         String[] expectedFeatureSet3 = {"?","?","?","93"};
@@ -301,7 +301,7 @@ public class SpecializeGTest
 		int datalen = 0;
         HashSet<Hypothesis> S = new HashSet<>();
         HashSet<Hypothesis> G = new HashSet<>();
-        br = new BufferedReader(new FileReader(new File("C:\\Users\\Sharique\\Desktop\\Study_Materials\\Master\\Data_Science_Project\\VersionSpaceLearning\\code\\src\\test\\resources\\datafile\\testdata.csv")));
+        br = new BufferedReader(new FileReader(new File("/src/test/resources/datafile/testdata.csv")));
         while ((line = br.readLine()) != null) {
             datas = line.split(",");
             instances.add(new Instance(datas));
@@ -326,7 +326,7 @@ public class SpecializeGTest
         HashSet<Hypothesis> specializedHypothesisSet = new HashSet<Hypothesis>();
         specializedHypothesisSet.addAll(S);
         featureGraph = CandidateElimination.makeGraph(featureValues);
-        outputList =  specializeObject.specialize(negativeData, specializedHypothesisSet, featureGraph, G);
+        outputList =  specializeObject.specialize(negativeData, specializedHypothesisSet, featureGraph, G, line);
         
         String[] expectedFeatureSet1 = {"Visit5","?","?","?","?"};
         String[] expectedFeatureSet2 = {"?","?","?","Sunday","?"};
@@ -365,7 +365,7 @@ public class SpecializeGTest
 		int datalen = 0;
         HashSet<Hypothesis> S = new HashSet<>();
         HashSet<Hypothesis> G = new HashSet<>();
-        br = new BufferedReader(new FileReader(new File("C:\\Users\\Sharique\\Desktop\\Study_Materials\\Master\\Data_Science_Project\\VersionSpaceLearning\\code\\src\\test\\resources\\datafile\\testdata.csv")));
+        br = new BufferedReader(new FileReader(new File("/src/test/resources/datafile/testdata.csv")));
         while ((line = br.readLine()) != null) {
             datas = line.split(",");
             instances.add(new Instance(datas));
@@ -390,7 +390,7 @@ public class SpecializeGTest
         HashSet<Hypothesis> specializedHypothesisSet = new HashSet<Hypothesis>();
         specializedHypothesisSet.addAll(S);
         featureGraph = CandidateElimination.makeGraph(featureValues);
-        outputList =  specializeObject.specialize(negativeData, specializedHypothesisSet, featureGraph, G);
+        outputList =  specializeObject.specialize(negativeData, specializedHypothesisSet, featureGraph, G, line);
         String[] expectedFeatureSet1 = {"Visit5","?","?","?","?"};
         String[] expectedFeatureSet2 = {"?","?","?","?","Expensive"};
         String[] expectedFeatureSet3 = {"?","?","Lunch","?","?"};
@@ -428,7 +428,7 @@ public class SpecializeGTest
 		int datalen = 0;
         HashSet<Hypothesis> S = new HashSet<>();
         HashSet<Hypothesis> G = new HashSet<>();
-        br = new BufferedReader(new FileReader(new File("C:\\Users\\Sharique\\Desktop\\Study_Materials\\Master\\Data_Science_Project\\VersionSpaceLearning\\code\\src\\test\\resources\\datafile\\DataTest1.csv")));
+        br = new BufferedReader(new FileReader(new File("/src/test/resources/datafile/DataTest1.csv")));
         while ((line = br.readLine()) != null) {
             datas = line.split(",");
             instances.add(new Instance(datas));
@@ -453,7 +453,7 @@ public class SpecializeGTest
         HashSet<Hypothesis> specializedHypothesisSet = new HashSet<Hypothesis>();
         specializedHypothesisSet.addAll(S);
         featureGraph = CandidateElimination.makeGraph(featureValues);
-        outputList =  specializeObject.specialize(negativeData, specializedHypothesisSet, featureGraph, G);
+        outputList =  specializeObject.specialize(negativeData, specializedHypothesisSet, featureGraph, G, line);
         String[] expectedFeatureSet1 = {"S-class","?","?","?"};
         String[] expectedFeatureSet2 = {"BMW","?","?","?"};
         String[] expectedFeatureSet3 = {"?","Affordable","?","?"};
@@ -491,7 +491,7 @@ public class SpecializeGTest
 		int datalen = 0;
         HashSet<Hypothesis> S = new HashSet<>();
         HashSet<Hypothesis> G = new HashSet<>();
-        br = new BufferedReader(new FileReader(new File("C:\\Users\\Sharique\\Desktop\\Study_Materials\\Master\\Data_Science_Project\\VersionSpaceLearning\\code\\src\\test\\resources\\datafile\\DataTest1.csv")));
+        br = new BufferedReader(new FileReader(new File("/src/test/resources/datafile/DataTest1.csv")));
         while ((line = br.readLine()) != null) {
             datas = line.split(",");
             instances.add(new Instance(datas));
@@ -516,7 +516,7 @@ public class SpecializeGTest
         HashSet<Hypothesis> specializedHypothesisSet = new HashSet<Hypothesis>();
         specializedHypothesisSet.addAll(S);
         featureGraph = CandidateElimination.makeGraph(featureValues);
-        outputList =  specializeObject.specialize(negativeData, specializedHypothesisSet, featureGraph, G);
+        outputList =  specializeObject.specialize(negativeData, specializedHypothesisSet, featureGraph, G, line);
         String[] expectedFeatureSet1 = {"BMW","?","?","?"};
         String[] expectedFeatureSet2 = {"?","Affordable","?","?"};
         String[] expectedFeatureSet3 = {"E-class","?","?","?"};
