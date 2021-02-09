@@ -284,7 +284,8 @@ public class CandidateElimination {
 				setInst_S(getGenS().min_generalizations(getInst_S(), inst.getAttribs(), featureGraph, getInst_G()));
 				setInst_G(getSpclG().removeMember(getInst_S(), getInst_G(), featureGraph));
 			} else {
-				setConsistentG(getSpclG().specialize(inst.getAttribs(), getInst_S(), featureGraph, getConsistentG(), "ce"));
+				setConsistentG(
+						getSpclG().specialize(inst.getAttribs(), getInst_S(), featureGraph, getConsistentG(), "ce"));
 				setInst_S(getGenS().removeMember(getInst_S(), inst.getAttribs(), featureGraph));
 				setInst_G(getSpclG().specialize(inst.getAttribs(), getInst_S(), featureGraph, getInst_G(), "ce"));
 
@@ -461,8 +462,8 @@ public class CandidateElimination {
 			 * Hypothesis are removed from g boundary which is not consistent with s
 			 * boundary.
 			 */
-			getVS_hSet().add(new VersionSpace(getGenS().removeGeneric(getInst_S(), featureGraph),
-					getSpclG().removeMember(getGenS().removeGeneric(getInst_S(), featureGraph), getConsistentG(), featureGraph)));
+			getVS_hSet().add(new VersionSpace(getGenS().removeGeneric(getInst_S(), featureGraph), getSpclG()
+					.removeMember(getGenS().removeGeneric(getInst_S(), featureGraph), getConsistentG(), featureGraph)));
 		}
 
 	}

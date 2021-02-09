@@ -38,8 +38,7 @@ public class Main {
 		// For calling SPAB usecase
 		case 3:
 			CandidateElimination ces = new CandidateElimination("spab",
-					"./src/test/resources/datafile/virtuoso-pos.txt",
-					"./src/test/resources/datafile/virtuoso-neg.txt");
+					"./src/test/resources/datafile/virtuoso-pos.txt", "./src/test/resources/datafile/virtuoso-neg.txt");
 			ces.spabElimination();
 			break;
 

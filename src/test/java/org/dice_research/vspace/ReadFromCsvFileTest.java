@@ -7,9 +7,9 @@ import org.junit.Test;
 
 @SuppressWarnings("deprecation")
 public class ReadFromCsvFileTest {
-  @Test
-  public void test() throws IOException {
-    List<List<String>> result = ReadFromcsvFile.csvReader();
-	Assert.assertEquals(10, result.size());
-  }
+	@Test
+	public void test() throws IOException {
+		List<List<String>> result = ReadFromcsvFile.csvReader();
+		Assert.assertEquals(10, result.size());
+	}
 }

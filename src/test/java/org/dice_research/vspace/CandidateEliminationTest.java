@@ -51,10 +51,12 @@ public class CandidateEliminationTest {
 		ce = new CandidateElimination();
 		ce.makeGraph(fValues);
 		for (String str : set) {
-			assertEquals(ce.getFeatureGraph().get(0).search(ce.getFeatureGraph().get(0).getRoot(), str).getValue(), str);
+			assertEquals(ce.getFeatureGraph().get(0).search(ce.getFeatureGraph().get(0).getRoot(), str).getValue(),
+					str);
 		}
 		for (String str1 : setB) {
-			assertEquals(ce.getFeatureGraph().get(1).search(ce.getFeatureGraph().get(1).getRoot(), str1).getValue(), str1);
+			assertEquals(ce.getFeatureGraph().get(1).search(ce.getFeatureGraph().get(1).getRoot(), str1).getValue(),
+					str1);
 		}
 
 	}
@@ -69,10 +71,11 @@ public class CandidateEliminationTest {
 		ce = new CandidateElimination("Hierarchical", "src/test/resources/datafile/DataTest4.csv",
 				"src/test/resources/datafile/OntologyTest4.csv");
 		ce.performElimination();
-		assertTrue((ce.getFeatureGraph().get(1).findCommonParent("Cauliflower", "Tomato").getValue()).equals("Vegetables"));
+		assertTrue((ce.getFeatureGraph().get(1).findCommonParent("Cauliflower", "Tomato").getValue())
+				.equals("Vegetables"));
 		assertFalse((ce.getFeatureGraph().get(1).findCommonParent("Potato", "Tomato").getValue()).equals("Polyhedron"));
-		assertTrue(
-				(ce.getFeatureGraph().get(1).findCommonParent("Broccoli", "Cauliflower").getValue()).equals("Vegetables"));
+		assertTrue((ce.getFeatureGraph().get(1).findCommonParent("Broccoli", "Cauliflower").getValue())
+				.equals("Vegetables"));
 		assertTrue((ce.getFeatureGraph().get(1).findCommonParent("Apple", "Orange").getValue()).equals("Fruits"));
 		assertTrue((ce.getFeatureGraph().get(1).findCommonParent("Fruits", "Vegetables").getValue()).equals("?"));
 		assertTrue((ce.getFeatureGraph().get(2).findCommonParent("Cube", "Pyramid").getValue()).equals("Polyhedron"));
@@ -107,9 +110,11 @@ public class CandidateEliminationTest {
 		ce.getInst_G().add(new Hypothesis(ce.getDatalen(), "G"));
 		System.out.println("The instance is");
 		System.out.println(inst.toString());
-		ce.setConsistentG(ce.getSpclG().specialize(inst.getAttribs(), ce.getInst_S(), ce.getFeatureGraph(), ce.getConsistentG(), "ce"));
+		ce.setConsistentG(ce.getSpclG().specialize(inst.getAttribs(), ce.getInst_S(), ce.getFeatureGraph(),
+				ce.getConsistentG(), "ce"));
 		ce.setInst_S(ce.getGenS().removeMember(ce.getInst_S(), inst.getAttribs(), ce.getFeatureGraph()));
-		ce.setInst_G(ce.getSpclG().specialize(inst.getAttribs(), ce.getInst_S(), ce.getFeatureGraph(), ce.getInst_G(), "ce"));
+		ce.setInst_G(ce.getSpclG().specialize(inst.getAttribs(), ce.getInst_S(), ce.getFeatureGraph(), ce.getInst_G(),
+				"ce"));
 
 		ce.mergeVersionSpace(inst);
 		hypothesisTestCase = new String[] { "Small", "Polyhedron" };
@@ -139,7 +144,8 @@ public class CandidateEliminationTest {
 		assertNotNull(ce.getG());
 		assertNotNull(ce.getS());
 
-		ce.setInst_S(ce.getGenS().min_generalizations(ce.getInst_S(), inst.getAttribs(), ce.getFeatureGraph(), ce.getInst_G()));
+		ce.setInst_S(ce.getGenS().min_generalizations(ce.getInst_S(), inst.getAttribs(), ce.getFeatureGraph(),
+				ce.getInst_G()));
 		ce.setInst_G(ce.getSpclG().removeMember(ce.getInst_S(), ce.getInst_G(), ce.getFeatureGraph()));
 
 		ce.mergeVersionSpace(inst);
@@ -178,7 +184,8 @@ public class CandidateEliminationTest {
 		ce.getInst_G().add(new Hypothesis(ce.getDatalen(), "G"));
 		System.out.println("The instance is");
 		System.out.println(inst.toString());
-		ce.setInst_S(ce.getGenS().min_generalizations(ce.getInst_S(), inst.getAttribs(), ce.getFeatureGraph(), ce.getInst_G()));
+		ce.setInst_S(ce.getGenS().min_generalizations(ce.getInst_S(), inst.getAttribs(), ce.getFeatureGraph(),
+				ce.getInst_G()));
 		ce.setInst_G(ce.getSpclG().removeMember(ce.getInst_S(), ce.getInst_G(), ce.getFeatureGraph()));
 
 		ce.mergeVersionSpace(inst);
@@ -210,9 +217,11 @@ public class CandidateEliminationTest {
 		ce.getInst_G().add(new Hypothesis(ce.getDatalen(), "G"));
 		System.out.println("The instance is");
 		System.out.println(inst.toString());
-		ce.setConsistentG(ce.getSpclG().specialize(inst.getAttribs(), ce.getInst_S(), ce.getFeatureGraph(), ce.getConsistentG(), "ce"));
+		ce.setConsistentG(ce.getSpclG().specialize(inst.getAttribs(), ce.getInst_S(), ce.getFeatureGraph(),
+				ce.getConsistentG(), "ce"));
 		ce.setInst_S(ce.getGenS().removeMember(ce.getInst_S(), inst.getAttribs(), ce.getFeatureGraph()));
-		ce.setInst_G(ce.getSpclG().specialize(inst.getAttribs(), ce.getInst_S(), ce.getFeatureGraph(), ce.getInst_G(), "ce"));
+		ce.setInst_G(ce.getSpclG().specialize(inst.getAttribs(), ce.getInst_S(), ce.getFeatureGraph(), ce.getInst_G(),
+				"ce"));
 
 		ce.mergeVersionSpace(inst);
 
@@ -243,7 +252,8 @@ public class CandidateEliminationTest {
 		ce.getInst_G().add(new Hypothesis(ce.getDatalen(), "G"));
 		System.out.println("The instance is");
 		System.out.println(inst.toString());
-		ce.setInst_S(ce.getGenS().min_generalizations(ce.getInst_S(), inst.getAttribs(), ce.getFeatureGraph(), ce.getInst_G()));
+		ce.setInst_S(ce.getGenS().min_generalizations(ce.getInst_S(), inst.getAttribs(), ce.getFeatureGraph(),
+				ce.getInst_G()));
 		ce.setInst_G(ce.getSpclG().removeMember(ce.getInst_S(), ce.getInst_G(), ce.getFeatureGraph()));
 
 		ce.mergeVersionSpace(inst);
@@ -273,7 +283,8 @@ public class CandidateEliminationTest {
 		ce.getInst_G().add(new Hypothesis(ce.getDatalen(), "G"));
 		System.out.println("The instance is");
 		System.out.println(inst.toString());
-		ce.setInst_S(ce.getGenS().min_generalizations(ce.getInst_S(), inst.getAttribs(), ce.getFeatureGraph(), ce.getInst_G()));
+		ce.setInst_S(ce.getGenS().min_generalizations(ce.getInst_S(), inst.getAttribs(), ce.getFeatureGraph(),
+				ce.getInst_G()));
 		ce.setInst_G(ce.getSpclG().removeMember(ce.getInst_S(), ce.getInst_G(), ce.getFeatureGraph()));
 		ce.mergeVersionSpace(inst);
 
@@ -313,7 +324,8 @@ public class CandidateEliminationTest {
 		ce.getInst_G().add(new Hypothesis(ce.getDatalen(), "G"));
 		System.out.println("The instance is");
 		System.out.println(inst.toString());
-		ce.setInst_S(ce.getGenS().min_generalizations(ce.getInst_S(), inst.getAttribs(), ce.getFeatureGraph(), ce.getInst_G()));
+		ce.setInst_S(ce.getGenS().min_generalizations(ce.getInst_S(), inst.getAttribs(), ce.getFeatureGraph(),
+				ce.getInst_G()));
 		ce.setInst_G(ce.getSpclG().removeMember(ce.getInst_S(), ce.getInst_G(), ce.getFeatureGraph()));
 		ce.mergeVersionSpace(inst);
 

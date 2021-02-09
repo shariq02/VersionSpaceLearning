@@ -8,13 +8,13 @@ import java.util.Arrays;
 import java.util.List;
 
 public class QueryReader {
-	public static List<String> readQueries(String filepath) throws FileNotFoundException{
+	public static List<String> readQueries(String filepath) throws FileNotFoundException {
 		String fileContent = "";
 		File file = new File(filepath);
-		if(file.exists()) {
+		if (file.exists()) {
 			try {
 				fileContent = Files.readString(file.toPath());
-			} catch(Exception e) {
+			} catch (Exception e) {
 				e.printStackTrace();
 			}
 		} else {

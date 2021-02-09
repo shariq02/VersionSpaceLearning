@@ -24,7 +24,7 @@ import org.apache.jena.sparql.syntax.ElementWalker;
  */
 public class JenaParser extends SPARQLQueryParser {
 
-	//public static String line = "";
+	// public static String line = "";
 	public static ArrayList<String> query = new ArrayList<>();
 	public static Query jenaQuery, originalQuery;
 	List<Node> subjects = new ArrayList<Node>();
@@ -58,12 +58,12 @@ public class JenaParser extends SPARQLQueryParser {
 					// When it's a block of triples
 					public void visit(ElementPathBlock elementBlock) {
 						// Go through all the triples
-						//System.out.println(elementBlock.toString());
+						// System.out.println(elementBlock.toString());
 						Iterator<TriplePath> triples = elementBlock.patternElts();
 						int i = 0;
 						while (triples.hasNext()) {
 							// storing each triple of the query
-							//triple = triples.next();
+							// triple = triples.next();
 							allTriples.add(triples.next());
 							// stores all the subjects,predicates and objects of the query
 							subjects.add(allTriples.get(i).getSubject());
@@ -116,19 +116,18 @@ public class JenaParser extends SPARQLQueryParser {
 //		sparqlUnit = spab.getInput().getNegatives().get(0);
 //		jenaQuery = QueryFactory.create(sparqlUnit.getJenaStringRepresentation());
 //		originalQuery = QueryFactory.create(sparqlUnit.getOriginalString());
-		
+
 		List<String> qSubjects = new ArrayList<String>();
 		List<String> qPredicates = new ArrayList<String>();
 		List<String> qObjects = new ArrayList<String>();
-		
+
 		List<String> originalVariables = new ArrayList<String>();
 		List<String> replacedVariables = new ArrayList<String>();
 		Statement s = new SelectStatement();
-		
-		
+
 		/**
-		 * Jena parsed triple values are passed to our Query class
-		 * (This Query class is created by us and not a Jena type Query)
+		 * Jena parsed triple values are passed to our Query class (This Query class is
+		 * created by us and not a Jena type Query)
 		 */
 		ElementWalker.walk(jenaQuery.getQueryPattern(),
 				// For each element
