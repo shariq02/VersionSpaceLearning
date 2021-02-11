@@ -135,28 +135,28 @@ public class Triple {
 		int score = Integer.MAX_VALUE;
 		int index = -1;
 		for (Triple i : y) {
-			int currentScore = 0;
+			int differenceScore = 0;
 			BitSet difference = t.getDifference(i);
 			if (difference.get(0)) {
-				currentScore++;
+				differenceScore++;
 				if (!t.getSubject().getType().equals(i.getSubject().getType())) {
-					currentScore += 3;
+					differenceScore += 3;
 				}
 			}
 			if (difference.get(1)) {
-				currentScore++;
+				differenceScore++;
 				if (!t.getPredicate().getType().equals(i.getPredicate().getType())) {
-					currentScore += 3;
+					differenceScore += 3;
 				}
 			}
 			if (difference.get(2)) {
-				currentScore++;
+				differenceScore++;
 				if (!t.getObject().getType().equals(i.getObject().getType())) {
-					currentScore += 3;
+					differenceScore += 3;
 				}
 			}
-			if (currentScore < score) {
-				score = currentScore;
+			if (differenceScore < score) {
+				score = differenceScore;
 				index = y.indexOf(i);
 			}
 		}

@@ -12,12 +12,9 @@ public class Query {
 	boolean mostGeneral = false;
 
 	// internal representation
-	Map<String, String> prefixes;
-	List<Statement> statements;
-	List<Triple> triples;
-
-	// used for the purpose of renaming variables
-	int j = 0;
+	private Map<String, String> prefixes;
+	private List<Statement> statements;
+	private List<Triple> triples;
 
 	static List<String> reservedWords = Arrays.asList(new String[] { "SELECT", "WHERE", "GROUP", "HAVING", "ORDER",
 			"LIMIT", "OFFSET", "VALUES", "OPTIONAL", "MINUS", "GRAPH", "SERVICE", "FILTER", "BIND" });
@@ -195,8 +192,11 @@ public class Query {
 	 * 
 	 * @param statements List of statements in which to search for variables
 	 * @param triples    List of triples to search for variables to rename
+	 * @param n          The next number that is going to be assigned to an
+	 *                   un-renamed variable
 	 */
-	public boolean renameVariables(List<Statement> statements, List<Triple> triples) {
+	public boolean renameVariables(List<Statement> statements, List<Triple> triples, int n) {
+		int j = n;
 		for (Statement s : statements) {
 			Map<String, String> vars;
 			if (s.getType().equals("SELECT")) {
@@ -236,7 +236,7 @@ public class Query {
 	 * abbreviate
 	 */
 	public void replacePrefixVariables() {
-		for (Triple t : triples) {
+		for (Triple t : this.triples) {
 			String[] parts;
 			if (t.s.getType().equals(TripleValue.IRI) && !t.s.toString().startsWith("<")
 					&& !t.s.toString().endsWith(">")) {
@@ -283,7 +283,7 @@ public class Query {
 			return false;
 		}
 		if (assignedTriples != null) {
-			if (assignedTriples.size() == q.triples.size()) {
+			if (assignedTriples.size() == q.getTriples().size()) {
 				return true;
 			}
 			if (assignedTriples.containsValue(start)) {
@@ -291,7 +291,7 @@ public class Query {
 			}
 		}
 
-		Triple t = q.triples.get(start);
+		Triple t = q.getTriples().get(start);
 		for (int k = 0; k < this.triples.size(); k++) {
 			if (assignedTriples.containsKey(k)) {
 				continue;

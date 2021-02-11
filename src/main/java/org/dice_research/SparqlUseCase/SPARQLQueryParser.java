@@ -22,7 +22,7 @@ public class SPARQLQueryParser {
 			if (tmp[i].toLowerCase().equals("prefix")) {
 				String v = tmp[i + 1].substring(0, tmp[i + 1].length() - 1);
 				String u = tmp[i + 2].substring(1, tmp[i + 2].length() - 1);
-				query.prefixes.put(v, u);
+				query.getPrefixes().put(v, u);
 				i += 3;
 			} else {
 				// return the query without the prefixes
@@ -43,7 +43,7 @@ public class SPARQLQueryParser {
 	public static void parse(Query query) {
 		query.setQuery(removePrefixes(query));
 		String[] tmp = query.getOriginalQuery().trim().split(" ");
-
+		int j = 0;
 		boolean searchForTriples = false;
 		for (int i = 0; i < tmp.length; i++) {
 			Statement s;
@@ -56,12 +56,12 @@ public class SPARQLQueryParser {
 					if (tmp[i].equals("*")) {
 						((SelectStatement) s).putVariable(tmp[i], "*");
 					} else if (tmp[i].startsWith("?")) {
-						((SelectStatement) s).putVariable(tmp[i], "?v" + query.j);
-						query.j++;
+						((SelectStatement) s).putVariable(tmp[i], "?v" + j);
+						j++;
 					}
 					i++;
 				}
-				query.statements.add(s);
+				query.getStatements().add(s);
 			}
 			// parsing other types of queries apart form SELECT queries is not supported
 			else if (tmp[i].equals("ASK")) {
@@ -70,7 +70,7 @@ public class SPARQLQueryParser {
 						return "ASK";
 					}
 				};
-				query.statements.add(s);
+				query.getStatements().add(s);
 				break;
 			} else if (tmp[i].equals("DESCRIBE")) {
 				s = new Statement() {
@@ -78,7 +78,7 @@ public class SPARQLQueryParser {
 						return "DESCRIBE";
 					}
 				};
-				query.statements.add(s);
+				query.getStatements().add(s);
 				break;
 
 			} else if (tmp[i].equals("CONSTRUCT")) {
@@ -87,7 +87,7 @@ public class SPARQLQueryParser {
 						return "CONSTRUCT";
 					}
 				};
-				query.statements.add(s);
+				query.getStatements().add(s);
 				break;
 			}
 
@@ -96,7 +96,7 @@ public class SPARQLQueryParser {
 					// nothing, empty brackets
 				} else if (tmp[i + 3].equals(".") || tmp[i + 3].equals("}") || tmp[i + 3].equals("{")
 						|| Query.reservedWords.contains(tmp[i + 3])) {
-					query.triples.add(new Triple(tmp[i], tmp[i + 1], tmp[i + 2]));
+					query.getTriples().add(new Triple(tmp[i], tmp[i + 1], tmp[i + 2]));
 					i += 3;
 				} else if (tmp[i].equals("{")) {
 					// embedded brackets
@@ -120,7 +120,7 @@ public class SPARQLQueryParser {
 			}
 		}
 
-		query.renameVariables(query.statements, query.triples);
+		query.renameVariables(query.getStatements(), query.getTriples(), j);
 		query.replacePrefixVariables();
 	}
 }

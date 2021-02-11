@@ -149,7 +149,7 @@ public class JenaParser extends SPARQLQueryParser {
 				});
 
 		for (int i = 0; i < qSubjects.size(); i++) {
-			query.triples.add(new Triple(qSubjects.get(i), qPredicates.get(i), qObjects.get(i)));
+			query.getTriples().add(new Triple(qSubjects.get(i), qPredicates.get(i), qObjects.get(i)));
 
 		}
 
@@ -162,9 +162,9 @@ public class JenaParser extends SPARQLQueryParser {
 		for (int i = 0; i < originalVariables.size(); i++) {
 			((SelectStatement) s).putVariable(originalVariables.get(i), replacedVariables.get(i));
 		}
-		query.statements.add(s);
+		query.getStatements().add(s);
 
-		query.prefixes = jenaQuery.getPrefixMapping().getNsPrefixMap();
+		//query.getPrefixes() = jenaQuery.getPrefixMapping().getNsPrefixMap();
 
 	}
 }
