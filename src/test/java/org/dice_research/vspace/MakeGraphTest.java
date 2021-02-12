@@ -38,10 +38,10 @@ public class MakeGraphTest {
 				featureValues.get(i).add(datas[i]);
 			}
 		}
-		ArrayList<Ontology> output;
+		ArrayList<Ontology> output = null;
 		ArrayList<Ontology> expected = new ArrayList<>();
 		CandidateElimination candidateObject = new CandidateElimination();
-		output = candidateObject.makeGraph(featureValues);
+		candidateObject.makeGraph(featureValues);
 		assertEquals(expected, output);
 	}
 }

@@ -73,21 +73,4 @@ public class Hierarchy {
 		}
 		return null;
 	}
-
-	public static void main(String[] args) {
-		Hierarchy h = new Hierarchy();
-		h.readData(new File("./src/main/java/hdata.txt"));
-		System.out.println("Parent -> Children relationships :");
-		h.printData();
-
-		System.out.println("Children values of \"B\" :");
-		String[] children = h.getChildren("B");
-		for (String child : children) {
-			System.out.print(child + " ");
-		}
-		System.out.println();
-		System.out.println("Parent value of \"K\" :");
-		System.out.println(h.getParent("K"));
-	}
-
 }
